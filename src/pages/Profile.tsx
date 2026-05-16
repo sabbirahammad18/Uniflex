@@ -125,7 +125,7 @@ const Profile = () => {
               trending_up
             </span>
 
-            <span className="text-sm font-bold">+12.5% this month</span>
+            <span className="text-sm font-bold">+15.5% this month</span>
           </div>
         </section>
 
@@ -162,21 +162,6 @@ const Profile = () => {
               Tree
             </span>
           </Link>
-
-          {/* <Link
-            to="/setting"
-            className="rounded-xl bg-white p-4 min-h-18 grid grid-cols-[40px_1fr] items-center gap-3 border border-blue-100 active:scale-[0.98] transition"
-          >
-            {" "}
-            <div className="w-10 h-10 rounded-lg bg-slate-100 grid place-items-center text-slate-600">
-              <span className="material-symbols-outlined text-[23px]">
-                settings
-              </span>
-            </div>
-            <span className="text-sm leading-4 font-medium text-[#00176b]">
-              Settings
-            </span>
-          </Link> */}
 
           <Link
             to="../commission"
