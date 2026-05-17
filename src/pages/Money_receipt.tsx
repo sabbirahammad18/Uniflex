@@ -23,7 +23,7 @@ function MoneyReceipt() {
   const data = state || {
     customerId: "CUS-1001",
     customerName: "Sabbir Ahmed",
-    mobile: "01700000000",
+    mobile: "017045500000",
     plotDescription: "P-38 K-5A R-7/A",
     startDate: "15 Sep 2025",
     receivedAmount: 100000,
