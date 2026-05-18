@@ -11,14 +11,14 @@ import Component from "../Componenets/Component";
 import Setting from "../pages/Setting";
 import Customer from "../pages/Customer";
 import Employee from "../pages/Employee";
-import Profile_Customer from "../pages/Profile_customer";
-import Payment_History from "../pages/Payment_history";
 import Commission from "../pages/commission/Commission";
-import Money_receipt from "../pages/Money_receipt";
 import All_Statement from "../pages/All_statement";
 import Customerpayment from "../pages/Customerpayment";
 import Achievement from "../pages/Achievement";
 import Paymentrequest from "../pages/paymentrequest";
+import PaymentDetails from "../pages/PaymentDetails";
+import CustomerProfile from "../pages/CustomerProfile";
+import MoneyReceipt from "../pages/MoneyReceipt";
 const AppRoute = () => {
   return (
     <Routes>
@@ -36,10 +36,10 @@ const AppRoute = () => {
         <Route path="setting" element={<Setting />} />
         <Route path="customer" element={<Customer />} />
         <Route path="employee" element={<Employee />} />
-        <Route path="profilecustomer" element={<Profile_Customer />} />
-        <Route path="paymenthistory" element={<Payment_History />} />
+        <Route path="CustomerProfile" element={<CustomerProfile />} />
+        <Route path="PaymentDetails" element={<PaymentDetails />} />
         <Route path="commission" element={<Commission />} />
-        <Route path="Moneyreceipt" element={<Money_receipt />} />
+        <Route path="MoneyReceipt" element={<MoneyReceipt />} />
         <Route path="allstatement" element={<All_Statement />} />
         <Route path="customerpayment" element={<Customerpayment />} />
         <Route path="achievement" element={<Achievement />} />

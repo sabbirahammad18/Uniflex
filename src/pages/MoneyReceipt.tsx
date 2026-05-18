@@ -125,7 +125,7 @@ function MoneyReceipt() {
         </div>
 
         {/* Back Button */}
-        <Link to="/profilecustomer">
+        <Link to="/CustomerProfile">
           <button className="w-full bg-[#07277F] text-white py-3 rounded-lg font-semibold mt-5">
             Back
           </button>

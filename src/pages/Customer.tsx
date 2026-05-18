@@ -107,7 +107,7 @@ function CustomerHistory() {
               <div className="flex-1 bg-white border border-gray-100 rounded-xl p-4 shadow-sm hover:shadow-md transition">
                 <div className="flex justify-between items-center">
                   <Link
-                    to="/profilecustomer"
+                    to="/customerprofile"
                     state={{
                       customerName: item.name,
                       customerId: item.customerId,
@@ -142,7 +142,7 @@ function CustomerHistory() {
 
                 <div className="mt-3 flex justify-between items-center">
                   <p className="font-bold text-[#07277F]">{item.amount}</p>
-                  <Link to="/paymenthistory">
+                  <Link to="/PaymentDetails">
                     <button className="text-[10px] bg-[#07277F] text-white px-3 py-1 rounded-md">
                       Payment Details
                     </button>

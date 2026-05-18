@@ -243,7 +243,7 @@ const Profile = () => {
               </div>
             </div>
 
-            <Link to="/profilecustomer">
+            <Link to="/CustomerProfile">
               <button className="mt-6 h-12 w-full rounded-2xl bg-sky-300 text-sm font-extrabold text-[#00176b] shadow-lg">
                 View Us
               </button>

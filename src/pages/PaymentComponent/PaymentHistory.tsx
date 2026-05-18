@@ -1,6 +1,6 @@
 import { Link } from "react-router-dom";
 
-const PaymentHistoryMobile = () => {
+const PaymentHistory = () => {
   const data = [
     {
       id: "UC00514",
@@ -243,4 +243,4 @@ const PaymentHistoryMobile = () => {
   );
 };
 
-export default PaymentHistoryMobile;
+export default PaymentHistory;
