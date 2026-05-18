@@ -1,6 +1,10 @@
 import { Link } from "react-router-dom";
-
-const Payments = () => {
+type PropsType = {
+  title: string;
+  amount: string;
+  date: string;
+};
+const Payments = (props: PropsType) => {
   return (
     <div className="bg-white mx-auto w-full max-w-107.5 min-h-screen pb-24 font-sans text-slate-950">
       <main className="mx-auto w-full max-w-107.5 px-4 py-6 grid grid-cols-1 gap-5">
@@ -10,19 +14,12 @@ const Payments = () => {
 
           <div className="relative z-10 grid grid-cols-1 gap-5">
             <div>
-              <p className="grid grid-cols-[auto_1fr] items-center gap-2 text-sm text-slate-500">
-                <span className="material-symbols-outlined text-body-lg">
-                  account_balance_wallet
-                </span>
-                Current Balance
-              </p>
-              <h2 className="mt-2 text-numeral-xl leading-none font-extrabold tracking-tight text-[#00176b]">
-                &#2547;12,450.80
-              </h2>
+             <div>
+              <h1 className="-mt-2 opacity-70 font-semibold ">{props.title}</h1>
+              <h1 className="text-h1 font-bold  text-[#07277f]">{props.amount}</h1>
+              <h1 className="text-sm font-bold opacity-80 text-blue-900">{props.date}</h1>
+             </div>
               <div className="mt-3 grid grid-cols-1 gap-2">
-                <span className="w-fit rounded-full bg-green-100 px-3 py-1 text-xs font-bold text-green-700">
-                  +14.2% this month
-                </span>
                 <span className="text-xs text-slate-400">
                   Updated 2 mins ago
                 </span>

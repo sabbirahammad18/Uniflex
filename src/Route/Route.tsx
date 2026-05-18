@@ -32,7 +32,7 @@ const AppRoute = () => {
         <Route path="profile" element={<Profile />} />
         <Route path="project" element={<Project />} />
         <Route path="booking" element={<Booking />} />
-        <Route path="payment" element={<Payment />} />
+        <Route path="payment" element={<Payment title="Current Balance" amount="৳ 53,500.00" date="1+15.5% this month" />} />
         <Route path="setting" element={<Setting />} />
         <Route path="customer" element={<Customer />} />
         <Route path="employee" element={<Employee />} />

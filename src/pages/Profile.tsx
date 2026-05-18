@@ -76,6 +76,13 @@ const Profile = () => {
       ],
     },
   ];
+  const blance = [
+    {
+      title: " Wallet Balance",
+      amount: "৳ 53,500.00",
+      date : "+15.5% this month"
+    },
+  ]
 
   return (
     <div className="bg-white min-h-screen pb-24 font-sans text-slate-950">
@@ -109,24 +116,21 @@ const Profile = () => {
 
         {/* Wallet */}
         <section className="rounded-xl bg-[#07277F] p-6 text-white shadow-lg -mt-10">
-          <p className="text-sm text-blue-200 font-medium">Wallet Balance</p>
-
-          <Link
-            to="/payment"
-            className="text-sm font-medium text-white/70  mt-1"
-          >
-            <h3 className="mt-1 text-[38px] leading-none font-extrabold tracking-tight text-[#9cb4ff]">
-              ৳ 43,850.00
-            </h3>
-          </Link>
-
-          <div className="mt-6 flex items-center gap-2 text-emerald-300">
-            <span className="material-symbols-outlined text-[23px]">
-              trending_up
-            </span>
-
-            <span className="text-sm font-bold">+15.5% this month</span>
+       <Link to="/payment">
+          <div >
+          {blance.map((item) => (
+            <div key={item.title}>
+              <p className="-mt-2  text-sm opacity-80">
+                {item.title}
+              </p>
+              <p className="font-bold text-h1">
+                {item.amount}
+              </p>
+              <p className="font-semibold opacity-70 text-blue-300">{item.date}</p>
+            </div>
+          ))}
           </div>
+       </Link>
         </section>
 
         {/* Menu */}
