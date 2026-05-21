@@ -62,7 +62,6 @@ const Sidebar = ({ sidebarOpen, setSidebarOpen }: SidebarProps) => {
 
           {/* MENU */}
           <nav className="p-2 space-y-1 text-sm overflow-y-auto h-[calc(100%-56px)]">
-
             {/* PROJECT */}
             <button
               onClick={() =>
@@ -136,15 +135,27 @@ const Sidebar = ({ sidebarOpen, setSidebarOpen }: SidebarProps) => {
 
             {openMenu === "hrm" && (
               <div className="ml-8 space-y-1">
-                <Link to="/booking" onClick={closeSidebar} className={subMenuClass}>
+                <Link
+                  to="/booking"
+                  onClick={closeSidebar}
+                  className={subMenuClass}
+                >
                   Booking
                 </Link>
 
-                <Link to="/employee" onClick={closeSidebar} className={subMenuClass}>
+                <Link
+                  to="/employee"
+                  onClick={closeSidebar}
+                  className={subMenuClass}
+                >
                   Employee Tree
                 </Link>
 
-                <Link to="/customer" onClick={closeSidebar} className={subMenuClass}>
+                <Link
+                  to="/customer"
+                  onClick={closeSidebar}
+                  className={subMenuClass}
+                >
                   All Customer
                 </Link>
 
@@ -156,7 +167,11 @@ const Sidebar = ({ sidebarOpen, setSidebarOpen }: SidebarProps) => {
                   Customer Payment
                 </Link>
 
-                <Link to="/payment" onClick={closeSidebar} className={subMenuClass}>
+                <Link
+                  to="/payment"
+                  onClick={closeSidebar}
+                  className={subMenuClass}
+                >
                   PayOut Request
                 </Link>
               </div>
@@ -178,15 +193,27 @@ const Sidebar = ({ sidebarOpen, setSidebarOpen }: SidebarProps) => {
 
             {openMenu === "accounts" && (
               <div className="ml-8 space-y-1">
-                <Link to="/component/income-entry" onClick={closeSidebar} className={subMenuClass}>
+                <Link
+                  to="/component/income-entry"
+                  onClick={closeSidebar}
+                  className={subMenuClass}
+                >
                   Income Entry
                 </Link>
 
-                <Link to="/component/create-pay" onClick={closeSidebar} className={subMenuClass}>
+                <Link
+                  to="/component/create-pay"
+                  onClick={closeSidebar}
+                  className={subMenuClass}
+                >
                   Create Pay
                 </Link>
 
-                <Link to="/payment" onClick={closeSidebar} className={subMenuClass}>
+                <Link
+                  to="/payment"
+                  onClick={closeSidebar}
+                  className={subMenuClass}
+                >
                   Payment
                 </Link>
 
@@ -201,10 +228,11 @@ const Sidebar = ({ sidebarOpen, setSidebarOpen }: SidebarProps) => {
             )}
 
             {/* LOGOUT */}
+            {/* LOGOUT */}
             <Link
               to="/"
               onClick={closeSidebar}
-              className="absolute left-0 bottom-0 w-65.5 mt-auto h-11 px-3 flex items-center gap-3 text-white bg-[#07277F]"
+              className="text-body-lg absolute left-0 bottom-0 w-65.5 mt-auto h-11 px-3 flex items-center gap-2 text-[#07277F] border-t-2 border-slate-500"
             >
               <span className="material-symbols-outlined">logout</span>
               Logout
