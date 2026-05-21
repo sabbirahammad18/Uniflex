@@ -1,17 +1,16 @@
-
-import {Outlet } from "react-router-dom"
+import { Outlet } from "react-router-dom";
 import Header from "../components/Header.tsx";
 import Sidebar from "../components/Sidebar.tsx";
 import Footer from "../components/Footer.tsx";
-import {useState} from "react";
+import { useState } from "react";
 
 export default function Layout() {
   const [sidebarOpen, setSidebarOpen] = useState(false);
 
   return (
     <div className="mx-auto w-full max-w-107.5 min-h-screen relative overflow-x-hidden pb-16">
-
       <Header setSidebarOpen={setSidebarOpen} />
+
       <Sidebar sidebarOpen={sidebarOpen} setSidebarOpen={setSidebarOpen} />
 
       <main className="pt-14">
@@ -24,8 +23,7 @@ export default function Layout() {
         </p>
       </footer>
 
-      <Footer/>
-
+      <Footer />
     </div>
   );
-};
+}

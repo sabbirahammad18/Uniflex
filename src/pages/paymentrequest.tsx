@@ -68,7 +68,7 @@ const BalanceRequestCard = () => {
                 onChange={(e) => setMethod(e.target.value)}
                 className="w-full  appearance-none bg-transparent py-2 px-4  text-sm font-bold text-black-700 outline-none"
               >
-                <option  value="">Select withdraw method</option>
+                <option value="">Select withdraw method</option>
                 <option value="cash">Cash</option>
                 <option value="bank">Bank</option>
                 <option value="gateway">Gateway</option>

@@ -80,9 +80,9 @@ const Profile = () => {
     {
       title: " Wallet Balance",
       amount: "৳ 53,500.00",
-      date : "+15.5% this month"
+      date: "+15.5% this month",
     },
-  ]
+  ];
 
   return (
     <div className="bg-white min-h-screen pb-24 font-sans text-slate-950">
@@ -116,21 +116,19 @@ const Profile = () => {
 
         {/* Wallet */}
         <section className="rounded-xl bg-[#07277F] p-6 text-white shadow-lg -mt-10">
-       <Link to="/payment">
-          <div >
-          {blance.map((item) => (
-            <div key={item.title}>
-              <p className="-mt-2  text-sm opacity-80">
-                {item.title}
-              </p>
-              <p className="font-bold text-h1">
-                {item.amount}
-              </p>
-              <p className="font-semibold opacity-70 text-blue-300">{item.date}</p>
+          <Link to="/payment">
+            <div>
+              {blance.map((item) => (
+                <div key={item.title}>
+                  <p className="-mt-2  text-sm opacity-80">{item.title}</p>
+                  <p className="font-bold text-h1">{item.amount}</p>
+                  <p className="font-semibold opacity-70 text-blue-300">
+                    {item.date}
+                  </p>
+                </div>
+              ))}
             </div>
-          ))}
-          </div>
-       </Link>
+          </Link>
         </section>
 
         {/* Menu */}

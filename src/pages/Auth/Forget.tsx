@@ -61,8 +61,16 @@ const Forget = () => {
                     visibility
                   </span>
                 </button>
+                  <Link
+                  to="/"
+                  className="text-xs font-semibold text-secondary hover:underline absolute right-2 top-full mt-1"
+                >
+                  Back To Login
+                </Link>
               </div>
             </div>
+
+            
 
             <Link to="/" className="block">
               <button
@@ -75,12 +83,6 @@ const Forget = () => {
                 </span>
               </button>
             </Link>
-
-            <div className="grid grid-cols-[1fr_auto_1fr] items-center gap-4 py-1">
-              <div className="h-px bg-slate-200" />
-              <span className="text-xs font-semibold text-slate-400">OR</span>
-              <div className="h-px bg-slate-200" />
-            </div>
           </form>
         </section>
 
