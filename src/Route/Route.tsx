@@ -7,7 +7,7 @@ import Profile from "../pages/Profile";
 import Project from "../pages/Project";
 import Booking from "../pages/Booking";
 import Payment from "../pages/Payment";
-import Component from "../Componenets/Component";
+import Layout from "../app/Layout.tsx";
 import Setting from "../pages/Setting";
 import Customer from "../pages/Customer";
 import Employee from "../pages/Employee";
@@ -27,7 +27,7 @@ const AppRoute = () => {
         <Route path="Forget" element={<Forget />} />
       </Route>
 
-      <Route path="/" element={<Component />}>
+      <Route path="/" element={<Layout />}>
         <Route path="dashboard" element={<Dashboard />} />
         <Route path="profile" element={<Profile />} />
         <Route path="project" element={<Project />} />

@@ -1,5 +1,5 @@
 import { Outlet } from "react-router-dom";
-import Logo from "../assets/images/uniflex_logo_con (1).png";
+import Logo from "../assets/logo.png";
 function AuthLayout() {
   return (
     <div>

@@ -1,11 +1,11 @@
 import { useLocation, Link } from "react-router-dom";
-import img from "../assets/images/uniflex_logo_con (1).png";
+import img from "../assets/logo.png";
 type InfoProps = {
   label: string;
   value: string | number;
 };
 
-// ✅ Separate Component
+// ✅ Separate Layout
 function Info({ label, value }: InfoProps) {
   return (
     <div className="grid grid-cols-[110px_10px_1fr] text-[11px] font-semibold">

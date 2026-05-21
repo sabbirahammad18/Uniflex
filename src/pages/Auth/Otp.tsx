@@ -47,7 +47,7 @@ const Otp = () => {
             </span>
           </div>
 
-          <Link to="/Component/Profile" className="block">
+          <Link to="/Layout/Profile" className="block">
             <button
               type="button"
               className="w-full py-4 bg-linear-to-r from-primary to-primary-container text-on-primary text-xl font-semibold rounded-xl shadow-lg active:scale-[0.98] transition-all flex items-center justify-center gap-2"
