@@ -1,140 +1,112 @@
-import { Link } from "react-router-dom";
+import { useGetPaymentSummaryQuery } from "@/queries/paymentQuery";
+import { useGetBookingsQuery } from "@/queries/bookingQuery";
+import { formatCurrency, formatPlainNumber } from "@/utils/format";
 
 const PaymentHistory = () => {
-  const data = [
-    {
-      id: "UC00514",
-      name: "Dr. Md. Delower Hossain",
-      plotPrice: 4125000,
-      bookingMoney: 100000,
-      downPayment: 0,
-      installment: 100000,
-      totalPaid: 400000,
-      remaining: 4025000,
-      lastDate: "15 Sep 2025",
-      khata: 5,
-    },
-  ];
+  const { data: summary, isLoading } = useGetPaymentSummaryQuery();
+  const { data: bookings } = useGetBookingsQuery();
+  const customerBooking = bookings?.data.find(
+    (booking) => booking.customer_uid === summary?.user_id,
+  );
 
   return (
     <div className="w-full min-h-screen bg-gray-100 flex justify-center -mt-1">
       <div className="w-107 min-h-screen bg-white flex flex-col">
         <div className="p-4 space-y-4 overflow-y-auto">
-          {data.map((item, i) => (
-            <div
-              key={i}
-              className="rounded-2xl border border-blue-100 bg-white overflow-hidden"
-            >
-              {/* Top ID + Button */}
-              <div className="flex justify-between items-center px-4 py-3 bg-slate-50 rounded-lg">
-                {/* Customer ID */}
-                <div>
-                  <p className="text-[11px] text-gray-500">Customer ID</p>
-                  <p className="font-bold text-blue-700">{item.id}</p>
-                </div>
-
-                {/* Installment No */}
-                <div className="text-right">
-                  <p className="text-[11px] text-gray-500">Installment No</p>
-                  <p className="font-bold text-blue-700">05</p>
-                </div>
+          <div className="rounded-2xl border border-blue-100 bg-white overflow-hidden">
+            <div className="flex justify-between items-center px-4 py-3 bg-slate-50 rounded-lg">
+              <div>
+                <p className="text-[11px] text-gray-500">Customer ID</p>
+                <p className="font-bold text-blue-700">
+                  {isLoading ? "Loading..." : summary?.user_id || "N/A"}
+                </p>
               </div>
 
-              {/* Name */}
-              <div className="px-4 py-3 border-b">
-                <p className="text-[11px] text-gray-500">Customer Name</p>
-                <p className="font-semibold text-gray-800">{item.name}</p>
-              </div>
-
-              {/* Color Blocks */}
-              <div className="grid grid-cols-2 gap-2 p-4 text-sm">
-                <div className="p-3 rounded-xl bg-blue-50">
-                  <p className="text-xs text-gray-500">Plot Price</p>
-                  <p className="font-bold text-blue-700">
-                    ৳{item.plotPrice.toLocaleString()}
-                  </p>
-                </div>
-
-                <div className="p-3 rounded-xl bg-yellow-50">
-                  <p className="text-xs text-gray-500">Booking</p>
-                  <p className="font-bold text-yellow-600">
-                    ৳{item.bookingMoney.toLocaleString()}
-                  </p>
-                </div>
-
-                <div className="p-3 rounded-xl bg-gray-50">
-                  <p className="text-xs text-gray-500">Down Payment</p>
-                  <p className="font-bold text-gray-700">
-                    ৳{item.downPayment.toLocaleString()}
-                  </p>
-                </div>
-
-                <div className="p-3 rounded-xl bg-purple-50">
-                  <p className="text-xs text-gray-500">Installment</p>
-                  <p className="font-bold text-purple-700">
-                    ৳{item.installment.toLocaleString()}
-                  </p>
-                </div>
-
-                <div className="p-3 rounded-xl bg-green-50 col-span-2">
-                  <p className="text-xs text-gray-500">Total Paid</p>
-                  <p className="font-bold text-green-700">
-                    ৳{item.totalPaid.toLocaleString()}
-                  </p>
-                </div>
-
-                <div className="p-3 rounded-xl bg-red-50 col-span-2">
-                  <p className="text-xs text-gray-500">Remaining</p>
-                  <p className="font-bold text-red-600">
-                    ৳{item.remaining.toLocaleString()}
-                  </p>
-                </div>
-              </div>
-
-              {/* Footer */}
-              <div className="flex justify-between px-4 py-3 bg-slate-50 text-xs">
-                <span className="text-gray-500">Last: {item.lastDate}</span>
-                <span className="font-semibold text-slate-800">
-                  Khata: {item.khata}
-                </span>
+              <div className="text-right">
+                <p className="text-[11px] text-gray-500">Project</p>
+                <p className="font-bold text-blue-700">
+                  {customerBooking?.project_name || "N/A"}
+                </p>
               </div>
             </div>
-          ))}
+
+            <div className="px-4 py-3 border-b">
+              <p className="text-[11px] text-gray-500">Customer Name</p>
+              <p className="font-semibold text-gray-800">
+                {summary?.user_name || "N/A"}
+              </p>
+            </div>
+
+            <div className="grid grid-cols-2 gap-2 p-4 text-sm">
+              <div className="p-3 rounded-xl bg-blue-50">
+                <p className="text-xs text-gray-500">Plot Price</p>
+                <p className="font-bold text-blue-700">
+                  {formatCurrency(summary?.plot_price)}
+                </p>
+              </div>
+
+              <div className="p-3 rounded-xl bg-yellow-50">
+                <p className="text-xs text-gray-500">Booking</p>
+                <p className="font-bold text-yellow-600">
+                  {formatCurrency(summary?.booking_money)}
+                </p>
+              </div>
+
+              <div className="p-3 rounded-xl bg-gray-50">
+                <p className="text-xs text-gray-500">Down Payment</p>
+                <p className="font-bold text-gray-700">
+                  {formatCurrency(summary?.down_payment)}
+                </p>
+              </div>
+
+              <div className="p-3 rounded-xl bg-purple-50">
+                <p className="text-xs text-gray-500">Installment</p>
+                <p className="font-bold text-purple-700">
+                  {formatCurrency(summary?.installment_amount)}
+                </p>
+              </div>
+
+              <div className="p-3 rounded-xl bg-green-50 col-span-2">
+                <p className="text-xs text-gray-500">Total Paid</p>
+                <p className="font-bold text-green-700">
+                  {formatCurrency(summary?.total_paid_amount)}
+                </p>
+              </div>
+
+              <div className="p-3 rounded-xl bg-red-50 col-span-2">
+                <p className="text-xs text-gray-500">Remaining</p>
+                <p className="font-bold text-red-600">
+                  {formatCurrency(summary?.remaining_amount)}
+                </p>
+              </div>
+            </div>
+
+            <div className="flex justify-between px-4 py-3 bg-slate-50 text-xs">
+              <span className="text-gray-500">
+                Last: {customerBooking?.last_entry_date || "N/A"}
+              </span>
+              <span className="font-semibold text-slate-800">
+                Khata: {formatPlainNumber(summary?.plot_size_khata)}
+              </span>
+            </div>
+          </div>
         </div>
 
         <section className="overflow-hidden rounded-[30px] bg-white shadow-sm border border-slate-100">
-          {/* Header */}
           <div className="flex items-center justify-between px-5 py-5 border-b border-slate-100">
             <div>
               <h3 className="text-h3 font-extrabold text-[#00176b]">
                 Transaction History
               </h3>
               <p className="text-[13px] text-slate-400">
-                Recent payment transactions
+                Recent backend payment totals
               </p>
-            </div>
-
-            <div className="flex items-center gap-3">
-              <button className="w-10 h-10 rounded-full bg-slate-100 active:scale-95 transition grid place-items-center">
-                <span className="material-symbols-outlined text-slate-600">
-                  tune
-                </span>
-              </button>
-
-              <button className="w-10 h-10 rounded-full bg-slate-100 active:scale-95 transition grid place-items-center">
-                <span className="material-symbols-outlined text-slate-600">
-                  download
-                </span>
-              </button>
             </div>
           </div>
 
-          {/* Transactions */}
           <div className="p-4 space-y-4">
-            {/* Card 1 */}
             <div className="rounded-3xl border border-slate-100 bg-[#f8fbff] p-4 shadow-sm">
               <div className="flex justify-between gap-3">
-                {/* Left */}
                 <div className="flex gap-4">
                   <div className="w-14 h-14 rounded-2xl bg-blue-100 text-[#00176b] grid place-items-center">
                     <span className="material-symbols-outlined text-[28px]">
@@ -144,99 +116,39 @@ const PaymentHistory = () => {
 
                   <div>
                     <h4 className="text-[17px] font-bold text-[#00176b] leading-6">
-                      Commission Payment
+                      Booking Money
                     </h4>
 
-                    <p className="text-sm text-slate-500">Project Phoenix</p>
-
-                    <p className="text-xs mt-1 text-slate-400">TRX-7729103</p>
+                    <p className="text-sm text-slate-500">
+                      {customerBooking?.project_name || "Project"}
+                    </p>
                   </div>
-                </div>
-
-                {/* Date */}
-                <div className="text-right">
-                  <p className="text-sm font-bold text-[#00176b]">24 Oct</p>
-                  <p className="text-xs text-slate-400">02:45 PM</p>
                 </div>
               </div>
 
-              <Link to="/moneyreceipt">
-                <button className="w-full mt-4 py-3 rounded-2xl bg-[#00176b] text-white font-bold active:scale-95 transition">
-                  View Money Receipt
-                </button>
-              </Link>
+              <p className="mt-4 text-lg font-bold text-[#00176b]">
+                {formatCurrency(summary?.booking_money)}
+              </p>
             </div>
 
-            {/* Card 2 */}
             <div className="rounded-3xl border border-slate-100 bg-white p-4 shadow-sm">
-              <div className="flex justify-between gap-3">
-                <div className="flex gap-4">
-                  <div className="w-14 h-14 rounded-2xl bg-red-100 text-red-600 grid place-items-center">
-                    <span className="material-symbols-outlined text-[28px]">
-                      account_balance
-                    </span>
-                  </div>
-
-                  <div>
-                    <h4 className="text-[17px] font-bold text-[#00176b] leading-6">
-                      Withdrawal to Bank
-                    </h4>
-
-                    <p className="text-sm text-slate-500">DBBL Account</p>
-
-                    <p className="text-xs mt-1 text-slate-400">TRX-7728841</p>
-                  </div>
-                </div>
-
-                <div className="text-right">
-                  <p className="text-sm font-bold text-[#00176b]">22 Oct</p>
-                  <p className="text-xs text-slate-400">11:15 AM</p>
-                </div>
-              </div>
-
-              <Link to="/moneyreceipt">
-                <button className="w-full mt-4 py-3 rounded-2xl border-2 border-[#00176b] text-[#00176b] font-bold active:scale-95 transition">
-                  View Money Receipt
-                </button>
-              </Link>
+              <h4 className="text-[17px] font-bold text-[#00176b] leading-6">
+                Down Payment
+              </h4>
+              <p className="mt-4 text-lg font-bold text-[#00176b]">
+                {formatCurrency(summary?.down_payment)}
+              </p>
             </div>
 
-            {/* Card 3 */}
             <div className="rounded-3xl border border-slate-100 bg-white p-4 shadow-sm">
-              <div className="flex justify-between gap-3">
-                <div className="flex gap-4">
-                  <div className="w-14 h-14 rounded-2xl bg-green-100 text-green-600 grid place-items-center">
-                    <span className="material-symbols-outlined text-[28px]">
-                      receipt_long
-                    </span>
-                  </div>
-
-                  <div>
-                    <h4 className="text-[17px] font-bold text-[#00176b] leading-6">
-                      Booking Fee
-                    </h4>
-
-                    <p className="text-sm text-slate-500">Client A</p>
-
-                    <p className="text-xs mt-1 text-slate-400">TRX-7725519</p>
-                  </div>
-                </div>
-
-                <div className="text-right">
-                  <p className="text-sm font-bold text-[#00176b]">19 Oct</p>
-                  <p className="text-xs text-slate-400">09:00 AM</p>
-                </div>
-              </div>
-
-              <Link to="/moneyreceipt">
-                <button className="w-full mt-4 py-3 rounded-2xl border-2 border-[#00176b] text-[#00176b] font-bold active:scale-95 transition">
-                  View Money Receipt
-                </button>
-              </Link>
+              <h4 className="text-[17px] font-bold text-[#00176b] leading-6">
+                Installment
+              </h4>
+              <p className="mt-4 text-lg font-bold text-[#00176b]">
+                {formatCurrency(summary?.installment_amount)}
+              </p>
             </div>
           </div>
-
-          {/* Footer */}
         </section>
       </div>
     </div>

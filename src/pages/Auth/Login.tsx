@@ -1,11 +1,39 @@
-import { Link } from "react-router";
+import { useState } from "react";
+import type { FormEvent } from "react";
+import { Link, useLocation, useNavigate } from "react-router-dom";
+import { useLoginMutation } from "@/queries/authQuery";
+import { getApiErrorMessage } from "@/utils/format";
 
 const Login = () => {
+  const [login, setLogin] = useState("");
+  const [password, setPassword] = useState("");
+  const [showPassword, setShowPassword] = useState(false);
+  const [errorMessage, setErrorMessage] = useState("");
+  const [loginUser, { isLoading }] = useLoginMutation();
+  const navigate = useNavigate();
+  const location = useLocation();
+
+  const redirectTo =
+    (location.state as { from?: { pathname?: string } } | null)?.from
+      ?.pathname || "/profile";
+
+  const handleSubmit = async (event: FormEvent<HTMLFormElement>) => {
+    event.preventDefault();
+    setErrorMessage("");
+
+    try {
+      await loginUser({ login, password }).unwrap();
+      navigate(redirectTo, { replace: true });
+    } catch (error) {
+      setErrorMessage(getApiErrorMessage(error, "Invalid login credentials"));
+    }
+  };
+
   return (
     <div className="bg-white min-h-screen  font-inter text-slate-950">
       <main className="relative mx-auto flex min-h-dvh w-full max-w-107 flex-col bg-white px-5 py-7 shadow-lg overflow-hidden">
         <section className="mt-8 grid grid-cols-1">
-          <form className="grid grid-cols-1 gap-5">
+          <form onSubmit={handleSubmit} className="grid grid-cols-1 gap-5">
             <div>
               <label className="mb-2 ml-2 block text-xs font-semibold text-slate-600">
                 User ID
@@ -16,9 +44,13 @@ const Login = () => {
                   person
                 </span>
                 <input
+                  value={login}
+                  onChange={(event) => setLogin(event.target.value)}
                   className="h-14 w-full rounded-xl border border-slate-200 bg-slate-50 pl-11 pr-4 text-sm outline-none transition-all placeholder:text-slate-400 focus:border-secondary focus:bg-white focus:ring-4 focus:ring-sky-100"
-                  placeholder="10001"
+                  placeholder="UC2913 or email"
                   type="text"
+                  autoComplete="username"
+                  required
                 />
               </div>
             </div>
@@ -36,17 +68,22 @@ const Login = () => {
                 </span>
 
                 <input
+                  value={password}
+                  onChange={(event) => setPassword(event.target.value)}
                   className="h-14 w-full rounded-xl border border-slate-200 bg-slate-50 pl-11 pr-12 text-sm outline-none transition-all placeholder:text-slate-400 focus:border-secondary focus:bg-white focus:ring-4 focus:ring-sky-100"
                   placeholder="••••••••"
-                  type="password"
+                  type={showPassword ? "text" : "password"}
+                  autoComplete="current-password"
+                  required
                 />
 
                 <button
+                  onClick={() => setShowPassword((value) => !value)}
                   className="absolute right-4 top-1/2 -translate-y-1/2 text-slate-400 active:scale-95 transition"
                   type="button"
                 >
                   <span className="material-symbols-outlined text-[22px] mt-1.5">
-                    visibility
+                    {showPassword ? "visibility_off" : "visibility"}
                   </span>
                 </button>
                 <Link
@@ -58,17 +95,24 @@ const Login = () => {
               </div>
             </div>
 
-            <Link to="/profile" className="block">
+            {errorMessage && (
+              <p className="rounded-xl border border-red-100 bg-red-50 px-4 py-3 text-sm font-semibold text-red-700">
+                {errorMessage}
+              </p>
+            )}
+
+            <div className="block">
               <button
-                className="flex mt-4 h-14 w-full items-center justify-center gap-2 rounded-xl bg-linear-to-r from-[#07277f] to-[#263f96] text-lg font-bold text-white shadow-lg active:scale-[0.98] transition-all"
+                className="flex mt-4 h-14 w-full items-center justify-center gap-2 rounded-xl bg-linear-to-r from-[#07277f] to-[#263f96] text-lg font-bold text-white shadow-lg active:scale-[0.98] transition-all disabled:cursor-not-allowed disabled:opacity-60"
                 type="submit"
+                disabled={isLoading}
               >
-                Login
+                {isLoading ? "Logging in..." : "Login"}
                 <span className="material-symbols-outlined text-[22px]">
                   arrow_forward
                 </span>
               </button>
-            </Link>
+            </div>
 
             <div className="grid grid-cols-[1fr_auto_1fr] items-center gap-4 py-1"></div>
           </form>

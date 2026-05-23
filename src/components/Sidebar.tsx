@@ -1,13 +1,25 @@
 import { useState } from "react";
-import { Link } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
 import type { SidebarProps } from "@/types/types";
+import { useLogoutMutation } from "@/queries/authQuery";
 
 import logo from "@/assets/logo.png";
 
 const Sidebar = ({ sidebarOpen, setSidebarOpen }: SidebarProps) => {
   const [openMenu, setOpenMenu] = useState("");
+  const [logout, { isLoading: isLoggingOut }] = useLogoutMutation();
+  const navigate = useNavigate();
 
   const closeSidebar = () => setSidebarOpen(false);
+  const handleLogout = async () => {
+    closeSidebar();
+
+    try {
+      await logout().unwrap();
+    } finally {
+      navigate("/", { replace: true });
+    }
+  };
 
   const subMenuClass =
     "flex items-center gap-2 py-2 px-3 rounded-md text-[#07277F] hover:bg-blue-50";
@@ -105,7 +117,7 @@ const Sidebar = ({ sidebarOpen, setSidebarOpen }: SidebarProps) => {
 
             {/* WITHDRAW */}
             <Link
-              to="#"
+              to="/request"
               onClick={closeSidebar}
               className="h-11 px-3 rounded-md flex items-center gap-3 text-[#07277F] hover:bg-blue-50"
             >
@@ -114,7 +126,7 @@ const Sidebar = ({ sidebarOpen, setSidebarOpen }: SidebarProps) => {
             </Link>
 
             <Link
-              to="#"
+              to="/payment"
               onClick={closeSidebar}
               className="h-11 px-3 rounded-md flex items-center gap-3 text-[#07277F] hover:bg-blue-50"
             >
@@ -201,14 +213,15 @@ const Sidebar = ({ sidebarOpen, setSidebarOpen }: SidebarProps) => {
             )}
 
             {/* LOGOUT */}
-            <Link
-              to="/"
-              onClick={closeSidebar}
-              className="absolute left-0 bottom-0 w-65.5 mt-auto h-11 px-3 flex items-center gap-3 text-white bg-[#07277F]"
+            <button
+              type="button"
+              onClick={handleLogout}
+              disabled={isLoggingOut}
+              className="absolute left-0 bottom-0 w-65.5 mt-auto h-11 px-3 flex items-center gap-3 text-white bg-[#07277F] disabled:opacity-70"
             >
               <span className="material-symbols-outlined">logout</span>
-              Logout
-            </Link>
+              {isLoggingOut ? "Logging out..." : "Logout"}
+            </button>
           </nav>
         </aside>
       </div>

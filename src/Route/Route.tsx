@@ -19,32 +19,41 @@ import Paymentrequest from "../pages/paymentrequest";
 import PaymentDetails from "../pages/PaymentDetails";
 import CustomerProfile from "../pages/CustomerProfile";
 import MoneyReceipt from "../pages/MoneyReceipt";
+import ProjectDetails from "../pages/ProjectDetails";
+import BookingDetails from "../pages/BookingDetails";
+import { GuestRoute, ProtectedRoute } from "./AuthGuards";
 const AppRoute = () => {
   return (
     <Routes>
-      <Route path="/" element={<AuthLayout />}>
-        <Route path="/" element={<Login />} />
-        <Route path="Forget" element={<Forget />} />
+      <Route element={<GuestRoute />}>
+        <Route path="/" element={<AuthLayout />}>
+          <Route path="/" element={<Login />} />
+          <Route path="Forget" element={<Forget />} />
+        </Route>
       </Route>
 
-      <Route path="/" element={<Layout />}>
-        <Route path="dashboard" element={<Dashboard />} />
-        <Route path="profile" element={<Profile />} />
-        <Route path="project" element={<Project />} />
-        <Route path="booking" element={<Booking />} />
-        <Route path="payment" element={<Payment title="Current Balance" amount="৳ 53,500.00" date="1+15.5% this month" />} />
-        <Route path="setting" element={<Setting />} />
-        <Route path="customer" element={<Customer />} />
-        <Route path="employee" element={<Employee />} />
-        <Route path="CustomerProfile" element={<CustomerProfile />} />
-        <Route path="PaymentDetails" element={<PaymentDetails />} />
-        <Route path="commission" element={<Commission />} />
-        <Route path="MoneyReceipt" element={<MoneyReceipt />} />
-        <Route path="allstatement" element={<All_Statement />} />
-        <Route path="customerpayment" element={<Customerpayment />} />
-        <Route path="achievement" element={<Achievement />} />
-        <Route path="request" element={<Paymentrequest />} />
-        {/* Default route for unmatched paths */}
+      <Route element={<ProtectedRoute />}>
+        <Route path="/" element={<Layout />}>
+          <Route path="dashboard" element={<Dashboard />} />
+          <Route path="profile" element={<Profile />} />
+          <Route path="project" element={<Project />} />
+          <Route path="project/:id" element={<ProjectDetails />} />
+          <Route path="booking" element={<Booking />} />
+          <Route path="booking/:id" element={<BookingDetails />} />
+          <Route path="payment" element={<Payment title="Current Balance" amount="৳ 0" date="Live balance" />} />
+          <Route path="setting" element={<Setting />} />
+          <Route path="customer" element={<Customer />} />
+          <Route path="employee" element={<Employee />} />
+          <Route path="CustomerProfile" element={<CustomerProfile />} />
+          <Route path="PaymentDetails" element={<PaymentDetails />} />
+          <Route path="commission" element={<Commission />} />
+          <Route path="MoneyReceipt" element={<MoneyReceipt />} />
+          <Route path="allstatement" element={<All_Statement />} />
+          <Route path="customerpayment" element={<Customerpayment />} />
+          <Route path="achievement" element={<Achievement />} />
+          <Route path="request" element={<Paymentrequest />} />
+          {/* Default route for unmatched paths */}
+        </Route>
       </Route>
     </Routes>
   );

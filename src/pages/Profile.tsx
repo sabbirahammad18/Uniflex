@@ -1,137 +1,89 @@
-import { Link } from "react-router";
 import { useState } from "react";
+import { Link } from "react-router-dom";
 import img from "../assets/images/download.jpg";
+import { useGetCurrentUserQuery } from "@/queries/authQuery";
+import { useGetEarningBreakdownQuery } from "@/queries/dashboardQuery";
+import { useGetPaymentSummaryQuery } from "@/queries/paymentQuery";
+import { useGetProfileQuery } from "@/queries/profileQuery";
+import { formatCurrency, formatPlainNumber } from "@/utils/format";
+import { getDataScopeLabel, isCustomerUser } from "@/utils/userAccess";
+
 const Profile = () => {
   const [openType, setOpenType] = useState<string | null>(null);
+  const { data: session } = useGetCurrentUserQuery();
+  const { data: profileResponse, isLoading: profileLoading } =
+    useGetProfileQuery();
+  const currentUser = session?.user;
+  const customerUser = isCustomerUser(currentUser);
+  const { data: earnings, isLoading: earningsLoading } =
+    useGetEarningBreakdownQuery(undefined, {
+      skip: !currentUser || customerUser,
+    });
+  const { data: paymentSummary } = useGetPaymentSummaryQuery(undefined, {
+    skip: !currentUser || !customerUser,
+  });
+
+  const profile = profileResponse?.data;
+  const displayName = profile?.name || currentUser?.name || "User";
+  const displayUid = profile?.uid || currentUser?.uid || "N/A";
+  const designation = customerUser
+    ? "Customer"
+    : currentUser?.designation || "Team Member";
+  const avatar = profile?.avatar_url || currentUser?.avatar_url || img;
 
   const toggleDropdown = (type: string) => {
     setOpenType(openType === type ? null : type);
   };
 
-  const earningsData = [
-    {
-      key: "booking",
-      title: "Booking Money",
-      amount: "৳ 1,500.00",
-      dot: "bg-green-500",
-      customers: [
-        {
-          name: "Rahim Ahmed",
-          date: "12 Oct 2023",
-          id: "CUST-1001",
-          amount: "৳ 500.00",
-        },
-        {
-          name: "Karim Hasan",
-          date: "14 Oct 2023",
-          id: "CUST-1002",
-          amount: "৳ 700.00",
-        },
-        {
-          name: "Sumaiya Akter",
-          date: "16 Oct 2023",
-          id: "CUST-1003",
-          amount: "৳ 300.00",
-        },
-      ],
-    },
-    {
-      key: "down",
-      title: "Down Payment",
-      amount: "৳ 2,000.00",
-      dot: "bg-[#07277f]",
-      customers: [
-        {
-          name: "Nayeem Islam",
-          date: "18 Oct 2023",
-          id: "CUST-2001",
-          amount: "৳ 1,200.00",
-        },
-        {
-          name: "Sadia Khan",
-          date: "20 Oct 2023",
-          id: "CUST-2002",
-          amount: "৳ 800.00",
-        },
-      ],
-    },
-    {
-      key: "installment",
-      title: "Installment",
-      amount: "৳ 1,000.00",
-      dot: "bg-slate-300",
-      customers: [
-        {
-          name: "Fahim Chowdhury",
-          date: "22 Oct 2023",
-          id: "CUST-3001",
-          amount: "৳ 400.00",
-        },
-        {
-          name: "Jannat Mim",
-          date: "25 Oct 2023",
-          id: "CUST-3002",
-          amount: "৳ 600.00",
-        },
-      ],
-    },
-  ];
-  const blance = [
-    {
-      title: " Wallet Balance",
-      amount: "৳ 53,500.00",
-      date: "+15.5% this month",
-    },
-  ];
-
   return (
     <div className="bg-white min-h-screen pb-24 font-sans text-slate-950">
       <main className="mx-auto w-full max-w-107.5 px-4 py-8 space-y-6">
-        {/* Profile Section */}
         <section className="grid grid-cols-1 rounded-xl bg-white -mt-9 p-6">
           <div className="grid grid-cols-[96px_1fr] items-center gap-5">
             <div className="relative">
               <img
-                alt="Agent Profile"
+                alt="Profile"
                 className="w-21 h-21 rounded-full object-cover border-2 border-blue-900 mb-5 shadow-lg"
-                src={img}
+                src={avatar}
               />
             </div>
 
             <div>
               <h2 className="text-h2 leading-6 font-extrabold text-[#00176b] tracking-tight">
-                Mr. Hasan Rohaman Sajjad
+                {profileLoading ? "Loading..." : displayName}
               </h2>
 
-              <div className="mt-2 flex items-center gap-2">
-                <span className="rounded-full bg-blue-50 border border-blue-100 px-3 py-1 text-xs font-medium text-blue-700">
-                  Marketing Officer
+              <div className="mt-2 flex flex-wrap items-center gap-2">
+                <span className="rounded-full bg-blue-50 border border-blue-100 px-3 py-1 text-xs font-medium text-blue-700 capitalize">
+                  {designation}
                 </span>
 
-                <span className="text-sm text-slate-400">ID: MO0084</span>
+                <span className="text-sm text-slate-400">
+                  ID: {displayUid}
+                </span>
               </div>
             </div>
           </div>
         </section>
 
-        {/* Wallet */}
         <section className="rounded-xl bg-[#07277F] p-6 text-white shadow-lg -mt-10">
-          <Link to="/payment">
+          <Link to={customerUser ? "/customerpayment" : "/payment"}>
             <div>
-              {blance.map((item) => (
-                <div key={item.title}>
-                  <p className="-mt-2  text-sm opacity-80">{item.title}</p>
-                  <p className="font-bold text-h1">{item.amount}</p>
-                  <p className="font-semibold opacity-70 text-blue-300">
-                    {item.date}
-                  </p>
-                </div>
-              ))}
+              <p className="-mt-2 text-sm opacity-80">
+                {customerUser ? "Due Balance" : "Wallet Balance"}
+              </p>
+              <p className="font-bold text-h1">
+                {customerUser
+                  ? formatCurrency(paymentSummary?.remaining_amount)
+                  : formatCurrency(profile?.wallet_balance)}
+              </p>
+              <p className="font-semibold opacity-70 text-blue-300">
+                {getDataScopeLabel(currentUser)}
+              </p>
             </div>
           </Link>
         </section>
 
-        {/* Menu */}
         <section className="grid grid-cols-2 gap-4">
           <Link
             to="/customer"
@@ -166,7 +118,7 @@ const Profile = () => {
           </Link>
 
           <Link
-            to="../commission"
+            to="/commission"
             className="rounded-xl bg-white p-4 min-h-18 grid grid-cols-[40px_1fr] items-center gap-3 border border-blue-100 active:scale-[0.98] transition"
           >
             <div className="w-10 h-10 rounded-lg bg-blue-100 grid place-items-center text-blue-600">
@@ -186,7 +138,7 @@ const Profile = () => {
           >
             <div className="w-10 h-10 rounded-lg bg-blue-100 grid place-items-center text-blue-600">
               <span className="material-symbols-outlined text-[23px]">
-                workspace_Premium
+                workspace_premium
               </span>
             </div>
 
@@ -196,148 +148,154 @@ const Profile = () => {
           </Link>
         </section>
 
-        {/* Customer Card */}
-        <aside className="grid grid-cols-1 gap-5">
-          <section className="relative overflow-hidden rounded-3xl bg-[#07277f] p-6 text-white shadow-xl">
-            <div className="absolute -right-12 -top-12 h-28 w-28 rounded-full bg-white/10" />
+        <div className="grid grid-cols-1 gap-5">
+          {customerUser ? (
+            <section className="rounded-3xl bg-white border border-blue-100 p-5 shadow-sm">
+              <h3 className="text-xl font-extrabold text-[#00176b]">
+                Payment Summary
+              </h3>
 
-            <div className="mt-5 grid grid-cols-[56px_1fr] items-center gap-4">
-              <div className="h-14 w-14 rounded-2xl">
-                <img className="rounded-full" src={img} alt="" />
-              </div>
-
-              <div>
-                <h3 className="text-xl font-extrabold leading-6">
-                  Hasan Sajjad
-                </h3>
-
-                <p className="text-sm text-blue-200">Marketing Officer</p>
-              </div>
-            </div>
-
-            <div className="mt-6 grid grid-cols-1 gap-4">
-              <div className="grid grid-cols-[auto_1fr] items-center gap-3">
-                <span className="material-symbols-outlined text-blue-300">
-                  apartment
-                </span>
-
-                <div>
-                  <p className="text-[10px] uppercase font-extrabold text-blue-300">
-                    Project Name
-                  </p>
-
-                  <p className="text-sm">Project Phoenix</p>
+              <div className="mt-5 grid grid-cols-1 gap-3">
+                <div className="grid grid-cols-[1fr_auto] rounded-2xl bg-slate-50 p-4 text-sm">
+                  <span className="font-bold text-slate-500">Plot Price</span>
+                  <span className="font-extrabold text-[#00176b]">
+                    {formatCurrency(paymentSummary?.plot_price)}
+                  </span>
                 </div>
-              </div>
-
-              <div className="grid grid-cols-[auto_1fr] items-center gap-3">
-                <span className="material-symbols-outlined text-blue-300">
-                  badge
-                </span>
-
-                <div>
-                  <p className="text-[10px] uppercase font-extrabold text-blue-300">
-                    Reference
-                  </p>
-
-                  <p className="text-sm">Mr / MO0084</p>
+                <div className="grid grid-cols-[1fr_auto] rounded-2xl bg-slate-50 p-4 text-sm">
+                  <span className="font-bold text-slate-500">Booking Money</span>
+                  <span className="font-extrabold text-[#00176b]">
+                    {formatCurrency(paymentSummary?.booking_money)}
+                  </span>
                 </div>
+                <div className="grid grid-cols-[1fr_auto] rounded-2xl bg-slate-50 p-4 text-sm">
+                  <span className="font-bold text-slate-500">Down Payment</span>
+                  <span className="font-extrabold text-[#00176b]">
+                    {formatCurrency(paymentSummary?.down_payment)}
+                  </span>
+                </div>
+                <div className="grid grid-cols-[1fr_auto] rounded-2xl bg-slate-50 p-4 text-sm">
+                  <span className="font-bold text-slate-500">Installment</span>
+                  <span className="font-extrabold text-[#00176b]">
+                    {formatCurrency(paymentSummary?.installment_amount)}
+                  </span>
+                </div>
+                <div className="grid grid-cols-[1fr_auto] items-center border-t border-slate-100 pt-5">
+                  <span className="text-base font-extrabold text-[#00176b]">
+                    Remaining
+                  </span>
+
+                  <span className="text-base font-extrabold text-red-600">
+                    {formatCurrency(paymentSummary?.remaining_amount)}
+                  </span>
+                </div>
+                <p className="text-xs font-semibold text-slate-500">
+                  Plot size: {formatPlainNumber(paymentSummary?.plot_size_khata)}{" "}
+                  Khata
+                </p>
               </div>
-            </div>
+            </section>
+          ) : (
+            <section className="rounded-3xl bg-white border border-blue-100 p-5 shadow-sm">
+              <h3 className="text-xl font-extrabold text-[#00176b]">
+                Earnings Breakdown
+              </h3>
 
-            <Link to="/CustomerProfile">
-              <button className="mt-6 h-12 w-full rounded-2xl bg-sky-300 text-sm font-extrabold text-[#00176b] shadow-lg">
-                View Us
-              </button>
-            </Link>
-          </section>
+              <div className="mt-5 grid grid-cols-1 gap-4">
+                {earningsLoading && (
+                  <p className="rounded-2xl bg-slate-50 p-4 text-sm font-semibold text-slate-500">
+                    Loading earnings...
+                  </p>
+                )}
 
-          {/* Earnings Breakdown */}
-          <section className="rounded-3xl bg-white border border-blue-100 p-5 shadow-sm">
-            <h3 className="text-xl font-extrabold text-[#00176b]">
-              Earnings Breakdown
-            </h3>
-
-            <div className="mt-5 grid grid-cols-1 gap-4">
-              {earningsData.map((item) => (
-                <div
-                  key={item.key}
-                  className="rounded-2xl border border-blue-100 bg-white p-4 shadow-sm"
-                >
-                  <button
-                    onClick={() => toggleDropdown(item.key)}
-                    className="w-full grid grid-cols-[1fr_auto] items-center gap-3"
+                {(earnings?.earnings_breakdown || []).map((item) => (
+                  <div
+                    key={item.category_name}
+                    className="rounded-2xl border border-blue-100 bg-white p-4 shadow-sm"
                   >
-                    <div className="grid grid-cols-[auto_1fr] items-center gap-3 text-left">
-                      <div className={`h-3 w-3 rounded-full ${item.dot}`} />
+                    <button
+                      onClick={() => toggleDropdown(item.category_name)}
+                      className="w-full grid grid-cols-[1fr_auto] items-center gap-3"
+                    >
+                      <div className="grid grid-cols-[auto_1fr] items-center gap-3 text-left">
+                        <div className="h-3 w-3 rounded-full bg-[#07277f]" />
 
-                      <div>
-                        <p className="text-sm font-bold text-slate-700">
-                          {item.title}
-                        </p>
+                        <div>
+                          <p className="text-sm font-bold text-slate-700">
+                            {item.category_name}
+                          </p>
 
-                        <p className="text-xs text-slate-400">
-                          {item.customers.length} Customers
-                        </p>
+                          <p className="text-xs text-slate-400">
+                            {item.total_customers} Customers
+                          </p>
+                        </div>
                       </div>
-                    </div>
 
-                    <div className="flex items-center gap-2">
-                      <span className="text-sm font-extrabold text-[#00176b]">
-                        {item.amount}
-                      </span>
+                      <div className="flex items-center gap-2">
+                        <span className="text-sm font-extrabold text-[#00176b]">
+                          {formatCurrency(item.total_amount)}
+                        </span>
 
-                      <span className="material-symbols-outlined text-[22px] text-slate-400">
-                        {openType === item.key ? "expand_less" : "expand_more"}
-                      </span>
-                    </div>
-                  </button>
+                        <span className="material-symbols-outlined text-[22px] text-slate-400">
+                          {openType === item.category_name
+                            ? "expand_less"
+                            : "expand_more"}
+                        </span>
+                      </div>
+                    </button>
 
-                  {openType === item.key && (
-                    <div className="mt-4 grid grid-cols-1 gap-3">
-                      {item.customers.map((customer) => (
-                        <div
-                          key={customer.id}
-                          className="rounded-2xl bg-slate-50 border border-slate-100 p-4"
-                        >
-                          <div className="flex items-start justify-between gap-3">
-                            <div className="flex flex-col mt-2">
-                              <h4 className="text-sm font-extrabold text-[#00176b]">
-                                {customer.name}
-                              </h4>
+                    {openType === item.category_name && (
+                      <div className="mt-4 grid grid-cols-1 gap-3">
+                        {item.customers.map((customer) => (
+                          <div
+                            key={`${customer.customer_id}-${customer.customer_uid}`}
+                            className="rounded-2xl bg-slate-50 border border-slate-100 p-4"
+                          >
+                            <div className="flex items-start justify-between gap-3">
+                              <div className="flex flex-col mt-2">
+                                <h4 className="text-sm font-extrabold text-[#00176b]">
+                                  {customer.customer_name || "Customer"}
+                                </h4>
 
-                              <div className="mt-2 flex flex-wrap items-center gap-3 text-xs text-slate-500">
-                                <span>ID: {customer.id}</span>
+                                <div className="mt-2 flex flex-wrap items-center gap-3 text-xs text-slate-500">
+                                  <span>ID: {customer.customer_uid || "N/A"}</span>
+                                </div>
+                              </div>
+                              <div className="flex flex-col items-end">
+                                <span className="rounded-xl bg-blue-100 px-3 py-1 text-sm font-extrabold text-[#00176b]">
+                                  {formatCurrency(customer.amount)}
+                                </span>
+                                <span className="text-label-md font-semibold mt-2 opacity-60">
+                                  {customer.date || "N/A"}
+                                </span>
                               </div>
                             </div>
-                            <div className="flex flex-col ">
-                              <span className="rounded-xl bg-blue-100 w-25 px-3 py-1 text-sm font-extrabold text-[#00176b]">
-                                {customer.amount}
-                              </span>
-                              <span className="text-label-md font-semibold ml-4 mt-2 opacity-60 ">
-                                {customer.date}
-                              </span>
-                            </div>
                           </div>
-                        </div>
-                      ))}
-                    </div>
-                  )}
+                        ))}
+                      </div>
+                    )}
+                  </div>
+                ))}
+
+                {!earningsLoading && !earnings?.earnings_breakdown?.length && (
+                  <p className="rounded-2xl bg-slate-50 p-4 text-sm font-semibold text-slate-500">
+                    No earning data found.
+                  </p>
+                )}
+
+                <div className="grid grid-cols-[1fr_auto] items-center border-t border-slate-100 pt-5">
+                  <span className="text-base font-extrabold text-[#00176b]">
+                    Total Commission
+                  </span>
+
+                  <span className="text-base font-extrabold text-[#00176b]">
+                    {formatCurrency(earnings?.total_commission)}
+                  </span>
                 </div>
-              ))}
-
-              <div className="grid grid-cols-[1fr_auto] items-center border-t border-slate-100 pt-5">
-                <span className="text-base font-extrabold text-[#00176b]">
-                  Total Commission
-                </span>
-
-                <span className="text-base font-extrabold text-[#00176b]">
-                  ৳ 4,500.00
-                </span>
               </div>
-            </div>
-          </section>
-        </aside>
+            </section>
+          )}
+        </div>
       </main>
     </div>
   );

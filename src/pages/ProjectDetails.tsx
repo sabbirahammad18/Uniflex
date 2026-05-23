@@ -1,0 +1,113 @@
+import { Link, useParams } from "react-router-dom";
+import { useGetProjectQuery } from "@/queries/projectQuery";
+import { formatCurrency } from "@/utils/format";
+
+const InfoRow = ({ label, value }: { label: string; value: string | number }) => (
+  <div className="grid grid-cols-[120px_1fr] gap-3 rounded-xl bg-slate-50 px-4 py-3 text-sm">
+    <span className="font-semibold text-slate-500">{label}</span>
+    <span className="font-bold text-[#00176b]">{value}</span>
+  </div>
+);
+
+const ProjectDetails = () => {
+  const { id } = useParams();
+  const { data: project, isLoading, isError } = useGetProjectQuery(id || "", {
+    skip: !id,
+  });
+
+  if (isLoading) {
+    return (
+      <div className="grid min-h-screen place-items-center bg-white text-[#07277F]">
+        Loading project details
+      </div>
+    );
+  }
+
+  if (isError || !project) {
+    return (
+      <div className="mx-auto grid min-h-screen w-full max-w-107.5 place-items-center bg-white p-5 text-center">
+        <div>
+          <p className="text-lg font-extrabold text-[#00176b]">
+            Project not found
+          </p>
+          <Link className="mt-4 inline-block text-sm font-bold text-secondary" to="/project">
+            Back to projects
+          </Link>
+        </div>
+      </div>
+    );
+  }
+
+  return (
+    <div className="bg-white min-h-screen pb-24 font-sans text-slate-950">
+      <main className="mx-auto grid w-full max-w-107.5 grid-cols-1 gap-5 px-4 py-6">
+        <Link
+          to="/project"
+          className="inline-grid w-fit grid-cols-[auto_auto] items-center gap-1 text-sm font-bold text-[#07277F]"
+        >
+          <span className="material-symbols-outlined text-body-lg">
+            arrow_back
+          </span>
+          Projects
+        </Link>
+
+        <section className="overflow-hidden rounded-2xl border border-blue-100 bg-white">
+          <div className="h-56 bg-slate-100">
+            {project.image ? (
+              <img
+                className="h-full w-full object-cover"
+                src={project.image}
+                alt={project.project_name}
+              />
+            ) : (
+              <div className="grid h-full place-items-center text-[#07277F]">
+                <span className="material-symbols-outlined text-5xl">
+                  apartment
+                </span>
+              </div>
+            )}
+          </div>
+
+          <div className="grid grid-cols-1 gap-4 p-5">
+            <div>
+              <p className="text-[11px] font-extrabold uppercase tracking-[0.18em] text-secondary">
+                {project.project_id}
+              </p>
+              <h1 className="mt-1 text-2xl font-extrabold text-[#00176b]">
+                {project.project_name}
+              </h1>
+              <p className="mt-2 grid grid-cols-[auto_1fr] items-start gap-2 text-sm leading-5 text-slate-500">
+                <span className="material-symbols-outlined text-body-md">
+                  location_on
+                </span>
+                {project.location}
+              </p>
+            </div>
+
+            <div className="grid grid-cols-1 gap-2">
+              <InfoRow label="Avenue" value={project.avenue} />
+              <InfoRow label="Road" value={project.road} />
+              <InfoRow label="Plot" value={project.plot} />
+              <InfoRow
+                label="Plot Cost"
+                value={formatCurrency(project.per_share_plot_cost)}
+              />
+              <InfoRow
+                label="Flat Cost"
+                value={formatCurrency(project.per_share_flat_cost)}
+              />
+            </div>
+
+            {project.description && project.description !== "N/A" && (
+              <p className="rounded-xl border border-blue-100 bg-blue-50 p-4 text-sm leading-6 text-slate-700">
+                {project.description}
+              </p>
+            )}
+          </div>
+        </section>
+      </main>
+    </div>
+  );
+};
+
+export default ProjectDetails;

@@ -1,13 +1,42 @@
+import { useState } from "react";
 import { Link } from "react-router-dom";
+import { useGetCurrentUserQuery } from "@/queries/authQuery";
+import { useGetBookingsQuery } from "@/queries/bookingQuery";
+import { formatCurrency, formatPlainNumber } from "@/utils/format";
+import { getDataScopeLabel } from "@/utils/userAccess";
+
+type BookingFilter = "all" | "due" | "paid";
 
 const BookingManagement = () => {
+  const [filter, setFilter] = useState<BookingFilter>("all");
+  const { data: session } = useGetCurrentUserQuery();
+  const { data, isLoading, isError } = useGetBookingsQuery();
+  const bookings = data?.data || [];
+
+  const visibleBookings = bookings.filter((booking) => {
+    const isPaid = booking.remaining_amount <= 0;
+    if (filter === "paid") return isPaid;
+    if (filter === "due") return !isPaid;
+    return true;
+  });
+
+  const dueTotal = bookings.reduce(
+    (total, booking) => total + Math.max(booking.remaining_amount, 0),
+    0,
+  );
+
+  const filterButtonClass = (value: BookingFilter) =>
+    value === filter
+      ? "grid grid-cols-[auto_auto] items-center gap-1 rounded-full bg-[#07277f] px-2.5 py-1 text-label-md font-bold text-white shadow-sm"
+      : "grid grid-cols-[auto_auto] items-center gap-1 rounded-full bg-white px-2.5 py-2 text-label-md text-slate-500 border border-slate-100";
+
   return (
     <div className="bg-white mx-auto w-full max-w-107.5 min-h-screen pb-24 font-sans text-slate-950">
       <main className="mx-auto w-full max-w-107.5 px-4 py-6 grid grid-cols-1 gap-5">
         <section className="grid grid-cols-1 gap-4">
           <div>
             <p className="mb-1 text-[11px] font-extrabold uppercase tracking-[0.2em] text-secondary">
-              Portfolio Management
+              {getDataScopeLabel(session?.user)}
             </p>
             <h2 className="text-2xl font-extrabold text-[#00176b] tracking-tight">
               Booking Management
@@ -15,212 +44,171 @@ const BookingManagement = () => {
           </div>
 
           <div className="grid grid-flow-col auto-cols-max gap-1 overflow-x-auto pb-1 [-ms-overflow-style:none] [scrollbar-width:none] [&::-webkit-scrollbar]:hidden">
-            <button className="grid grid-cols-[auto_auto] items-center gap-1 rounded-full bg-[#07277f] px-2.5 py-1 text-label-md font-bold text-white shadow-sm">
-              <span className="material-symbols-outlined  text-body-sm">
+            <button
+              onClick={() => setFilter("all")}
+              className={filterButtonClass("all")}
+            >
+              <span className="material-symbols-outlined text-body-sm">
                 list_alt
               </span>
               All Bookings
             </button>
-            <button className="grid grid-cols-[auto_auto] items-center gap-1 rounded-full bg-white px-2.5 py-2 text-label-md  text-slate-500 border border-slate-100">
+            <button
+              onClick={() => setFilter("due")}
+              className={filterButtonClass("due")}
+            >
               <span className="material-symbols-outlined text-body-lg">
                 pending_actions
               </span>
-              Pending
+              Due
             </button>
-            <button className="grid grid-cols-[auto_auto] items-center gap-1 rounded-full bg-white px-2.5 py-2 text-label-md  text-slate-500 border border-slate-100">
+            <button
+              onClick={() => setFilter("paid")}
+              className={filterButtonClass("paid")}
+            >
               <span className="material-symbols-outlined text-body-lg">
                 verified
               </span>
-              Confirmed
-            </button>
-            <button className="grid grid-cols-[auto_auto] items-center gap-0.5 rounded-full bg-white px-2 py-2 text-label-md  text-slate-500 border border-slate-100">
-              <span className="material-symbols-outlined text-body-lg">
-                filter_list
-              </span>
-              Filters
+              Paid
             </button>
           </div>
         </section>
 
         <section className="grid grid-cols-1 gap-4">
-          <article className="grid grid-cols-1 gap-5 rounded-2xl bg-white p-5 border border-orange-100 border-l-4 border-l-amber-500">
-            <div className="grid grid-cols-[auto_auto] items-start justify-between">
-              <div className="h-12 w-12 rounded-xl bg-slate-100 grid place-items-center text-[#00176b]">
-                <span className="material-symbols-outlined text-h2">
-                  apartment
-                </span>
-              </div>
-              <span className="rounded-full border border-amber-200 bg-amber-50 px-3 py-1 text-[11px] font-extrabold text-amber-700">
-                Pending
-              </span>
+          {isLoading && (
+            <div className="rounded-2xl border border-blue-100 bg-blue-50 p-5 text-sm font-bold text-[#00176b]">
+              Loading bookings...
             </div>
+          )}
 
-            <div>
-              <h3 className="text-lg font-extrabold text-slate-950">
-                Skyline Apartments
-              </h3>
-              <p className="mt-1 grid grid-cols-[auto_1fr] items-center gap-1 text-sm text-slate-500">
-                <span className="material-symbols-outlined text-body-md">
-                  person
-                </span>
-                John Doe
-              </p>
+          {isError && (
+            <div className="rounded-2xl border border-red-100 bg-red-50 p-5 text-sm font-bold text-red-700">
+              Could not load bookings.
             </div>
+          )}
 
-            <div className="rounded-xl bg-slate-50 p-4 grid grid-cols-[1fr_auto] items-center gap-3">
-              <span className="text-sm text-slate-500">
-                Expected Commission
-              </span>
-              <span className="text-xl font-extrabold text-[#00176b]">
-                &#2547; 1,200
-              </span>
+          {!isLoading && !isError && visibleBookings.length === 0 && (
+            <div className="rounded-2xl border border-slate-100 bg-slate-50 p-5 text-sm font-bold text-slate-600">
+              No bookings found.
             </div>
+          )}
 
-            <div className="grid grid-cols-[1fr_auto] gap-2">
-              <Link to="/Moneyreceipt">
-                <button className="h-11 w-70  rounded-xl bg-[#07277f] text-white font-bold grid grid-cols-[auto_auto] items-center justify-center gap-2 active:scale-[0.98] transition">
-                  <span className="material-symbols-outlined text-body-lg">
-                    check_circle
+          {visibleBookings.map((booking) => {
+            const isPaid = booking.remaining_amount <= 0;
+
+            return (
+              <article
+                key={booking.booking_id}
+                className={`grid grid-cols-1 gap-5 rounded-2xl bg-white p-5 border border-l-4 ${
+                  isPaid
+                    ? "border-green-100 border-l-emerald-500"
+                    : "border-orange-100 border-l-amber-500"
+                }`}
+              >
+                <div className="grid grid-cols-[auto_auto] items-start justify-between">
+                  <div className="h-12 w-12 rounded-xl bg-slate-100 grid place-items-center text-[#00176b]">
+                    <span className="material-symbols-outlined text-h2">
+                      apartment
+                    </span>
+                  </div>
+                  <span
+                    className={`rounded-full border px-3 py-1 text-[11px] font-extrabold ${
+                      isPaid
+                        ? "border-emerald-200 bg-emerald-50 text-emerald-700"
+                        : "border-amber-200 bg-amber-50 text-amber-700"
+                    }`}
+                  >
+                    {isPaid ? "Paid" : "Due"}
                   </span>
-                  View
-                </button>
-              </Link>
-              <button className="h-11 w-12 rounded-xl border border-red-200 text-red-600 grid place-items-center active:scale-95 transition">
-                <span className="material-symbols-outlined text-body-lg">
-                  close
-                </span>
-              </button>
-            </div>
-          </article>
+                </div>
 
-          <article className="grid grid-cols-1 gap-5 rounded-2xl bg-white p-5 border border-green-100 border-l-4 border-l-emerald-500">
-            <div className="grid grid-cols-[auto_auto] items-start justify-between">
-              <div className="h-12 w-12 rounded-xl bg-slate-100 grid place-items-center text-[#00176b]">
-                <span className="material-symbols-outlined text-h2">
-                  home_work
-                </span>
-              </div>
-              <span className="rounded-full border border-emerald-200 bg-emerald-50 px-3 py-1 text-[11px] font-extrabold text-emerald-700">
-                Confirmed
-              </span>
-            </div>
+                <div>
+                  <h3 className="text-lg font-extrabold text-slate-950">
+                    {booking.project_name || "Project"}
+                  </h3>
+                  <p className="mt-1 grid grid-cols-[auto_1fr] items-center gap-1 text-sm text-slate-500">
+                    <span className="material-symbols-outlined text-body-md">
+                      person
+                    </span>
+                    {booking.user_name || "Customer"}{" "}
+                    {booking.customer_uid ? `(${booking.customer_uid})` : ""}
+                  </p>
+                </div>
 
-            <div>
-              <h3 className="text-lg font-extrabold text-slate-950">
-                Ocean View Villas
-              </h3>
-              <p className="mt-1 grid grid-cols-[auto_1fr] items-center gap-1 text-sm text-slate-500">
-                <span className="material-symbols-outlined text-body-md">
-                  person
-                </span>
-                Sarah Jenkins
-              </p>
-            </div>
-
-            <div className="rounded-xl bg-slate-50 p-4 grid grid-cols-[1fr_auto] items-center gap-3">
-              <span className="text-sm text-slate-500">Total Commission</span>
-              <span className="text-xl font-extrabold text-secondary">
-                &#2547; 3,450
-              </span>
-            </div>
-
-            <Link to="/Moneyreceipt">
-              <button className="h-11 w-90  rounded-xl border border-gray-400  text-black font-bold grid grid-cols-[auto_auto] items-center justify-center gap-2 active:scale-[0.98] transition">
-                <span className="material-symbols-outlined text-body-lg">
-                  check_circle
-                </span>
-                View
-              </button>
-            </Link>
-          </article>
-
-          <article className="grid grid-cols-1 gap-5 rounded-2xl bg-white p-5 border border-orange-100 border-l-4 border-l-amber-500">
-            <div className="grid grid-cols-[auto_auto] items-start justify-between">
-              <div className="h-12 w-12 rounded-xl bg-slate-100 grid place-items-center text-[#00176b]">
-                <span className="material-symbols-outlined text-h2">deck</span>
-              </div>
-              <span className="rounded-full border border-amber-200 bg-amber-50 px-3 py-1 text-[11px] font-extrabold text-amber-700">
-                Pending
-              </span>
-            </div>
-
-            <div>
-              <h3 className="text-lg font-extrabold text-slate-950">
-                Highland Retreat
-              </h3>
-              <p className="mt-1 grid grid-cols-[auto_1fr] items-center gap-1 text-sm text-slate-500">
-                <span className="material-symbols-outlined text-body-md">
-                  person
-                </span>
-                Marcus Thorne
-              </p>
-            </div>
-
-            <div className="rounded-xl bg-slate-50 p-4 grid grid-cols-[1fr_auto] items-center gap-3">
-              <span className="text-sm text-slate-500">
-                Expected Commission
-              </span>
-              <span className="text-xl font-extrabold text-[#00176b]">
-                &#2547; 850
-              </span>
-            </div>
-
-            <div className="grid grid-cols-[1fr_auto] gap-2">
-              <Link to="/Moneyreceipt">
-                <button className="h-11 w-70  rounded-xl bg-[#07277f] text-white font-bold grid grid-cols-[auto_auto] items-center justify-center gap-2 active:scale-[0.98] transition">
-                  <span className="material-symbols-outlined text-body-lg">
-                    check_circle
+                <div className="rounded-xl bg-slate-50 p-4 grid grid-cols-[1fr_auto] items-center gap-3">
+                  <span className="text-sm text-slate-500">
+                    Remaining Amount
                   </span>
-                  View
-                </button>
-              </Link>
-              <button className="h-11 w-12 rounded-xl border border-red-200 text-red-600 grid place-items-center active:scale-95 transition">
-                <span className="material-symbols-outlined text-body-lg">
-                  close
-                </span>
-              </button>
-            </div>
-          </article>
+                  <span className="text-xl font-extrabold text-[#00176b]">
+                    {formatCurrency(booking.remaining_amount)}
+                  </span>
+                </div>
+
+                <div className="grid grid-cols-2 gap-2 text-xs">
+                  <div className="rounded-xl bg-blue-50 p-3">
+                    <p className="font-semibold text-slate-500">Plot Price</p>
+                    <p className="mt-1 font-black text-[#00176b]">
+                      {formatCurrency(booking.plot_price)}
+                    </p>
+                  </div>
+                  <div className="rounded-xl bg-green-50 p-3">
+                    <p className="font-semibold text-slate-500">Paid</p>
+                    <p className="mt-1 font-black text-green-700">
+                      {formatCurrency(booking.total_paid_amount)}
+                    </p>
+                  </div>
+                  <div className="rounded-xl bg-yellow-50 p-3">
+                    <p className="font-semibold text-slate-500">Booking</p>
+                    <p className="mt-1 font-black text-yellow-700">
+                      {formatCurrency(booking.booking_money)}
+                    </p>
+                  </div>
+                  <div className="rounded-xl bg-purple-50 p-3">
+                    <p className="font-semibold text-slate-500">Khata</p>
+                    <p className="mt-1 font-black text-purple-700">
+                      {formatPlainNumber(booking.plot_size_khata)}
+                    </p>
+                  </div>
+                </div>
+
+                <div className="grid grid-cols-[1fr_auto] gap-2">
+                  <Link to={`/booking/${booking.booking_id}`}>
+                    <button className="h-11 w-full rounded-xl bg-[#07277f] text-white font-bold grid grid-cols-[auto_auto] items-center justify-center gap-2 active:scale-[0.98] transition">
+                      <span className="material-symbols-outlined text-body-lg">
+                        visibility
+                      </span>
+                      View
+                    </button>
+                  </Link>
+                  {!isPaid && (
+                    <Link to="/customerpayment">
+                      <button className="h-11 w-16 rounded-xl border border-blue-200 text-[#07277f] grid place-items-center text-xs font-bold active:scale-95 transition">
+                        Pay
+                      </button>
+                    </Link>
+                  )}
+                </div>
+              </article>
+            );
+          })}
 
           <article className="rounded-2xl bg-blue-50 p-5 border border-blue-100">
-            <div className="grid grid-cols-2 items-center mb-4">
-              <span className="text-[11px] font-extrabold uppercase text-[#00176b]">
-                Monthly Goal
-              </span>
-              <span className="justify-self-end text-sm font-extrabold text-[#00176b]">
-                75%
-              </span>
-            </div>
-
-            <div className="mb-5 h-2 w-full overflow-hidden rounded-full bg-blue-100">
-              <div className="h-full w-[75%] rounded-full bg-[#07277f]" />
-            </div>
-
             <div className="grid grid-cols-[48px_1fr] items-center gap-4">
               <div className="h-12 w-12 rounded-xl bg-white grid place-items-center text-[#00176b]">
                 <span className="material-symbols-outlined text-h2">
-                  trending_up
+                  payments
                 </span>
               </div>
               <div>
                 <p className="text-xl font-extrabold text-[#00176b]">
-                  &#2547; 12,400
+                  {formatCurrency(dueTotal)}
                 </p>
-                <p className="text-sm text-slate-500">Pending Settlements</p>
+                <p className="text-sm text-slate-500">Total due balance</p>
               </div>
             </div>
           </article>
-
-          <button className="h-14 rounded-2xl border-2 border-dashed border-slate-200 bg-white text-slate-500 font-bold grid grid-cols-[auto_auto] items-center justify-center gap-2 active:scale-[0.98] transition">
-            <span className="material-symbols-outlined text-[22px]">
-              autorenew
-            </span>
-            Load more bookings
-          </button>
         </section>
       </main>
-
-      
     </div>
   );
 };
