@@ -1,7 +1,6 @@
 import { Routes, Route } from "react-router-dom"; // Use "react-router" for v7+
 import Login from "../pages/Auth/Login";
 import AuthLayout from "../layout/AuthLayout";
-import Forget from "../pages/Auth/Forget";
 import Dashboard from "../pages/Dashboard";
 import Profile from "../pages/Profile";
 import Project from "../pages/Project";
@@ -22,13 +21,18 @@ import MoneyReceipt from "../pages/MoneyReceipt";
 import ProjectDetails from "../pages/ProjectDetails";
 import BookingDetails from "../pages/BookingDetails";
 import { GuestRoute, ProtectedRoute } from "./AuthGuards";
+import NewPassword from "@/pages/Auth/NewPassword.tsx";
+import ForgetPassword from "@/pages/Auth/ForgetPassword.tsx";
+import Otp from "@/pages/Auth/Otp.tsx";
 const AppRoute = () => {
   return (
     <Routes>
       <Route element={<GuestRoute />}>
         <Route path="/" element={<AuthLayout />}>
           <Route path="/" element={<Login />} />
-          <Route path="Forget" element={<Forget />} />
+          <Route path="forgetpassword" element={<ForgetPassword />} />
+          <Route path="otp" element={<Otp />} />
+          <Route path="newpassword" element={<NewPassword />} />
         </Route>
       </Route>
 

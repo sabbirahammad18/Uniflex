@@ -67,6 +67,7 @@ export type ChangePasswordPayload = {
 };
 
 export type ProjectSummary = {
+  imageUrl: string | undefined;
   id: number;
   title: string;
   location: string;

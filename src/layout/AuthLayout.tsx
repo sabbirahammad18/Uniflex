@@ -3,7 +3,7 @@ import Logo from "../assets/logo.png";
 
 function AuthLayout() {
   return (
-    <div className="min-h-screen  flex justify-center overflow-hidden">
+    <div className="min-h-screen flex justify-center overflow-hidden">
       <div className="w-full max-w-107 bg-white shadow-sm min-h-screen flex flex-col">
         
         {/* Header */}

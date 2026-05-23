@@ -1,5 +1,5 @@
 import { Link } from "react-router";
-const Number = () => {
+const ForgetPassword = () => {
   return (
     <div className="lex flex-1 flex-col font-inter text-slate-950">
       {/* Logo Section */}
@@ -61,4 +61,4 @@ const Number = () => {
   );
 };
 
-export default Number;
+export default ForgetPassword;

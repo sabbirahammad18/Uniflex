@@ -55,18 +55,17 @@ const Login = () => {
   };
 
   return (
-    <div className="bg-white min-h-screen  font-inter text-slate-950">
-      <main className="relative mx-auto flex min-h-dvh w-full max-w-107 flex-col bg-white px-5 py-7 shadow-lg overflow-hidden">
+   
+      <div className="flex flex-1 flex-col font-inter text-slate-950">
         <section className="mt-8 grid grid-cols-1">
           <form onSubmit={handleSubmit} className="grid grid-cols-1 gap-5">
             {errorMessage && (
-                  <div
-                      className="rounded-xl border border-red-100 bg-red-50 px-4 py-3 font-semibold text-red-700 flex gap-4 items-center"
-                      role="alert"
-                  >
-
-                    <RiErrorWarningFill size={24}/> {errorMessage}
-                  </div>
+              <div
+                className="rounded-xl border border-red-100 bg-red-50 px-4 py-3 font-semibold text-red-700 flex gap-4 items-center"
+                role="alert"
+              >
+                <RiErrorWarningFill size={24} /> {errorMessage}
+              </div>
             )}
 
             <div>
@@ -141,7 +140,7 @@ const Login = () => {
                   </span>
                 </button>
                 <Link
-                  to="/forget"
+                  to="/forgetpassword"
                   className="text-xs font-semibold text-secondary hover:underline absolute right-2 top-full mt-1"
                 >
                   Forgot Password?
@@ -171,8 +170,8 @@ const Login = () => {
             Developed by HSBLCO V2.1
           </p>
         </footer>
-      </main>
-    </div>
+      </div>
+ 
   );
 };
 

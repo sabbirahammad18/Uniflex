@@ -1,4 +1,3 @@
-import { useState } from "react";
 import { Link, useNavigate } from "react-router-dom";
 import type { SidebarProps } from "@/types/types";
 import { useLogoutMutation } from "@/queries/authQuery";
@@ -6,7 +5,6 @@ import { useLogoutMutation } from "@/queries/authQuery";
 import logo from "@/assets/logo.png";
 
 const Sidebar = ({ sidebarOpen, setSidebarOpen }: SidebarProps) => {
-  const [openMenu, setOpenMenu] = useState("");
   const [logout, { isLoading: isLoggingOut }] = useLogoutMutation();
   const navigate = useNavigate();
 
@@ -74,150 +72,93 @@ const Sidebar = ({ sidebarOpen, setSidebarOpen }: SidebarProps) => {
 
           {/* MENU */}
           <nav className="p-2 space-y-1 text-sm overflow-y-auto h-[calc(100%-56px)]">
-
             {/* PROJECT */}
-            <button
-              onClick={() =>
-                setOpenMenu(openMenu === "project" ? "" : "project")
-              }
-              className="w-full h-11 px-3 rounded-md flex items-center gap-3 text-[#07277F] hover:bg-blue-50"
-            >
-              <span className="material-symbols-outlined">folder_managed</span>
-              <span className="flex-1 text-left">Project</span>
-              <span className="material-symbols-outlined text-body-lg">
-                {openMenu === "project" ? "expand_more" : "chevron_right"}
-              </span>
-            </button>
 
-            {openMenu === "project" && (
-              <div className="ml-8 space-y-1">
-                <Link
-                  to="/project"
-                  onClick={closeSidebar}
-                  className={subMenuClass}
-                >
-                  <span className="material-symbols-outlined text-base">
-                    assignment
-                  </span>
-                  Project
-                </Link>
-
-                <Link
-                  to="/booking"
-                  onClick={closeSidebar}
-                  className={subMenuClass}
-                >
-                  <span className="material-symbols-outlined text-base">
-                    event_available
-                  </span>
-                  All Booking
-                </Link>
-              </div>
-            )}
+            <div className="mt-4 space-y-1">
+              <Link
+                to="/project"
+                onClick={closeSidebar}
+                className={subMenuClass}
+              >
+                <span className="material-symbols-outlined text-base">
+                  assignment
+                </span>
+                Project
+              </Link>
+            </div>
 
             {/* WITHDRAW */}
-            <Link
-              to="/request"
-              onClick={closeSidebar}
-              className="h-11 px-3 rounded-md flex items-center gap-3 text-[#07277F] hover:bg-blue-50"
-            >
+            <Link to="/request" onClick={closeSidebar} className={subMenuClass}>
               <span className="material-symbols-outlined">payments</span>
               Withdraw Request
             </Link>
 
-            <Link
-              to="/payment"
-              onClick={closeSidebar}
-              className="h-11 px-3 rounded-md flex items-center gap-3 text-[#07277F] hover:bg-blue-50"
-            >
+            <Link to="/payment" onClick={closeSidebar} className={subMenuClass}>
               <span className="material-symbols-outlined">history</span>
               Withdraw History
             </Link>
 
             {/* HRM */}
-            <button
-              onClick={() => setOpenMenu(openMenu === "hrm" ? "" : "hrm")}
-              className="w-full h-11 px-3 rounded-md flex items-center gap-3 text-[#07277F] hover:bg-blue-50"
-            >
-              <span className="material-symbols-outlined">badge</span>
-              <span className="flex-1 text-left">HRM</span>
-              <span className="material-symbols-outlined text-body-lg">
-                {openMenu === "hrm" ? "expand_more" : "chevron_right"}
-              </span>
-            </button>
 
-            {openMenu === "hrm" && (
-              <div className="ml-8 space-y-1">
-                <Link to="/booking" onClick={closeSidebar} className={subMenuClass}>
-                  Booking
-                </Link>
+            <div className="space-y-1">
+              <Link
+                to="/booking"
+                onClick={closeSidebar}
+                className={subMenuClass}
+              >
+                <span className="material-symbols-outlined text-h3">
+                  event_available
+                </span>
+                Booking
+              </Link>
 
-                <Link to="/employee" onClick={closeSidebar} className={subMenuClass}>
-                  Employee Tree
-                </Link>
+              <Link
+                to="/employee"
+                onClick={closeSidebar}
+                className={subMenuClass}
+              >
+                <span className="material-symbols-outlined text-[23px]">
+                  account_tree
+                </span>
+                Employee Tree
+              </Link>
 
-                <Link to="/customer" onClick={closeSidebar} className={subMenuClass}>
-                  All Customer
-                </Link>
+              <Link
+                to="/customer"
+                onClick={closeSidebar}
+                className={subMenuClass}
+              >
+                <span className="material-symbols-outlined">group</span>
+                All Customer
+              </Link>
 
-                <Link
-                  to="/customerpayment"
-                  onClick={closeSidebar}
-                  className={subMenuClass}
-                >
-                  Customer Payment
-                </Link>
+              <Link
+                to="/customerpayment"
+                onClick={closeSidebar}
+                className={subMenuClass}
+              >
+                <span className="material-symbols-outlined">
+                  account_balance_wallet
+                </span>
+                Customer Payment
+              </Link>
 
-                <Link to="/payment" onClick={closeSidebar} className={subMenuClass}>
-                  PayOut Request
-                </Link>
-              </div>
-            )}
-
-            {/* ACCOUNTS */}
-            <button
-              onClick={() =>
-                setOpenMenu(openMenu === "accounts" ? "" : "accounts")
-              }
-              className="w-full h-11 px-3 rounded-md flex items-center gap-3 text-[#07277F] hover:bg-blue-50"
-            >
-              <span className="material-symbols-outlined">account_balance</span>
-              <span className="flex-1 text-left">Accounts Management</span>
-              <span className="material-symbols-outlined text-body-lg">
-                {openMenu === "accounts" ? "expand_more" : "chevron_right"}
-              </span>
-            </button>
-
-            {openMenu === "accounts" && (
-              <div className="ml-8 space-y-1">
-                <Link to="/component/income-entry" onClick={closeSidebar} className={subMenuClass}>
-                  Income Entry
-                </Link>
-
-                <Link to="/component/create-pay" onClick={closeSidebar} className={subMenuClass}>
-                  Create Pay
-                </Link>
-
-                <Link to="/payment" onClick={closeSidebar} className={subMenuClass}>
-                  Payment
-                </Link>
-
-                <Link
-                  to="/customer-payment"
-                  onClick={closeSidebar}
-                  className={subMenuClass}
-                >
-                  Customer Payment
-                </Link>
-              </div>
-            )}
+              <Link
+                to="/payment"
+                onClick={closeSidebar}
+                className={subMenuClass}
+              >
+                <span className="material-symbols-outlined">payments</span>
+                PayOut Request
+              </Link>
+            </div>
 
             {/* LOGOUT */}
             <button
               type="button"
               onClick={handleLogout}
               disabled={isLoggingOut}
-              className="absolute left-0 bottom-0 w-65.5 mt-auto h-11 px-3 flex items-center gap-3 text-white bg-[#07277F] disabled:opacity-70"
+              className="absolute w-full left-0 bottom-0 p-3 px-5 flex items-center gap-2 text-[#07277F] border-t border-blue-900"
             >
               <span className="material-symbols-outlined">logout</span>
               {isLoggingOut ? "Logging out..." : "Logout"}

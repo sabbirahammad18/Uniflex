@@ -1,9 +1,9 @@
 import { Link } from "react-router";
 
-const Forget = () => {
+const NewPassword = () => {
   return (
     
-      <div className="lex flex-1 flex-col font-inter text-slate-950">
+      <div className="flex flex-1 flex-col font-inter text-slate-950">
         <section className="mt-8 grid grid-cols-1">
           <form className="grid grid-cols-1 gap-5">
             <div>
@@ -88,4 +88,4 @@ const Forget = () => {
   );
 };
 
-export default Forget;
+export default NewPassword;

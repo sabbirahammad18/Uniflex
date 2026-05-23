@@ -94,6 +94,7 @@ const ProjectPortfolio = () => {
               key={project.id}
               className="overflow-hidden rounded-3xl bg-white border border-slate-100 shadow-sm grid grid-cols-1"
             >
+              <Link to={`/project/${project.id}`}>
               <div className="h-44 overflow-hidden bg-slate-100">
                 <img
                   className="h-full w-full object-cover"
@@ -101,6 +102,7 @@ const ProjectPortfolio = () => {
                   src={project.image || img}
                 />
               </div>
+              </Link>
 
               <div className="grid grid-cols-1 gap-4 p-5">
                 <div className="grid grid-cols-[1fr_auto] gap-3 items-start">
