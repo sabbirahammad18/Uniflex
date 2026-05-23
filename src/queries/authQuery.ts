@@ -17,10 +17,14 @@ export const authQuery = baseApi.injectEndpoints({
         method: "POST",
         body,
       }),
-      invalidatesTags: ["Session", "Profile"],
+      invalidatesTags: (result) => (result ? ["Session", "Profile"] : []),
       async onQueryStarted(_, { dispatch, queryFulfilled }) {
-        const { data } = await queryFulfilled;
-        dispatch(setCredentials(data.user));
+        try {
+          const { data } = await queryFulfilled;
+          dispatch(setCredentials(data.user));
+        } catch {
+          dispatch(clearCredentials());
+        }
       },
     }),
     getCurrentUser: builder.query<AuthResponse, void>({

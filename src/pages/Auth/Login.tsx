@@ -3,12 +3,29 @@ import type { FormEvent } from "react";
 import { Link, useLocation, useNavigate } from "react-router-dom";
 import { useLoginMutation } from "@/queries/authQuery";
 import { getApiErrorMessage } from "@/utils/format";
+import { RiErrorWarningFill } from "react-icons/ri";
+
+type LoginFormErrors = {
+  login?: string;
+};
+
+type ApiErrorResponse = {
+  data?: {
+    errors?: Record<string, string[]>;
+  };
+};
+
+const getFieldError = (error: unknown, field: string) => {
+  const apiError = error as ApiErrorResponse;
+  return apiError.data?.errors?.[field]?.[0] || "";
+};
 
 const Login = () => {
   const [login, setLogin] = useState("");
   const [password, setPassword] = useState("");
   const [showPassword, setShowPassword] = useState(false);
   const [errorMessage, setErrorMessage] = useState("");
+  const [fieldErrors, setFieldErrors] = useState<LoginFormErrors>({});
   const [loginUser, { isLoading }] = useLoginMutation();
   const navigate = useNavigate();
   const location = useLocation();
@@ -20,12 +37,20 @@ const Login = () => {
   const handleSubmit = async (event: FormEvent<HTMLFormElement>) => {
     event.preventDefault();
     setErrorMessage("");
+    setFieldErrors({});
 
     try {
       await loginUser({ login, password }).unwrap();
       navigate(redirectTo, { replace: true });
     } catch (error) {
-      setErrorMessage(getApiErrorMessage(error, "Invalid login credentials"));
+      const loginError = getFieldError(error, "login");
+
+      if (loginError) {
+        setFieldErrors({ login: loginError });
+        return;
+      }
+
+      setErrorMessage(getApiErrorMessage(error, "Invalid credentials"));
     }
   };
 
@@ -34,6 +59,16 @@ const Login = () => {
       <main className="relative mx-auto flex min-h-dvh w-full max-w-107 flex-col bg-white px-5 py-7 shadow-lg overflow-hidden">
         <section className="mt-8 grid grid-cols-1">
           <form onSubmit={handleSubmit} className="grid grid-cols-1 gap-5">
+            {errorMessage && (
+                  <div
+                      className="rounded-xl border border-red-100 bg-red-50 px-4 py-3 font-semibold text-red-700 flex gap-4 items-center"
+                      role="alert"
+                  >
+
+                    <RiErrorWarningFill size={24}/> {errorMessage}
+                  </div>
+            )}
+
             <div>
               <label className="mb-2 ml-2 block text-xs font-semibold text-slate-600">
                 User ID
@@ -45,14 +80,33 @@ const Login = () => {
                 </span>
                 <input
                   value={login}
-                  onChange={(event) => setLogin(event.target.value)}
-                  className="h-14 w-full rounded-xl border border-slate-200 bg-slate-50 pl-11 pr-4 text-sm outline-none transition-all placeholder:text-slate-400 focus:border-secondary focus:bg-white focus:ring-4 focus:ring-sky-100"
+                  onChange={(event) => {
+                    setLogin(event.target.value);
+                    setFieldErrors((errors) => ({ ...errors, login: "" }));
+                  }}
+                  className={`h-14 w-full rounded-xl border bg-slate-50 pl-11 pr-4 text-sm outline-none transition-all placeholder:text-slate-400 focus:bg-white focus:ring-4 ${
+                    fieldErrors.login
+                      ? "border-red-300 focus:border-red-500 focus:ring-red-100"
+                      : "border-slate-200 focus:border-secondary focus:ring-sky-100"
+                  }`}
                   placeholder="UC2913 or email"
                   type="text"
                   autoComplete="username"
+                  aria-invalid={Boolean(fieldErrors.login)}
+                  aria-describedby={
+                    fieldErrors.login ? "login-field-error" : undefined
+                  }
                   required
                 />
               </div>
+              {fieldErrors.login && (
+                <p
+                  className="mt-2 px-2 text-xs font-semibold text-red-600"
+                  id="login-field-error"
+                >
+                  {fieldErrors.login}
+                </p>
+              )}
             </div>
 
             <div>
@@ -94,12 +148,6 @@ const Login = () => {
                 </Link>
               </div>
             </div>
-
-            {errorMessage && (
-              <p className="rounded-xl border border-red-100 bg-red-50 px-4 py-3 text-sm font-semibold text-red-700">
-                {errorMessage}
-              </p>
-            )}
 
             <div className="block">
               <button
