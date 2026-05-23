@@ -227,12 +227,10 @@ const Sidebar = ({ sidebarOpen, setSidebarOpen }: SidebarProps) => {
               </div>
             )}
 
-            {/* LOGOUT */}
-            {/* LOGOUT */}
             <Link
               to="/"
               onClick={closeSidebar}
-              className="text-body-lg absolute left-0 bottom-0 w-65.5 mt-auto h-11 px-3 flex items-center gap-2 text-[#07277F] border-t-2 border-slate-500"
+              className="text-body-md absolute left-0 bottom-0 w-65.5 mt-auto h-11 px-3 flex items-center gap-2 text-[#07277F] border-t-2 border-slate-500"
             >
               <span className="material-symbols-outlined">logout</span>
               Logout
