@@ -2,6 +2,7 @@ import { Routes, Route } from "react-router-dom"; // Use "react-router" for v7+
 import Login from "../pages/Auth/Login";
 import AuthLayout from "../layout/AuthLayout";
 import Forget from "../pages/Auth/Forget";
+import Number from "../pages/Auth/Number";
 import Dashboard from "../pages/Dashboard";
 import Profile from "../pages/Profile";
 import Project from "../pages/Project";
@@ -19,12 +20,16 @@ import Paymentrequest from "../pages/paymentrequest";
 import PaymentDetails from "../pages/PaymentDetails";
 import CustomerProfile from "../pages/CustomerProfile";
 import MoneyReceipt from "../pages/MoneyReceipt";
+import Otp from "@/pages/Auth/Otp.tsx";
+
 const AppRoute = () => {
   return (
     <Routes>
       <Route path="/" element={<AuthLayout />}>
         <Route path="/" element={<Login />} />
         <Route path="Forget" element={<Forget />} />
+        <Route path="number" element={<Number />} />
+        <Route path="otp" element={<Otp />} />
       </Route>
 
       <Route path="/" element={<Layout />}>
@@ -32,7 +37,16 @@ const AppRoute = () => {
         <Route path="profile" element={<Profile />} />
         <Route path="project" element={<Project />} />
         <Route path="booking" element={<Booking />} />
-        <Route path="payment" element={<Payment title="Current Balance" amount="৳ 53,500.00" date="1+15.5% this month" />} />
+        <Route
+          path="payment"
+          element={
+            <Payment
+              title="Current Balance"
+              amount="৳ 53,500.00"
+              date="1+15.5% this month"
+            />
+          }
+        />
         <Route path="setting" element={<Setting />} />
         <Route path="customer" element={<Customer />} />
         <Route path="employee" element={<Employee />} />
@@ -44,6 +58,7 @@ const AppRoute = () => {
         <Route path="customerpayment" element={<Customerpayment />} />
         <Route path="achievement" element={<Achievement />} />
         <Route path="request" element={<Paymentrequest />} />
+
         {/* Default route for unmatched paths */}
       </Route>
     </Routes>

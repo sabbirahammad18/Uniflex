@@ -1,7 +1,7 @@
 import { Link } from "react-router";
-
 const Number = () => {
   return (
+    
     <div className="bg-white min-h-screen font-inter text-slate-950">
       <main className="relative mx-auto flex min-h-dvh w-full max-w-107.5 flex-col bg-white px-5 py-7 shadow-lg overflow-hidden">
         {/* Logo Section */}
@@ -27,7 +27,7 @@ const Number = () => {
               </div>
             </div>
 
-            <Link to="/auth/otp" className="block">
+            <Link to="/otp" className="block">
               <button
                 className="flex h-14 w-full items-center justify-center gap-2 rounded-xl bg-linear-to-r from-[#07277f] to-[#263f96] text-base font-bold text-white shadow-lg active:scale-[0.98] transition-all"
                 type="submit"
@@ -46,7 +46,7 @@ const Number = () => {
             </div>
 
             <Link
-              to="/auth/login"
+              to="/"
               className="text-center text-sm font-semibold text-slate-400 hover:text-slate-500"
             >
               <button
