@@ -2,8 +2,8 @@ import { Link } from "react-router";
 
 const Forget = () => {
   return (
-    <div className="bg-white min-h-screen  font-inter text-slate-950">
-      <main className="relative mx-auto flex min-h-dvh w-full max-w-107 flex-col bg-white px-5 py-7 shadow-lg overflow-hidden">
+    
+      <div className="lex flex-1 flex-col font-inter text-slate-950">
         <section className="mt-8 grid grid-cols-1">
           <form className="grid grid-cols-1 gap-5">
             <div>
@@ -61,16 +61,14 @@ const Forget = () => {
                     visibility
                   </span>
                 </button>
-                  <Link
+                {/* <Link
                   to="/"
                   className="text-xs font-semibold text-secondary hover:underline absolute right-2 top-full mt-1"
                 >
                   Back To Login
-                </Link>
+                </Link> */}
               </div>
             </div>
-
-            
 
             <Link to="/" className="block">
               <button
@@ -85,13 +83,7 @@ const Forget = () => {
             </Link>
           </form>
         </section>
-
-        <footer className="mt-auto pb-3 pt-10 flex items-center justify-center">
-          <p className="text-[11px] font-mono tracking-wider text-slate-400">
-            Developed by HSBLCO V2.1
-          </p>
-        </footer>
-      </main>
+      <div/>
     </div>
   );
 };
