@@ -1,13 +1,13 @@
 import { Link, useLocation } from "react-router";
-import img from "../assets/images/download.jpg";
-import PaymentHistory from "./PaymentComponent/PaymentHistory";
+import img from "@/assets/images/download.jpg";
+import PaymentHistory from "@/pages/payment/PaymentHistory";
 const CustomerProfile = () => {
   const location = useLocation();
 
   const { customerName, customerId, customerDate, customerBalance } =
     location.state || {};
   return (
-    <div className="bg-white min-h-screen pb-24 font-sans text-slate-950">
+    <div className="bg-white pb-24 font-sans text-slate-950">
       <main className="mx-auto w-full max-w-107.5 px-4 py-8 space-y-6">
         {/* PROFILE SECTION (NO DESIGN CHANGE) */}
         <section className="grid grid-cols-1 rounded-xl bg-white  -mt-9 p-6">

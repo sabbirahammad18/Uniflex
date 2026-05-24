@@ -1,6 +1,6 @@
 import { useState } from "react";
 import { Link } from "react-router-dom";
-import img from "../assets/images/2024-06-06.webp";
+import img from "../../assets/images/2024-06-06.webp";
 import { useGetProjectsQuery } from "@/queries/projectQuery";
 
 type ProjectFilter = "all" | "running" | "completed";

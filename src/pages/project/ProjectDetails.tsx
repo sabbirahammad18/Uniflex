@@ -36,7 +36,7 @@ const ProjectDetails = () => {
 
   if (isError || !project) {
     return (
-      <div className="mx-auto grid min-h-screen w-full max-w-107.5 place-items-center bg-white p-5 text-center">
+      <div className="mx-auto grid min-h-screen w-full max-w-107.5 place-items-center bg-white  text-center">
         <div>
           <p className="text-lg font-extrabold text-[#00176b]">
             Project not found
@@ -54,18 +54,9 @@ const ProjectDetails = () => {
   }
 
   return (
-    <div className="min-h-screen bg-white pb-24 font-sans text-slate-950">
+    <div className=" bg-white pb-3.75 font-sans text-slate-950">
       <main className="mx-auto grid w-full max-w-107.5 grid-cols-1 gap-5 px-4 py-6">
         {/* BACK BUTTON */}
-        <Link
-          to="/project"
-          className="inline-grid w-fit grid-cols-[auto_auto] items-center gap-1 text-sm font-bold text-[#07277F]"
-        >
-          <span className="material-symbols-outlined text-body-lg">
-            arrow_back
-          </span>
-          Projects
-        </Link>
 
         {/* SEARCH INPUT */}
         <div className="relative">
@@ -102,10 +93,6 @@ const ProjectDetails = () => {
           {/* CONTENT */}
           <div className="grid grid-cols-1 gap-4 p-5">
             <div>
-              <p className="text-[11px] font-extrabold uppercase tracking-[0.18em] text-secondary">
-                {project.project_id}
-              </p>
-
               <h1 className="mt-1 text-2xl font-extrabold text-[#00176b]">
                 {project.project_name}
               </h1>
@@ -146,6 +133,7 @@ const ProjectDetails = () => {
             )}
           </div>
         </section>
+        
       </main>
     </div>
   );

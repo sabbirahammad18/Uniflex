@@ -1,5 +1,5 @@
 import { useLocation, Link } from "react-router-dom";
-import img from "../assets/logo.png";
+import img from "../../assets/logo.png";
 type InfoProps = {
   label: string;
   value: string | number;
@@ -36,7 +36,7 @@ function MoneyReceipt() {
   };
 
   return (
-    <div className="w-full min-h-screen flex justify-center py-4">
+    <div className="w-full flex justify-center py-4">
       {/* Mobile App Size */}
       <div className="w-107 min-h-screen p-3">
         {/* Receipt */}

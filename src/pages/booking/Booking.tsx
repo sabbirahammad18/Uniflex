@@ -31,7 +31,7 @@ const BookingManagement = () => {
       : "grid grid-cols-[auto_auto] items-center gap-1 rounded-full bg-white px-2.5 py-2 text-label-md text-slate-500 border border-slate-100";
 
   return (
-    <div className="bg-white mx-auto w-full max-w-107.5 min-h-screen pb-24 font-sans text-slate-950">
+    <div className="bg-white mx-auto w-full max-w-107.5 pb-24 font-sans text-slate-950">
       <main className="mx-auto w-full max-w-107.5 px-4 py-6 grid grid-cols-1 gap-5">
         <section className="grid grid-cols-1 gap-4">
           <div>

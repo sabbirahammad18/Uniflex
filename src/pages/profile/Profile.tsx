@@ -1,6 +1,6 @@
 import { useState } from "react";
 import { Link } from "react-router-dom";
-import img from "../assets/images/download.jpg";
+import img from "../../assets/images/download.jpg";
 import { useGetCurrentUserQuery } from "@/queries/authQuery";
 import { useGetEarningBreakdownQuery } from "@/queries/dashboardQuery";
 import { useGetPaymentSummaryQuery } from "@/queries/paymentQuery";
@@ -36,7 +36,7 @@ const Profile = () => {
   };
 
   return (
-    <div className="bg-white min-h-screen pb-24 font-sans text-slate-950">
+    <div className="bg-white pb-16 font-sans text-slate-950">
       <main className="mx-auto w-full max-w-107.5 px-4 py-8 space-y-6">
         <section className="grid grid-cols-1 rounded-xl bg-white -mt-9 p-6">
           <div className="grid grid-cols-[96px_1fr] items-center gap-5">
@@ -296,6 +296,11 @@ const Profile = () => {
             </section>
           )}
         </div>
+        <footer className="mt-auto flex items-center justify-center">
+          <p className="text-[11px] font-mono tracking-wider text-slate-400">
+            Developed by HSBLCO V2.1
+          </p>
+        </footer>
       </main>
     </div>
   );

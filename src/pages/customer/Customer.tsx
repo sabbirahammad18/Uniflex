@@ -7,7 +7,7 @@ function CustomerHistory() {
   const bookings = data?.data || [];
 
   return (
-    <div className="w-full min-h-screen flex justify-center bg-gray-50">
+    <div className="w-full flex justify-center bg-gray-50">
       <div className="w-107 min-h-screen bg-white flex flex-col">
         <div className="p-5 bg-[#07277F] text-white">
           <h1 className="text-lg font-bold">Customer Timeline</h1>
