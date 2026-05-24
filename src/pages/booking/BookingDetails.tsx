@@ -49,7 +49,7 @@ const BookingDetails = () => {
   const status = booking.remaining_amount <= 0 ? "Paid" : "Due";
 
   return (
-    <div className="bg-white min-h-screen pb-24 font-sans text-slate-950">
+    <div className="bg-whitefont-sans text-slate-950">
       <main className="mx-auto grid w-full max-w-107.5 grid-cols-1 gap-5 px-4 py-6">
         <Link
           to="/booking"

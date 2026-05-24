@@ -82,8 +82,8 @@ function Setting() {
   };
 
   return (
-    <div className="min-h-screen w-full flex items-center justify-center">
-      <div className="w-full max-w-106 min-h-screen bg-white overflow-hidden">
+    <div className="w-full flex items-center justify-center">
+      <div className="w-full max-w-106  bg-white overflow-hidden">
         <div className="bg-[#07277F] h-52 flex items-center justify-center rounded-b-[40px]">
           <h1 className="text-white text-3xl font-bold">Profile Settings</h1>
         </div>

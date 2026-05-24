@@ -1,4 +1,4 @@
-import PaymentHistory from "./PaymentComponent/PaymentHistory";
+import PaymentHistory from "@/pages/payment/PaymentHistory";
 
 const PaymentDetails = () => {
   

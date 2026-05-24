@@ -9,7 +9,7 @@ export default function TeamDashboard() {
   const progress = Math.min(Number(promotion?.progress_percent || 0), 100);
 
   return (
-    <section className="w-full max-w-107 mx-auto p-4 min-h-screen">
+    <section className="w-full max-w-107 mx-auto p-4 ">
       <div className="grid grid-cols-[96px_1fr] items-center gap-5">
         <div className="relative">
           <img

@@ -17,8 +17,8 @@ function CommissionPage() {
     ) || [];
 
   return (
-    <div className="bg-slate-100 min-h-screen flex justify-center">
-      <div className="w-full max-w-107 bg-white min-h-screen pb-24">
+    <div className="bg-slate-100 flex justify-center">
+      <div className="w-full max-w-107 bg-white pb-24">
         <div className="bg-[#07277F] px-5 pt-12 pb-6 rounded-b-lg">
           <h1 className="text-white text-2xl font-bold">Commission</h1>
           <p className="text-blue-100 text-sm mt-1">Your commission overview</p>

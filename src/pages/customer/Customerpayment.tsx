@@ -6,7 +6,7 @@ const CustomerPayment = () => {
   const { data: summary, isLoading, isError } = useGetPaymentSummaryQuery();
 
   return (
-    <div className="bg-white mx-auto w-full max-w-107.5 min-h-screen pb-24 font-sans text-slate-950">
+    <div className="bg-white mx-auto w-full max-w-107.5 pb-24 font-sans text-slate-950">
       <main className="mx-auto w-full max-w-107.5 px-4 py-6 grid grid-cols-1 gap-5">
         <section className="relative overflow-hidden rounded-3xl bg-white border border-blue-100 p-5 -mt-3">
           <div className="relative z-10 grid grid-cols-1 gap-5">
