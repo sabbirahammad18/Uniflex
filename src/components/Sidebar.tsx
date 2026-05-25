@@ -76,6 +76,17 @@ const Sidebar = ({ sidebarOpen, setSidebarOpen }: SidebarProps) => {
 
             <div className="mt-4 space-y-1">
               <Link
+                to="/notifications"
+                onClick={closeSidebar}
+                className={subMenuClass}
+              >
+                <span className="material-symbols-outlined text-base">
+                  notifications
+                </span>
+                Notifications
+              </Link>
+
+              <Link
                 to="/project"
                 onClick={closeSidebar}
                 className={subMenuClass}

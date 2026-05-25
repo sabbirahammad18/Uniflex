@@ -20,6 +20,7 @@ import CustomerProfile from "../pages/customer/CustomerProfile.tsx";
 import MoneyReceipt from "../pages/booking/MoneyReceipt.tsx";
 import ProjectDetails from "../pages/project/ProjectDetails.tsx";
 import BookingDetails from "../pages/booking/BookingDetails.tsx";
+import NotificationPage from "@/pages/Notification";
 import { GuestRoute, ProtectedRoute } from "./AuthGuards";
 import NewPassword from "@/pages/Auth/NewPassword.tsx";
 import ForgetPassword from "@/pages/Auth/ForgetPassword.tsx";
@@ -44,6 +45,7 @@ const AppRoute = () => {
           <Route path="project/:id" element={<ProjectDetails />} />
           <Route path="booking" element={<Booking />} />
           <Route path="booking/:id" element={<BookingDetails />} />
+          <Route path="notifications" element={<NotificationPage />} />
           <Route path="payment" element={<Payment title="Current Balance" amount="৳ 0" date="Live balance" />} />
           <Route path="setting" element={<Setting />} />
           <Route path="customer" element={<Customer />} />

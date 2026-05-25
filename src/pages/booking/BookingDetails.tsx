@@ -1,4 +1,5 @@
 import { Link, useParams } from "react-router-dom";
+import { useState } from "react";
 import { useGetBookingsQuery } from "@/queries/bookingQuery";
 import { getApiUrl } from "@/utils/apiUrl";
 import { formatCurrency, formatPlainNumber } from "@/utils/format";
@@ -20,6 +21,7 @@ const AmountTile = ({
 
 const BookingDetails = () => {
   const { id } = useParams();
+  const [receiptOpen, setReceiptOpen] = useState(false);
   const { data, isLoading } = useGetBookingsQuery();
   const booking = data?.data.find((item) => String(item.booking_id) === id);
 
@@ -47,9 +49,12 @@ const BookingDetails = () => {
   }
 
   const status = booking.remaining_amount <= 0 ? "Paid" : "Due";
+  const receiptSource = booking.user_id
+    ? getApiUrl(`money-receipt/${booking.user_id}`)
+    : null;
 
   return (
-    <div className="bg-whitefont-sans text-slate-950">
+    <div className="bg-white font-sans text-slate-950">
       <main className="mx-auto grid w-full max-w-107.5 grid-cols-1 gap-5 px-4 py-6">
         <Link
           to="/booking"
@@ -129,19 +134,50 @@ const BookingDetails = () => {
             </div>
           </div>
 
-          <a
-            className="mt-5 grid h-12 grid-cols-[auto_auto] items-center justify-center gap-2 rounded-xl bg-[#07277F] text-sm font-extrabold text-white"
-            href={getApiUrl(`money-receipt/${booking.booking_id}`)}
-            target="_blank"
-            rel="noreferrer"
+          <button
+            type="button"
+            disabled={!receiptSource}
+            onClick={() => setReceiptOpen(true)}
+            className="mt-5 grid h-12 w-full grid-cols-[auto_auto] items-center justify-center gap-2 rounded-xl bg-[#07277F] text-sm font-extrabold text-white disabled:cursor-not-allowed disabled:opacity-50"
           >
             <span className="material-symbols-outlined text-body-lg">
               receipt_long
             </span>
             Money Receipt
-          </a>
+          </button>
         </section>
       </main>
+
+      {receiptOpen && receiptSource && (
+        <div className="fixed inset-0 z-[90] grid place-items-center bg-black/50 px-3 py-6">
+          <div className="grid h-full max-h-[88vh] w-full max-w-107.5 grid-rows-[auto_1fr] overflow-hidden rounded-2xl bg-white shadow-2xl">
+            <div className="grid grid-cols-[1fr_auto] items-center gap-3 border-b border-slate-100 px-4 py-3">
+              <div>
+                <h2 className="text-sm font-extrabold text-[#00176b]">
+                  Money Receipt
+                </h2>
+                <p className="text-xs font-semibold text-slate-500">
+                  {booking.customer_uid || `Booking #${booking.booking_id}`}
+                </p>
+              </div>
+              <button
+                type="button"
+                onClick={() => setReceiptOpen(false)}
+                className="grid h-9 w-9 place-items-center rounded-full bg-slate-100 text-[#07277F]"
+                aria-label="Close receipt"
+              >
+                <span className="material-symbols-outlined">close</span>
+              </button>
+            </div>
+
+            <iframe
+              title="Money Receipt"
+              src={receiptSource}
+              className="h-full w-full border-0 bg-white"
+            />
+          </div>
+        </div>
+      )}
     </div>
   );
 };

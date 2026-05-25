@@ -44,7 +44,7 @@ export const authQuery = baseApi.injectEndpoints({
         url: "logout",
         method: "POST",
       }),
-      invalidatesTags: ["Session", "Profile", "Earnings", "Payments"],
+      invalidatesTags: ["Session", "Profile", "Earnings", "Payments", "Notifications"],
       async onQueryStarted(_, { dispatch, queryFulfilled }) {
         try {
           await queryFulfilled;

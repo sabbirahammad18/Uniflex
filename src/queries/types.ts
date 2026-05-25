@@ -246,6 +246,40 @@ export type RecentTransactionsResponse = {
   pagination: Pagination;
 };
 
+export type AppNotification = {
+  id: string;
+  title: string;
+  message: string;
+  type: string;
+  action_url: string | null;
+  meta: {
+    booking_id?: number;
+    payment_id?: number;
+    receipt_url?: string;
+    [key: string]: unknown;
+  };
+  read_at: string | null;
+  created_at: string | null;
+  created_at_human: string | null;
+};
+
+export type NotificationListParams = {
+  page?: number;
+  per_page?: number;
+};
+
+export type NotificationListResponse = {
+  data: AppNotification[];
+  unread_count: number;
+  pagination: Pagination;
+};
+
+export type NotificationMutationResponse = {
+  message?: string;
+  data?: AppNotification;
+  unread_count: number;
+};
+
 export type PromotionStatus = {
   current_position: string;
   next_position?: string | null;
