@@ -113,6 +113,47 @@ export type BookingListResponse = {
   data: Booking[];
 };
 
+export type CustomerBooking = {
+  booking_id: number;
+  project_id: number | null;
+  project_name: string | null;
+  project_status: string | number | boolean | null;
+  booking_type: string | number | null;
+  booking_date: string | null;
+  plot_price: number;
+  booking_money: number;
+  down_payment: number;
+  installment_amount: number;
+  total_paid_amount: number;
+  remaining_amount: number;
+  plot_size_katha: string | number | null;
+  property_no: string | null;
+  last_entry_date: string | null;
+  status: number;
+  status_label: string;
+};
+
+export type Customer = {
+  user_id: number;
+  customer_uid: string | null;
+  name: string | null;
+  phone_number: string | null;
+  status: number;
+  status_label: string;
+  bookings: CustomerBooking[];
+};
+
+export type CustomerListParams = {
+  page?: number;
+  per_page?: number;
+  search?: string;
+};
+
+export type CustomerListResponse = {
+  data: Customer[];
+  pagination: Pagination;
+};
+
 export type EarningCustomer = {
   customer_id: number | null;
   customer_uid: string | null;

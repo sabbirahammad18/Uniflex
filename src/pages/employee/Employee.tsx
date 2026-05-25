@@ -15,7 +15,8 @@ const colorByDesignation = (designation: string | null | undefined) => {
 const EmployeeCard = ({ node }: { node: UserTreeNode }) => {
   const [open, setOpen] = useState(true);
   const employee = node.user;
-  const hasChildren = node.children.length > 0;
+  const children = node.children || [];
+  const hasChildren = children.length > 0;
 
   return (
     <div className="flex flex-col w-full">
@@ -42,6 +43,11 @@ const EmployeeCard = ({ node }: { node: UserTreeNode }) => {
                 {employee.designation || "Member"}{" "}
                 {employee.uid ? `(${employee.uid})` : ""}
               </p>
+              {hasChildren && (
+                <p className="mt-1 text-[11px] font-bold text-slate-400">
+                  {children.length} member{children.length === 1 ? "" : "s"}
+                </p>
+              )}
             </div>
           </div>
 
@@ -55,7 +61,7 @@ const EmployeeCard = ({ node }: { node: UserTreeNode }) => {
 
       {open && hasChildren && (
         <div className="ml-6 mt-4 border-l-2 border-dashed border-gray-300 pl-4 space-y-4">
-          {node.children.map((child) => (
+          {children.map((child) => (
             <EmployeeCard key={child.user.id} node={child} />
           ))}
         </div>
@@ -69,7 +75,7 @@ function EmployeeTree() {
 
   return (
     <div className="w-full min-h-screen flex justify-center py-5 px-2">
-      <div className="w-107 min-h-screen to-white rounded-xl shadow overflow-hidden">
+      <div className="w-full max-w-107.5 min-h-screen bg-white rounded-xl shadow overflow-hidden">
         <div className="bg-[#07277F] p-5 text-white sticky top-0 z-20">
           <h1 className="text-xl font-bold">Employee Tree</h1>
           <p className="text-xs opacity-80 mt-1">Your backend hierarchy</p>
@@ -89,6 +95,12 @@ function EmployeeTree() {
           )}
 
           {data?.data && <EmployeeCard node={data.data} />}
+
+          {!isLoading && !isError && !data?.data && (
+            <p className="rounded-xl bg-slate-50 p-4 text-sm font-bold text-slate-600">
+              No employee tree found.
+            </p>
+          )}
         </div>
       </div>
     </div>
