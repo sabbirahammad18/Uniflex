@@ -56,15 +56,7 @@ const BookingDetails = () => {
   return (
     <div className="bg-white font-sans text-slate-950">
       <main className="mx-auto grid w-full max-w-107.5 grid-cols-1 gap-5 px-4 py-6">
-        <Link
-          to="/booking"
-          className="inline-grid w-fit grid-cols-[auto_auto] items-center gap-1 text-sm font-bold text-[#07277F]"
-        >
-          <span className="material-symbols-outlined text-body-lg">
-            arrow_back
-          </span>
-          Bookings
-        </Link>
+      
 
         <section className="rounded-2xl border border-blue-100 bg-white p-5">
           <div className="grid grid-cols-[1fr_auto] items-start gap-3">

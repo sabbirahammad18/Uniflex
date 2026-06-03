@@ -198,7 +198,7 @@ const Profile = () => {
           ) : (
             <section className="rounded-3xl bg-white border border-blue-100 p-5 shadow-sm">
               <h3 className="text-xl font-extrabold text-[#00176b]">
-                Earnings Breakdown
+                Daily Breakdown
               </h3>
 
               <div className="mt-5 grid grid-cols-1 gap-4">
