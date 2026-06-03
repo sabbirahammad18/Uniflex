@@ -50,7 +50,7 @@ function MoneyReceipt() {
             <h2 className="font-bold text-[13px] mt-1">UNIFLEX LIMITED</h2>
 
             <p className="text-[10px] font-semibold leading-4">
-              Fareast Tower, 35 Topkhana Road, Dhaka - 1000.
+              Fareast Tower, 35 Topkhana Road, Dhaka - 1000. sd
             </p>
 
             <p className="text-[10px] font-semibold leading-4">
