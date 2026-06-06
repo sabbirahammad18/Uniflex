@@ -2,14 +2,83 @@ import { useState } from "react";
 import { Link } from "react-router-dom";
 import img from "../../assets/images/download.jpg";
 import { useGetCurrentUserQuery } from "@/queries/authQuery";
-import { useGetEarningBreakdownQuery } from "@/queries/dashboardQuery";
+import {
+  useGetEarningBreakdownQuery,
+  useLazyGetPlotSearchQuery,
+} from "@/queries/dashboardQuery";
 import { useGetPaymentSummaryQuery } from "@/queries/paymentQuery";
 import { useGetProfileQuery } from "@/queries/profileQuery";
-import { formatCurrency, formatPlainNumber } from "@/utils/format";
+import {
+  formatCurrency,
+  formatPlainNumber,
+  getApiErrorMessage,
+} from "@/utils/format";
 import { getDataScopeLabel, isCustomerUser } from "@/utils/userAccess";
+
+type PlotBreakdown = {
+  sector: string;
+  block: string;
+  road: string;
+  plotShare: string;
+  normalized: string;
+};
+
+const parsePlotCode = (value: string): PlotBreakdown | null => {
+  const normalized = value.trim().toUpperCase().replace(/\s+/g, "");
+
+  if (normalized.length < 6) {
+    return null;
+  }
+
+  const sector = normalized.slice(0, 2);
+  const block = normalized.slice(2, 3);
+
+  if (!/^\d{2}$/.test(sector) || !/^[A-Z]$/.test(block)) {
+    return null;
+  }
+
+  const remaining = normalized.slice(3);
+
+  let road = "";
+  let plotShare = "";
+
+  const firstPattern = remaining.match(/^(\d{2,3}\/[A-Z])(\d+(?:\/\d+)?)$/);
+  const secondPattern = remaining.match(/^(\d{4,5})\/(\d+)$/);
+  const thirdPattern = remaining.match(/^(\d{2,3})(\d+)$/);
+
+  if (firstPattern) {
+    road = firstPattern[1];
+    plotShare = firstPattern[2];
+  } else if (secondPattern) {
+    road = secondPattern[1].slice(0, -2);
+    plotShare = `${secondPattern[1].slice(-2)}/${secondPattern[2]}`;
+  } else if (thirdPattern) {
+    road = thirdPattern[1];
+    plotShare = thirdPattern[2];
+  } else {
+    road = remaining;
+    plotShare = "N/A";
+  }
+
+  return {
+    sector,
+    block,
+    road,
+    plotShare,
+    normalized,
+  };
+};
 
 const Profile = () => {
   const [openType, setOpenType] = useState<string | null>(null);
+  const [plotInput, setPlotInput] = useState("");
+  const [searchedPlotInput, setSearchedPlotInput] = useState("");
+  const [plotSearchError, setPlotSearchError] = useState("");
+  const [plotSearchResult, setPlotSearchResult] = useState<{
+    status: string | number;
+  } | null>(null);
+  const [triggerPlotSearch, { isFetching: isPlotSearching }] =
+    useLazyGetPlotSearchQuery();
   const { data: session } = useGetCurrentUserQuery();
   const { data: profileResponse, isLoading: profileLoading } =
     useGetProfileQuery();
@@ -30,9 +99,31 @@ const Profile = () => {
     ? "Customer"
     : currentUser?.designation || "Team Member";
   const avatar = profile?.avatar_url || currentUser?.avatar_url || img;
+  const plotBreakdown = parsePlotCode(searchedPlotInput);
 
   const toggleDropdown = (type: string) => {
     setOpenType(openType === type ? null : type);
+  };
+
+  const handlePlotSearch = async () => {
+    const trimmed = plotInput.trim();
+
+    if (!trimmed) {
+      setPlotSearchError("Enter a plot number to search.");
+      setPlotSearchResult(null);
+      return;
+    }
+
+    setPlotSearchError("");
+    setPlotSearchResult(null);
+
+    try {
+      const response = await triggerPlotSearch(trimmed).unwrap();
+      setSearchedPlotInput(trimmed);
+      setPlotSearchResult(response);
+    } catch (error) {
+      setPlotSearchError(getApiErrorMessage(error, "Unable to search plot."));
+    }
   };
 
   return (
@@ -146,6 +237,140 @@ const Profile = () => {
               Achievement
             </span>
           </Link>
+        </section>
+
+        <section>
+          <div className="rounded-3xl border border-blue-100 bg-white p-5 shadow-sm">
+            <div className="flex items-start justify-between gap-3">
+              <div>
+                <h3 className="text-xl font-extrabold text-[#00176b]">
+                  Plot Search
+                </h3>
+                <p className="mt-1 text-sm text-slate-500">
+                  Search a plot number and check whether it is available.
+                </p>
+              </div>
+              <span className="material-symbols-outlined text-3xl text-blue-200">
+                travel_explore
+              </span>
+            </div>
+
+            <div className="mt-5 grid grid-cols-1 gap-3 sm:grid-cols-[1fr_auto]">
+              <div className="relative">
+                <span className="material-symbols-outlined absolute left-4 top-1/2 -translate-y-1/2 text-[22px] text-slate-400">
+                  pin
+                </span>
+                <input
+                  value={plotInput}
+                  onChange={(event) => {
+                    setPlotInput(event.target.value);
+                    setPlotSearchError("");
+                  }}
+                  placeholder="Example: 01A0704/01"
+                  className="h-14 w-full rounded-2xl border border-slate-200 bg-slate-50 pl-11 pr-4 text-sm outline-none transition focus:border-[#07277F] focus:bg-white focus:ring-4 focus:ring-blue-100"
+                  type="text"
+                  autoComplete="off"
+                />
+              </div>
+
+              <button
+                onClick={handlePlotSearch}
+                disabled={isPlotSearching}
+                className="inline-flex h-14 items-center justify-center gap-2 rounded-2xl bg-[#07277F] px-6 text-sm font-bold text-white shadow-lg transition active:scale-[0.98] disabled:cursor-not-allowed disabled:opacity-60"
+                type="button"
+              >
+                {isPlotSearching ? "Searching..." : "Search"}
+                <span className="material-symbols-outlined text-[22px]">
+                  search
+                </span>
+              </button>
+            </div>
+
+            {plotSearchError && (
+              <p className="mt-3 rounded-2xl border border-red-100 bg-red-50 px-4 py-3 text-sm font-semibold text-red-700">
+                {plotSearchError}
+              </p>
+            )}
+
+            {plotSearchResult && (
+              <div
+                className={`mt-4 rounded-2xl border p-4 ${
+                  String(plotSearchResult.status) === "1"
+                    ? "border-emerald-200 bg-emerald-50"
+                    : "border-amber-200 bg-amber-50"
+                }`}
+              >
+                <div className="flex items-start justify-between gap-3">
+                  <div>
+                    <p
+                      className={`text-base font-extrabold ${
+                        String(plotSearchResult.status) === "1"
+                          ? "text-emerald-800"
+                          : "text-amber-800"
+                      }`}
+                    >
+                      {String(plotSearchResult.status) === "1"
+                        ? "Available"
+                        : "Not available"}
+                    </p>
+                    <p className="mt-1 text-sm text-slate-600">
+                      {String(plotSearchResult.status) === "1"
+                        ? "The plot exists in the system."
+                        : "The plot is not available."}
+                    </p>
+                  </div>
+                  <span className="material-symbols-outlined text-3xl text-slate-300">
+                    {String(plotSearchResult.status) === "1"
+                      ? "check_circle"
+                      : "cancel"}
+                  </span>
+                </div>
+
+                {String(plotSearchResult.status) === "1" && plotBreakdown && (
+                  <div className="mt-4 grid grid-cols-2 gap-3 sm:grid-cols-4">
+                    <div className="rounded-xl bg-white/80 p-3">
+                      <p className="text-[11px] font-semibold uppercase tracking-wide text-slate-500">
+                        Sector
+                      </p>
+                      <p className="mt-1 text-sm font-extrabold text-[#00176b]">
+                        {plotBreakdown.sector}
+                      </p>
+                    </div>
+                    <div className="rounded-xl bg-white/80 p-3">
+                      <p className="text-[11px] font-semibold uppercase tracking-wide text-slate-500">
+                        Block
+                      </p>
+                      <p className="mt-1 text-sm font-extrabold text-[#00176b]">
+                        {plotBreakdown.block}
+                      </p>
+                    </div>
+                    <div className="rounded-xl bg-white/80 p-3">
+                      <p className="text-[11px] font-semibold uppercase tracking-wide text-slate-500">
+                        Road
+                      </p>
+                      <p className="mt-1 text-sm font-extrabold text-[#00176b]">
+                        {plotBreakdown.road}
+                      </p>
+                    </div>
+                    <div className="rounded-xl bg-white/80 p-3">
+                      <p className="text-[11px] font-semibold uppercase tracking-wide text-slate-500">
+                        Plot / Share
+                      </p>
+                      <p className="mt-1 text-sm font-extrabold text-[#00176b]">
+                        {plotBreakdown.plotShare}
+                      </p>
+                    </div>
+                  </div>
+                )}
+
+                {String(plotSearchResult.status) !== "1" && (
+                  <p className="mt-4 text-sm font-semibold text-amber-800">
+                    Not available
+                  </p>
+                )}
+              </div>
+            )}
+          </div>
         </section>
 
         <div className="grid grid-cols-1 gap-5">

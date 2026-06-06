@@ -3,8 +3,13 @@ import { useGetEarningBreakdownQuery } from "@/queries/dashboardQuery";
 import { formatCurrency } from "@/utils/format";
 
 function CommissionPage() {
-  const { data, isLoading, isError } = useGetEarningBreakdownQuery();
-  const rows =
+    const today = new Date().toISOString().split("T")[0];
+
+    const { data, isLoading, isError } = useGetEarningBreakdownQuery({
+        date: today,
+    });
+
+    const rows =
     data?.earnings_breakdown.flatMap((category) =>
       category.customers.map((customer) => ({
         id: `${category.category_name}-${customer.customer_id}`,

@@ -292,6 +292,10 @@ export type PromotionStatus = {
   progress_percent: number;
 };
 
+export type PlotSearch = {
+  status: string | number;
+};
+
 export type UserTreeNode = {
   user: ApiUser & {
     reference?: number | null;
