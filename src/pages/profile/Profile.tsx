@@ -84,8 +84,11 @@ const Profile = () => {
     useGetProfileQuery();
   const currentUser = session?.user;
   const customerUser = isCustomerUser(currentUser);
+  const todayDate = new Intl.DateTimeFormat("en-CA", {
+    timeZone: "Asia/Dhaka",
+  }).format(new Date());
   const { data: earnings, isLoading: earningsLoading } =
-    useGetEarningBreakdownQuery(undefined, {
+    useGetEarningBreakdownQuery({ date: todayDate }, {
       skip: !currentUser || customerUser,
     });
   const { data: paymentSummary } = useGetPaymentSummaryQuery(undefined, {
