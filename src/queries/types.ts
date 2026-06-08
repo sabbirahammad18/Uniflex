@@ -9,6 +9,7 @@ export type ApiUser = {
   wallet_balance?: number | string | null;
   role_id?: number | string | null;
   designation?: string | null;
+  role?: string | null;
 };
 
 export type ApiMessageResponse = {

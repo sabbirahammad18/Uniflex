@@ -65,20 +65,22 @@ const AppRoute = () => {
           <Route path="booking" element={<Booking />} />
           <Route path="booking/:id" element={<BookingDetails />} />
           <Route path="notifications" element={<NotificationPage />} />
-          <Route path="payment" element={<Payment title="Current Balance" amount="৳ 0" date="Live balance" />} />
           <Route path="setting" element={<Setting />} />
           <Route path="customer" element={<Customer />} />
           <Route path="employee" element={<Employee />} />
           <Route path="CustomerProfile" element={<CustomerProfile />} />
           <Route path="PaymentDetails" element={<PaymentDetails />} />
-          <Route path="commission" element={<Commission />} />
           <Route path="MoneyReceipt" element={<MoneyReceipt />} />
           <Route path="allstatement" element={<All_Statement />} />
           <Route path="customerpayment" element={<Customerpayment />} />
-          <Route path="achievement" element={<Achievement />} />
-          <Route path="request" element={<Paymentrequest />} />
+          <Route element={<ProtectedRoute allowedRoles={["marketing"]} />}>
+            <Route path="payment" element={<Payment title="Current Balance" amount="৳ 0" date="Live balance" />} />
+            <Route path="commission" element={<Commission />} />
+            <Route path="achievement" element={<Achievement />} />
+            <Route path="request" element={<Paymentrequest />} />
+          </Route>
           <Route
-            path="test"
+            path="map"
             element={
               <Suspense fallback={<RouteLoader />}>
                 <TestPage />

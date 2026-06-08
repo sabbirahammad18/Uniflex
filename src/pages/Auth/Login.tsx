@@ -40,8 +40,10 @@ const Login = () => {
     setFieldErrors({});
 
     try {
-      await loginUser({ login, password }).unwrap();
+      const res = await loginUser({ login, password }).unwrap();
+      localStorage.setItem('user',JSON.stringify(res?.user))
       navigate(redirectTo, { replace: true });
+
     } catch (error) {
       const loginError = getFieldError(error, "login");
 

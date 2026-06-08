@@ -13,7 +13,12 @@ import {
   formatPlainNumber,
   getApiErrorMessage,
 } from "@/utils/format";
-import { getDataScopeLabel, isCustomerUser } from "@/utils/userAccess";
+import {
+  getDataScopeLabel,
+  isCustomerUser,
+  isMarketingUser,
+  isSuperAdminUser,
+} from "@/utils/userAccess";
 import ProfileMapButton from "@/components/UniplexMap/ProfileMapButton";
 
 type PlotBreakdown = {
@@ -40,8 +45,8 @@ const parsePlotCode = (value: string): PlotBreakdown | null => {
 
   const remaining = normalized.slice(3);
 
-  let road = "";
-  let plotShare = "";
+  let road: string;
+  let plotShare: string;
 
   const firstPattern = remaining.match(/^(\d{2,3}\/[A-Z])(\d+(?:\/\d+)?)$/);
   const secondPattern = remaining.match(/^(\d{4,5})\/(\d+)$/);
@@ -71,6 +76,7 @@ const parsePlotCode = (value: string): PlotBreakdown | null => {
 };
 
 const Profile = () => {
+  const today = new Date().toISOString().split("T")[0];
   const [openType, setOpenType] = useState<string | null>(null);
   const [plotInput, setPlotInput] = useState("");
   const [searchedPlotInput, setSearchedPlotInput] = useState("");
@@ -85,11 +91,12 @@ const Profile = () => {
     useGetProfileQuery();
   const currentUser = session?.user;
   const customerUser = isCustomerUser(currentUser);
-  const todayDate = new Intl.DateTimeFormat("en-CA", {
-    timeZone: "Asia/Dhaka",
-  }).format(new Date());
+  const marketingUser = isMarketingUser(currentUser);
+  const superAdminUser = isSuperAdminUser(currentUser);
   const { data: earnings, isLoading: earningsLoading } =
-    useGetEarningBreakdownQuery({ date: todayDate }, {
+    useGetEarningBreakdownQuery({
+        date: today,
+}, {
       skip: !currentUser || customerUser,
     });
   const { data: paymentSummary } = useGetPaymentSummaryQuery(undefined, {
@@ -161,88 +168,94 @@ const Profile = () => {
           </div>
         </section>
 
-        <section className="rounded-xl bg-[#07277F] p-6 text-white shadow-lg -mt-10">
-          <Link to={customerUser ? "/customerpayment" : "/payment"}>
-            <div>
-              <p className="-mt-2 text-sm opacity-80">
-                {customerUser ? "Due Balance" : "Wallet Balance"}
-              </p>
-              <p className="font-bold text-h1">
-                {customerUser
-                  ? formatCurrency(paymentSummary?.remaining_amount)
-                  : formatCurrency(profile?.wallet_balance)}
-              </p>
-              <p className="font-semibold opacity-70 text-blue-300">
-                {getDataScopeLabel(currentUser)}
-              </p>
-            </div>
-          </Link>
-        </section>
+        {
+          !superAdminUser ? <section className="rounded-xl bg-[#07277F] p-6 text-white shadow-lg">
+            <Link to={customerUser ? "/customerpayment" : "/payment"}>
+              <div>
+                <p className="-mt-2 text-sm opacity-80">
+                  {customerUser ? "Due Balance" : "Wallet Balance"}
+                </p>
+                <p className="font-bold text-h1">
+                  {customerUser
+                      ? formatCurrency(paymentSummary?.remaining_amount)
+                      : formatCurrency(profile?.wallet_balance)}
+                </p>
+                <p className="font-semibold opacity-70 text-blue-300">
+                  {getDataScopeLabel(currentUser)}
+                </p>
+              </div>
+            </Link>
+          </section>:null
+        }
 
         <section className="grid grid-cols-2 gap-4">
           <ProfileMapButton />
 
-          <Link
-            to="/customer"
-            className="rounded-xl bg-white p-4 min-h-18 grid grid-cols-[40px_1fr] items-center gap-3 border border-blue-100 active:scale-[0.98] transition"
-          >
-            <div className="w-10 h-10 rounded-lg bg-blue-100 grid place-items-center text-blue-600">
+          {
+            marketingUser ? <>
+              <Link
+                  to="/customer"
+                  className="rounded-xl bg-white p-4 min-h-18 grid grid-cols-[40px_1fr] items-center gap-3 border border-blue-100 active:scale-[0.98] transition"
+              >
+                <div className="w-10 h-10 rounded-lg bg-blue-100 grid place-items-center text-blue-600">
               <span className="material-symbols-outlined text-[23px]">
                 history
               </span>
-            </div>
-            <span className="text-sm leading-4 font-medium text-[#00176b]">
+                </div>
+                <span className="text-sm leading-4 font-medium text-[#00176b]">
               Customer
               <br />
               History
             </span>
-          </Link>
+              </Link>
 
-          <Link
-            to="/employee"
-            className="rounded-xl bg-white p-4 min-h-18 grid grid-cols-[40px_1fr] items-center border border-blue-100 gap-3 active:scale-[0.98] transition"
-          >
-            <div className="w-10 h-10 rounded-lg bg-indigo-100 grid place-items-center text-indigo-600">
+              <Link
+                  to="/employee"
+                  className="rounded-xl bg-white p-4 min-h-18 grid grid-cols-[40px_1fr] items-center border border-blue-100 gap-3 active:scale-[0.98] transition"
+              >
+                <div className="w-10 h-10 rounded-lg bg-indigo-100 grid place-items-center text-indigo-600">
               <span className="material-symbols-outlined text-[23px]">
                 account_tree
               </span>
-            </div>
-            <span className="text-sm leading-4 font-medium text-[#00176b]">
+                </div>
+                <span className="text-sm leading-4 font-medium text-[#00176b]">
               Employee
               <br />
               Tree
             </span>
-          </Link>
+              </Link>
 
-          <Link
-            to="/commission"
-            className="rounded-xl bg-white p-4 min-h-18 grid grid-cols-[40px_1fr] items-center gap-3 border border-blue-100 active:scale-[0.98] transition"
-          >
-            <div className="w-10 h-10 rounded-lg bg-blue-100 grid place-items-center text-blue-600">
+              <Link
+                  to="/commission"
+                  className="rounded-xl bg-white p-4 min-h-18 grid grid-cols-[40px_1fr] items-center gap-3 border border-blue-100 active:scale-[0.98] transition"
+              >
+                <div className="w-10 h-10 rounded-lg bg-blue-100 grid place-items-center text-blue-600">
               <span className="material-symbols-outlined text-[23px]">
                 payments
               </span>
-            </div>
+                </div>
 
-            <span className="text-sm leading-4 font-medium text-[#00176b]">
+                <span className="text-sm leading-4 font-medium text-[#00176b]">
               Commission
             </span>
-          </Link>
+              </Link>
 
-          <Link
-            to="/achievement"
-            className="rounded-xl bg-white p-4 min-h-18 grid grid-cols-[40px_1fr] items-center gap-3 border border-blue-100 active:scale-[0.98] transition"
-          >
-            <div className="w-10 h-10 rounded-lg bg-blue-100 grid place-items-center text-blue-600">
+              <Link
+                  to="/achievement"
+                  className="rounded-xl bg-white p-4 min-h-18 grid grid-cols-[40px_1fr] items-center gap-3 border border-blue-100 active:scale-[0.98] transition"
+              >
+                <div className="w-10 h-10 rounded-lg bg-blue-100 grid place-items-center text-blue-600">
               <span className="material-symbols-outlined text-[23px]">
                 workspace_premium
               </span>
-            </div>
+                </div>
 
-            <span className="text-sm leading-4 font-medium text-[#00176b]">
+                <span className="text-sm leading-4 font-medium text-[#00176b]">
               Achievement
             </span>
-          </Link>
+              </Link>
+            </>:null
+          }
         </section>
 
         <section>

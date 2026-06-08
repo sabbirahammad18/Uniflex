@@ -3,6 +3,8 @@ import { useGetEarningBreakdownQuery } from "@/queries/dashboardQuery";
 import { formatCurrency } from "@/utils/format";
 
 function CommissionPage() {
+
+
     const { data, isLoading, isError } = useGetEarningBreakdownQuery();
 
     const rows =
