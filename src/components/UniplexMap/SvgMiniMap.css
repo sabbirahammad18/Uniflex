@@ -1,0 +1,450 @@
+.svg-mini-map {
+  --available: #16a34a;
+  --booked: #dc2626;
+  --hold: #f59e0b;
+  --sold: #64748b;
+  --unknown: #2563eb;
+  --ink: #0f172a;
+  --muted: #64748b;
+  background: #e2e8f0;
+  height: calc(100dvh - 120px);
+  overflow: hidden;
+  position: relative;
+}
+
+.svg-mini-map__viewport {
+  background: #e2e8f0;
+  height: 100%;
+  overflow: hidden;
+  position: relative;
+  touch-action: none;
+  width: 100%;
+}
+
+.svg-mini-map__svg {
+  cursor: grab;
+  display: block;
+  height: 100%;
+  shape-rendering: geometricPrecision;
+  text-rendering: geometricPrecision;
+  touch-action: none;
+  user-select: none;
+  width: 100%;
+}
+
+.svg-mini-map__svg:active {
+  cursor: grabbing;
+}
+
+.svg-mini-map__road {
+  fill: none;
+  stroke: #111827;
+  stroke-linecap: round;
+  stroke-linejoin: round;
+  stroke-width: 24;
+}
+
+.svg-mini-map__road--main {
+  stroke-width: 34;
+}
+
+.svg-mini-map__road,
+.svg-mini-map__water,
+.svg-mini-map__plot {
+  shape-rendering: geometricPrecision;
+}
+
+.svg-mini-map__water {
+  fill: #0ea5e9;
+  opacity: 0.95;
+  stroke: #0369a1;
+  stroke-width: 4;
+}
+
+.svg-mini-map__road-label,
+.svg-mini-map__sector-label {
+  fill: #111827;
+  font-family: Inter, sans-serif;
+  font-size: 16px;
+  font-weight: 800;
+  paint-order: stroke;
+  stroke: #ffffff;
+  stroke-width: 5px;
+}
+
+.svg-mini-map__sector-label {
+  fill: #334155;
+  font-size: 18px;
+}
+
+.svg-mini-map__plot {
+  cursor: pointer;
+  stroke-width: 2.2;
+  transition: opacity 140ms ease, stroke-width 140ms ease;
+}
+
+.svg-mini-map__plot:hover,
+.svg-mini-map__plot:focus-visible {
+  outline: none;
+  stroke-width: 4;
+}
+
+.svg-mini-map__plot--selected {
+  stroke: #0f172a !important;
+  stroke-width: 5;
+}
+
+.svg-mini-map__plot--available {
+  fill: rgba(22, 163, 74, 0.16);
+  stroke: var(--available);
+}
+
+.svg-mini-map__plot--booked {
+  fill: rgba(220, 38, 38, 0.13);
+  stroke: var(--booked);
+}
+
+.svg-mini-map__plot--hold {
+  fill: rgba(245, 158, 11, 0.16);
+  stroke: var(--hold);
+}
+
+.svg-mini-map__plot--sold {
+  fill: rgba(100, 116, 139, 0.16);
+  stroke: var(--sold);
+}
+
+.svg-mini-map__plot--unknown {
+  fill: rgba(37, 99, 235, 0.12);
+  stroke: var(--unknown);
+}
+
+.svg-mini-map__plot-label,
+.svg-mini-map__plot-size {
+  fill: #0f172a;
+  font-family: Inter, sans-serif;
+  font-size: 13px;
+  font-weight: 800;
+  pointer-events: none;
+  text-anchor: middle;
+}
+
+.svg-mini-map__plot-size {
+  fill: #475569;
+  font-size: 11px;
+  font-weight: 700;
+}
+
+.svg-mini-map__search-toggle,
+.svg-mini-map__controls button,
+.svg-mini-map__search-card header button,
+.svg-mini-map__details > button {
+  align-items: center;
+  background: rgba(255, 255, 255, 0.96);
+  border: 1px solid rgba(15, 23, 42, 0.14);
+  border-radius: 8px;
+  box-shadow: 0 8px 20px rgba(15, 23, 42, 0.16);
+  color: var(--ink);
+  display: inline-flex;
+  font: inherit;
+  height: 44px;
+  justify-content: center;
+  padding: 0;
+  width: 44px;
+}
+
+.svg-mini-map__search-toggle {
+  left: 12px;
+  position: absolute;
+  top: 12px;
+  z-index: 8;
+}
+
+.svg-mini-map__search-toggle--active {
+  background: #0f172a;
+  color: #ffffff;
+}
+
+.svg-mini-map__controls {
+  bottom: 16px;
+  display: grid;
+  gap: 8px;
+  position: absolute;
+  right: 12px;
+  z-index: 7;
+}
+
+.svg-mini-map__controls button {
+  font-size: 21px;
+  font-weight: 900;
+}
+
+.svg-mini-map__search-card {
+  backdrop-filter: blur(10px);
+  background: linear-gradient(180deg, rgba(248, 250, 252, 0.98), rgba(255, 255, 255, 0.97));
+  border: 1px solid rgba(15, 23, 42, 0.12);
+  border-radius: 8px;
+  box-shadow: 0 20px 50px rgba(15, 23, 42, 0.22);
+  display: grid;
+  gap: 10px;
+  left: 10px;
+  max-height: min(58dvh, 460px);
+  overflow: hidden;
+  padding: 12px;
+  position: absolute;
+  right: 10px;
+  top: 64px;
+  z-index: 8;
+}
+
+.svg-mini-map__search-card header {
+  align-items: center;
+  display: flex;
+  gap: 12px;
+  justify-content: space-between;
+}
+
+.svg-mini-map__search-card p,
+.svg-mini-map__details p {
+  color: var(--muted);
+  font-size: 11px;
+  font-weight: 800;
+  line-height: 1.2;
+  margin: 0 0 2px;
+  text-transform: uppercase;
+}
+
+.svg-mini-map__search-card h2,
+.svg-mini-map__details h2 {
+  color: var(--ink);
+  font-size: 17px;
+  line-height: 1.2;
+  margin: 0;
+}
+
+.svg-mini-map__search-card header button,
+.svg-mini-map__details > button {
+  box-shadow: none;
+  height: 34px;
+  width: 34px;
+}
+
+.svg-mini-map__field {
+  align-items: center;
+  background: #ffffff;
+  border: 1px solid rgba(100, 116, 139, 0.22);
+  border-radius: 8px;
+  display: grid;
+  gap: 8px;
+  grid-template-columns: 22px 1fr;
+  min-height: 42px;
+  padding: 0 12px;
+}
+
+.svg-mini-map__field span {
+  color: var(--muted);
+}
+
+.svg-mini-map__field input,
+.svg-mini-map__filters select {
+  background: transparent;
+  border: 0;
+  color: var(--ink);
+  font: inherit;
+  min-width: 0;
+  outline: 0;
+}
+
+.svg-mini-map__filters label {
+  display: grid;
+  gap: 4px;
+}
+
+.svg-mini-map__filters label > span {
+  color: var(--muted);
+  font-size: 11px;
+  font-weight: 800;
+}
+
+.svg-mini-map__filters select {
+  background: #ffffff;
+  border: 1px solid rgba(100, 116, 139, 0.22);
+  border-radius: 8px;
+  height: 36px;
+  padding: 0 10px;
+}
+
+.svg-mini-map__chips {
+  display: flex;
+  gap: 6px;
+  overflow-x: auto;
+  scrollbar-width: none;
+}
+
+.svg-mini-map__chips::-webkit-scrollbar {
+  display: none;
+}
+
+.svg-mini-map__chips button {
+  align-items: center;
+  background: #ffffff;
+  border: 1px solid rgba(100, 116, 139, 0.18);
+  border-radius: 999px;
+  color: #475569;
+  display: inline-flex;
+  flex: 0 0 auto;
+  font: inherit;
+  font-size: 11px;
+  font-weight: 800;
+  gap: 5px;
+  height: 28px;
+  padding: 0 8px;
+}
+
+.svg-mini-map__chips button.is-active {
+  background: #0f172a;
+  border-color: #0f172a;
+  color: #ffffff;
+}
+
+.svg-mini-map__chips b {
+  color: currentColor;
+  font-size: 10px;
+}
+
+.svg-mini-map__dot {
+  border-radius: 999px;
+  display: inline-block;
+  height: 9px;
+  width: 9px;
+}
+
+.svg-mini-map__dot--available {
+  background: var(--available);
+}
+
+.svg-mini-map__dot--booked {
+  background: var(--booked);
+}
+
+.svg-mini-map__dot--hold {
+  background: var(--hold);
+}
+
+.svg-mini-map__dot--sold {
+  background: var(--sold);
+}
+
+.svg-mini-map__dot--unknown {
+  background: var(--unknown);
+}
+
+.svg-mini-map__results {
+  background: #ffffff;
+  border: 1px solid rgba(100, 116, 139, 0.16);
+  border-radius: 8px;
+  list-style: none;
+  margin: 0;
+  max-height: min(28dvh, 230px);
+  overflow-y: auto;
+  padding: 0;
+}
+
+.svg-mini-map__results li + li {
+  border-top: 1px solid rgba(100, 116, 139, 0.12);
+}
+
+.svg-mini-map__results button {
+  align-items: center;
+  background: transparent;
+  border: 0;
+  color: inherit;
+  display: grid;
+  gap: 10px;
+  grid-template-columns: 12px 1fr;
+  min-height: 48px;
+  padding: 8px 10px;
+  text-align: left;
+  width: 100%;
+}
+
+.svg-mini-map__results strong,
+.svg-mini-map__results small {
+  display: block;
+}
+
+.svg-mini-map__results strong {
+  color: var(--ink);
+  font-size: 13px;
+}
+
+.svg-mini-map__results small {
+  color: var(--muted);
+  font-size: 11px;
+  margin-top: 2px;
+}
+
+.svg-mini-map__details {
+  background: rgba(255, 255, 255, 0.97);
+  border: 1px solid rgba(15, 23, 42, 0.12);
+  border-radius: 8px 8px 0 0;
+  bottom: 0;
+  box-shadow: 0 -14px 34px rgba(15, 23, 42, 0.18);
+  left: 0;
+  padding: 14px 16px 18px;
+  position: absolute;
+  right: 0;
+  z-index: 9;
+}
+
+.svg-mini-map__details > button {
+  position: absolute;
+  right: 12px;
+  top: 12px;
+}
+
+.svg-mini-map__details dl {
+  display: grid;
+  gap: 8px;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  margin: 14px 0 0;
+}
+
+.svg-mini-map__details div {
+  background: #f8fafc;
+  border: 1px solid rgba(100, 116, 139, 0.14);
+  border-radius: 8px;
+  min-width: 0;
+  padding: 9px;
+}
+
+.svg-mini-map__details dt {
+  color: var(--muted);
+  font-size: 11px;
+  font-weight: 800;
+  margin-bottom: 4px;
+}
+
+.svg-mini-map__details dd {
+  color: var(--ink);
+  font-size: 13px;
+  font-weight: 800;
+  margin: 0;
+  overflow-wrap: anywhere;
+}
+
+@media (min-width: 768px) {
+  .svg-mini-map__search-card {
+    max-width: 420px;
+    right: auto;
+    width: 420px;
+  }
+
+  .svg-mini-map__details {
+    border-radius: 8px;
+    bottom: 18px;
+    left: auto;
+    max-width: 380px;
+    right: 18px;
+  }
+}

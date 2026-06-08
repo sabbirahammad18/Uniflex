@@ -99,6 +99,7 @@ export type Booking = {
   user_name: string | null;
   project_name: string | null;
   plot_price: number;
+  project_status:string;
   booking_money: number;
   down_payment: number;
   installment_amount: number;

@@ -1,0 +1,591 @@
+.full-svg-map {
+  --chrome: #0f172a;
+  --chrome-2: #111827;
+  --chrome-border: #1e3a5f;
+  --ink: #0f172a;
+  --muted: #64748b;
+  background: var(--chrome);
+  color: #f8fafc;
+  display: grid;
+  grid-template-rows: auto minmax(0, 1fr);
+  height: calc(100dvh - 120px);
+  min-height: calc(100dvh - 120px);
+  overflow: hidden;
+  position: relative;
+}
+
+.full-svg-map__header {
+  align-items: center;
+  background: #111827;
+  border-bottom: 1px solid rgba(30, 58, 95, 0.9);
+  display: flex;
+  gap: 12px;
+  justify-content: space-between;
+  min-height: 58px;
+  padding: 8px 14px;
+}
+
+.full-svg-map__header p {
+  color: #94a3b8;
+  font-size: 11px;
+  font-weight: 800;
+  letter-spacing: 0;
+  line-height: 1.2;
+  margin: 0 0 2px;
+  text-transform: uppercase;
+}
+
+.full-svg-map__header h1 {
+  color: #f8fafc;
+  font-size: 17px;
+  line-height: 1.2;
+  margin: 0;
+}
+
+.full-svg-map__header-stats {
+  align-items: flex-end;
+  display: grid;
+  justify-items: end;
+}
+
+.full-svg-map__header-stats strong {
+  color: #ffffff;
+  font-size: 18px;
+  line-height: 1;
+}
+
+.full-svg-map__header-stats span {
+  color: #64748b;
+  font-size: 11px;
+  font-weight: 700;
+}
+
+.full-svg-map__viewport {
+  background: #f8fafc;
+  min-height: 0;
+  overflow: hidden;
+  position: relative;
+  touch-action: none;
+}
+
+.full-svg-map__base {
+  pointer-events: none;
+  shape-rendering: geometricPrecision;
+}
+
+.full-svg-map__svg {
+  cursor: inherit;
+  display: block;
+  height: 100%;
+  shape-rendering: geometricPrecision;
+  text-rendering: geometricPrecision;
+  touch-action: none;
+  user-select: none;
+  width: 100%;
+}
+
+.full-svg-map__svg:active {
+  cursor: grabbing;
+}
+
+.full-svg-map__plot {
+  cursor: pointer;
+  fill: var(--plot-fill);
+  mix-blend-mode: multiply;
+  pointer-events: auto;
+  shape-rendering: geometricPrecision;
+  stroke: var(--plot-border);
+  stroke-linecap: round;
+  stroke-linejoin: round;
+  stroke-width: 0.58;
+  transition: opacity 120ms ease, stroke-width 120ms ease;
+}
+
+.full-svg-map__plot:hover,
+.full-svg-map__plot.is-selected {
+  fill-opacity: 0.95;
+  mix-blend-mode: normal;
+  stroke: #0f172a;
+  stroke-width: 2.4;
+}
+
+.full-svg-map__plot.is-selected {
+  stroke: #ffffff;
+}
+
+.full-svg-map__plot.is-filtered-out,
+.full-svg-map__label-group.is-filtered-out {
+  opacity: 0.06;
+  pointer-events: none;
+}
+
+.full-svg-map__structure-path {
+  fill: none;
+  opacity: 0.08;
+  pointer-events: none;
+  shape-rendering: geometricPrecision;
+  stroke: #334155;
+  stroke-linecap: round;
+  stroke-linejoin: round;
+  stroke-width: 0.5;
+}
+
+.full-svg-map__labels {
+  pointer-events: none;
+}
+
+.full-svg-map__plot-label,
+.full-svg-map__plot-size {
+  display: none;
+  fill: #0f172a;
+  font-family: ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, "Liberation Mono", monospace;
+  font-weight: 800;
+  dominant-baseline: central;
+  paint-order: stroke;
+  stroke: rgba(255, 255, 255, 0.92);
+  stroke-width: 0.8px;
+  text-anchor: middle;
+  vector-effect: non-scaling-stroke;
+}
+
+.full-svg-map__plot-size {
+  fill: #475569;
+  font-weight: 700;
+  stroke-width: 0.65px;
+}
+
+.full-svg-map__viewport--labels-visible .full-svg-map__plot-label,
+.full-svg-map__viewport--sizes-visible .full-svg-map__plot-size {
+  display: block;
+}
+
+.full-svg-map__search-toggle,
+.full-svg-map__controls button,
+.full-svg-map__search-card header button,
+.full-svg-map__popover > button {
+  align-items: center;
+  background: rgba(15, 23, 42, 0.96);
+  border: 1px solid rgba(148, 163, 184, 0.24);
+  border-radius: 8px;
+  box-shadow: 0 10px 24px rgba(15, 23, 42, 0.22);
+  color: #e2e8f0;
+  display: inline-flex;
+  font: inherit;
+  height: 42px;
+  justify-content: center;
+  padding: 0;
+  width: 42px;
+}
+
+.full-svg-map__search-toggle {
+  left: 12px;
+  position: absolute;
+  top: 12px;
+  z-index: 10;
+}
+
+.full-svg-map__search-toggle--active {
+  background: #ffffff;
+  color: #0f172a;
+}
+
+.full-svg-map__controls {
+  bottom: 50px;
+  display: grid;
+  gap: 8px;
+  position: absolute;
+  right: 12px;
+  z-index: 9;
+}
+
+.full-svg-map__controls button {
+  font-size: 21px;
+  font-weight: 900;
+}
+
+.full-svg-map__controls svg,
+.full-svg-map__search-toggle svg,
+.full-svg-map__search-card header button svg,
+.full-svg-map__popover > button svg {
+  height: 22px;
+  width: 22px;
+}
+
+.full-svg-map__search-card {
+  background: #111827;
+  border: 1px solid rgba(30, 58, 95, 0.95);
+  border-radius: 8px;
+  box-shadow: 0 24px 60px rgba(15, 23, 42, 0.36);
+  color: #f8fafc;
+  display: grid;
+  gap: 10px;
+  left: 10px;
+  max-height: min(72dvh, 590px);
+  overflow: hidden;
+  padding: 12px;
+  position: absolute;
+  right: 10px;
+  top: 64px;
+  z-index: 12;
+}
+
+.full-svg-map__search-card header {
+  align-items: center;
+  display: flex;
+  gap: 12px;
+  justify-content: space-between;
+}
+
+.full-svg-map__search-card p,
+.full-svg-map__popover p,
+.full-svg-map__legend p {
+  color: #94a3b8;
+  font-size: 11px;
+  font-weight: 800;
+  line-height: 1.2;
+  margin: 0 0 2px;
+  text-transform: uppercase;
+}
+
+.full-svg-map__search-card h2,
+.full-svg-map__popover h2 {
+  color: #ffffff;
+  font-size: 17px;
+  line-height: 1.2;
+  margin: 0;
+}
+
+.full-svg-map__search-card header button,
+.full-svg-map__popover > button {
+  background: #0a0f1e;
+  box-shadow: none;
+  height: 34px;
+  width: 34px;
+}
+
+.full-svg-map__field {
+  align-items: center;
+  background: #0a0f1e;
+  border: 1px solid #1e3a5f;
+  border-radius: 8px;
+  display: grid;
+  gap: 8px;
+  grid-template-columns: 22px 1fr;
+  min-height: 42px;
+  padding: 0 12px;
+}
+
+.full-svg-map__field svg {
+  color: #64748b;
+  height: 21px;
+  width: 21px;
+}
+
+.full-svg-map__field input,
+.full-svg-map__filters select {
+  background: transparent;
+  border: 0;
+  color: #f8fafc;
+  font: inherit;
+  min-width: 0;
+  outline: 0;
+}
+
+.full-svg-map__field input::placeholder {
+  color: #64748b;
+}
+
+.full-svg-map__filters {
+  display: grid;
+  gap: 8px;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+}
+
+.full-svg-map__filters label {
+  display: grid;
+  gap: 4px;
+  min-width: 0;
+}
+
+.full-svg-map__filter-wide {
+  grid-column: 1 / -1;
+}
+
+.full-svg-map__filters label > span {
+  color: #94a3b8;
+  font-size: 11px;
+  font-weight: 800;
+}
+
+.full-svg-map__filters select {
+  appearance: none;
+  background: #0a0f1e;
+  border: 1px solid #1e3a5f;
+  border-radius: 8px;
+  height: 36px;
+  padding: 0 10px;
+}
+
+.full-svg-map__status-pills {
+  display: flex;
+  gap: 6px;
+  overflow-x: auto;
+  scrollbar-width: none;
+}
+
+.full-svg-map__status-pills::-webkit-scrollbar {
+  display: none;
+}
+
+.full-svg-map__status-pills button,
+.full-svg-map__legend button {
+  align-items: center;
+  background: rgba(255, 255, 255, 0.04);
+  border: 1px solid rgba(148, 163, 184, 0.16);
+  border-radius: 999px;
+  color: #cbd5e1;
+  display: inline-flex;
+  flex: 0 0 auto;
+  font: inherit;
+  font-size: 11px;
+  font-weight: 800;
+  gap: 6px;
+  height: 28px;
+  padding: 0 9px;
+}
+
+.full-svg-map__status-pills button.is-active,
+.full-svg-map__legend button.is-active {
+  background: var(--status-fill);
+  border-color: var(--status-border);
+}
+
+.full-svg-map__status-pills button > span,
+.full-svg-map__legend button > span,
+.full-svg-map__result-status {
+  background: var(--status-color);
+  border-radius: 999px;
+  display: inline-block;
+  flex: 0 0 auto;
+  height: 8px;
+  width: 8px;
+}
+
+.full-svg-map__status-pills b,
+.full-svg-map__legend b {
+  color: var(--status-color);
+  font-size: 10px;
+}
+
+.full-svg-map__results {
+  background: #0a0f1e;
+  border: 1px solid #1e3a5f;
+  border-radius: 8px;
+  list-style: none;
+  margin: 0;
+  max-height: min(30dvh, 260px);
+  overflow-y: auto;
+  padding: 0;
+}
+
+.full-svg-map__results li + li {
+  border-top: 1px solid rgba(30, 58, 95, 0.7);
+}
+
+.full-svg-map__results button {
+  align-items: center;
+  background: transparent;
+  border: 0;
+  color: inherit;
+  display: grid;
+  gap: 10px;
+  grid-template-columns: 12px 1fr;
+  min-height: 50px;
+  padding: 8px 10px;
+  text-align: left;
+  width: 100%;
+}
+
+.full-svg-map__results button:hover {
+  background: rgba(148, 163, 184, 0.08);
+}
+
+.full-svg-map__results strong,
+.full-svg-map__results small {
+  display: block;
+}
+
+.full-svg-map__results strong {
+  color: #f8fafc;
+  font-size: 13px;
+}
+
+.full-svg-map__results small {
+  color: #94a3b8;
+  font-size: 11px;
+  margin-top: 2px;
+}
+
+.full-svg-map__legend {
+  background: rgba(15, 23, 42, 0.94);
+  border: 1px solid rgba(30, 58, 95, 0.9);
+  border-radius: 8px;
+  bottom: 50px;
+  box-shadow: 0 14px 34px rgba(15, 23, 42, 0.22);
+  display: none;
+  gap: 6px;
+  left: 12px;
+  padding: 10px;
+  position: absolute;
+  z-index: 8;
+}
+
+.full-svg-map__legend button {
+  border-radius: 8px;
+  justify-content: flex-start;
+  width: 100%;
+}
+
+.full-svg-map__legend em {
+  flex: 1;
+  font-style: normal;
+  text-align: left;
+}
+
+.full-svg-map__popover {
+  background: #111827;
+  border: 1px solid rgba(30, 58, 95, 0.95);
+  border-radius: 8px;
+  box-shadow: 0 24px 60px rgba(15, 23, 42, 0.38);
+  color: #f8fafc;
+  max-width: min(292px, calc(100vw - 24px));
+  padding: 14px;
+  position: absolute;
+  width: 292px;
+  z-index: 11;
+}
+
+.full-svg-map__popover > button {
+  position: absolute;
+  right: 10px;
+  top: 10px;
+}
+
+.full-svg-map__popover-status {
+  background: var(--status-fill);
+  border: 1px solid var(--status-border);
+  border-radius: 999px;
+  color: var(--status-color);
+  display: inline-flex;
+  font-size: 11px;
+  font-weight: 800;
+  margin-top: 8px;
+  padding: 4px 10px;
+}
+
+.full-svg-map__popover dl {
+  display: grid;
+  gap: 8px;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  margin: 14px 0 0;
+}
+
+.full-svg-map__popover div {
+  min-width: 0;
+}
+
+.full-svg-map__popover dl > div,
+.full-svg-map__customer {
+  background: #0a0f1e;
+  border: 1px solid rgba(30, 58, 95, 0.78);
+  border-radius: 8px;
+  padding: 9px;
+}
+
+.full-svg-map__popover-wide {
+  grid-column: 1 / -1;
+}
+
+.full-svg-map__popover dt {
+  color: #64748b;
+  font-size: 10px;
+  font-weight: 800;
+  line-height: 1.2;
+  margin-bottom: 4px;
+  text-transform: uppercase;
+}
+
+.full-svg-map__popover dd {
+  color: #e2e8f0;
+  font-size: 12px;
+  font-weight: 800;
+  line-height: 1.28;
+  margin: 0;
+  overflow-wrap: anywhere;
+}
+
+.full-svg-map__customer {
+  display: grid;
+  gap: 4px;
+  margin-top: 10px;
+}
+
+.full-svg-map__customer strong {
+  font-size: 13px;
+}
+
+.full-svg-map__customer span {
+  color: #94a3b8;
+  font-size: 11px;
+}
+
+@media (min-width: 768px) {
+  .full-svg-map {
+    height: calc(100dvh - 80px);
+    min-height: calc(100dvh - 80px);
+  }
+
+  .full-svg-map__search-card {
+    max-width: 440px;
+    right: auto;
+    width: 440px;
+  }
+
+  .full-svg-map__legend {
+    display: grid;
+    min-width: 180px;
+  }
+}
+
+@media (max-width: 480px) {
+  .full-svg-map__header {
+    min-height: 54px;
+    padding: 7px 12px;
+  }
+
+  .full-svg-map__header h1 {
+    font-size: 15px;
+  }
+
+  .full-svg-map__search-card {
+    max-height: min(76dvh, 610px);
+  }
+
+  .full-svg-map__filters {
+    grid-template-columns: 1fr;
+  }
+
+  .full-svg-map__filter-wide {
+    grid-column: auto;
+  }
+
+  .full-svg-map__popover {
+    border-radius: 8px 8px 0 0;
+    bottom: 0;
+    left: 0 !important;
+    max-width: none;
+    right: 0;
+    top: auto !important;
+    width: auto;
+  }
+}

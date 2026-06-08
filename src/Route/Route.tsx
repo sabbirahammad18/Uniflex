@@ -1,3 +1,4 @@
+import { Suspense, lazy } from "react";
 import { Routes, Route } from "react-router-dom"; // Use "react-router" for v7+
 import Login from "../pages/Auth/Login";
 import AuthLayout from "../layout/AuthLayout";
@@ -25,6 +26,16 @@ import { GuestRoute, ProtectedRoute } from "./AuthGuards";
 import NewPassword from "@/pages/Auth/NewPassword.tsx";
 import ForgetPassword from "@/pages/Auth/ForgetPassword.tsx";
 import Otp from "@/pages/Auth/Otp.tsx";
+
+const TestPage = lazy(() => import("@/pages/test.tsx"));
+const ProjectMapPage = lazy(() => import("@/pages/profile/ProjectMapPage"));
+
+const RouteLoader = () => (
+  <div className="grid min-h-[calc(100dvh-120px)] place-items-center bg-white text-[#07277F]">
+    <span className="material-symbols-outlined animate-pulse text-3xl">progress_activity</span>
+  </div>
+);
+
 const AppRoute = () => {
   return (
     <Routes>
@@ -41,6 +52,14 @@ const AppRoute = () => {
         <Route path="/" element={<Layout />}>
           <Route path="dashboard" element={<Dashboard />} />
           <Route path="profile" element={<Profile />} />
+          <Route
+            path="profile/map"
+            element={
+              <Suspense fallback={<RouteLoader />}>
+                <ProjectMapPage />
+              </Suspense>
+            }
+          />
           <Route path="project" element={<Project />} />
           <Route path="project/:id" element={<ProjectDetails />} />
           <Route path="booking" element={<Booking />} />
@@ -58,6 +77,15 @@ const AppRoute = () => {
           <Route path="customerpayment" element={<Customerpayment />} />
           <Route path="achievement" element={<Achievement />} />
           <Route path="request" element={<Paymentrequest />} />
+          <Route
+            path="test"
+            element={
+              <Suspense fallback={<RouteLoader />}>
+                <TestPage />
+              </Suspense>
+            }
+          />
+
           {/* Default route for unmatched paths */}
         </Route>
       </Route>

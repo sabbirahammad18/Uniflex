@@ -14,6 +14,7 @@ import {
   getApiErrorMessage,
 } from "@/utils/format";
 import { getDataScopeLabel, isCustomerUser } from "@/utils/userAccess";
+import ProfileMapButton from "@/components/UniplexMap/ProfileMapButton";
 
 type PlotBreakdown = {
   sector: string;
@@ -179,6 +180,8 @@ const Profile = () => {
         </section>
 
         <section className="grid grid-cols-2 gap-4">
+          <ProfileMapButton />
+
           <Link
             to="/customer"
             className="rounded-xl bg-white p-4 min-h-18 grid grid-cols-[40px_1fr] items-center gap-3 border border-blue-100 active:scale-[0.98] transition"
