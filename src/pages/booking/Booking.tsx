@@ -4,6 +4,7 @@ import { useGetCurrentUserQuery } from "@/queries/authQuery";
 import { useGetBookingsQuery, useUpdateBookingStatusMutation } from "@/queries/bookingQuery";
 import { formatCurrency, formatPlainNumber } from "@/utils/format";
 import { getDataScopeLabel } from "@/utils/userAccess";
+import PaymentModal from "@/components/PaymentModal.tsx";
 
 type PaymentFilter = "all" | "due" | "paid";
 type StatusFilter = "all" | "0" | "1" | "2"; // pending, approved, rejected
@@ -11,6 +12,7 @@ type StatusFilter = "all" | "0" | "1" | "2"; // pending, approved, rejected
 const BookingManagement = () => {
   const [paymentFilter, setPaymentFilter] = useState<PaymentFilter>("all");
   const [statusFilter, setStatusFilter] = useState<StatusFilter>("all");
+  const [payModalBookingId, setPayModalBookingId] = useState<number | null>(null);
 
   const { data: session } = useGetCurrentUserQuery();
   const isAdmin = session?.user?.uid === "admin10001";
@@ -237,12 +239,14 @@ const BookingManagement = () => {
 
                         {/* Standard Action: Display pay if not paid and context is user */}
                         {!isAdmin && !isPaid && (
-                            <Link to="/customerpayment">
-                              <button className="h-11 w-16 rounded-xl border border-blue-200 text-[#07277f] grid place-items-center text-xs font-bold active:scale-95 transition">
-                                Pay
-                              </button>
-                            </Link>
+                            <button
+                                onClick={() => setPayModalBookingId(booking.booking_id)}
+                                className="h-11 w-16 rounded-xl border border-blue-200 text-[#07277f] grid place-items-center text-xs font-bold active:scale-95 transition"
+                            >
+                              Pay
+                            </button>
                         )}
+
                       </div>
 
                       {/* Administrative Action Dashboard Controls */}
@@ -282,6 +286,12 @@ const BookingManagement = () => {
             </article>
           </section>
         </main>
+        <PaymentModal
+            bookingId={payModalBookingId ?? 0}
+            open={payModalBookingId !== null}
+            onClose={() => setPayModalBookingId(null)}
+        />
+
       </div>
   );
 };
