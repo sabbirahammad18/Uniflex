@@ -13,6 +13,7 @@ const BookingManagement = () => {
   const [paymentFilter, setPaymentFilter] = useState<PaymentFilter>("all");
   const [statusFilter, setStatusFilter] = useState<StatusFilter>("all");
   const [payModalBookingId, setPayModalBookingId] = useState<number | null>(null);
+  const [page, setPage] = useState(1);
 
   const { data: session } = useGetCurrentUserQuery();
   const isAdmin = session?.user?.uid === "admin10001";
@@ -21,11 +22,12 @@ const BookingManagement = () => {
   const { data, isLoading, isError } = useGetBookingsQuery({
     payment_status: paymentFilter !== "all" ? paymentFilter : undefined,
     status: statusFilter !== "all" ? statusFilter : undefined,
+    page,
   });
+  const bookings = data?.data || [];
+  const lastPage = data?.last_page ?? 1;
 
   const [updateBookingStatus, { isLoading: isUpdating }] = useUpdateBookingStatusMutation();
-
-  const bookings = data?.data || [];
 
   const dueTotal = bookings.reduce(
       (total, booking) => total + Math.max(booking.remaining_amount, 0),
@@ -38,6 +40,15 @@ const BookingManagement = () => {
     } catch (error) {
       console.error("Failed to update status:", error);
     }
+  };
+
+  const handlePaymentFilter = (val: PaymentFilter) => {
+    setPaymentFilter(val);
+    setPage(1);
+  };
+  const handleStatusFilter = (val: StatusFilter) => {
+    setStatusFilter(val);
+    setPage(1);
   };
 
   const filterButtonClass = (isActive: boolean) =>
@@ -61,21 +72,21 @@ const BookingManagement = () => {
             {/* First Filter Group: Payment Status */}
             <div className="grid grid-flow-col auto-cols-max gap-1 overflow-x-auto pb-1 [-ms-overflow-style:none] [scrollbar-width:none] [&::-webkit-scrollbar]:hidden">
               <button
-                  onClick={() => setPaymentFilter("all")}
+                  onClick={() => handlePaymentFilter("all")}
                   className={filterButtonClass(paymentFilter === "all")}
               >
                 <span className="material-symbols-outlined text-body-sm">list_alt</span>
                 All
               </button>
               <button
-                  onClick={() => setPaymentFilter("due")}
+                  onClick={() => handlePaymentFilter("due")}
                   className={filterButtonClass(paymentFilter === "due")}
               >
                 <span className="material-symbols-outlined text-body-lg">pending_actions</span>
                 Due
               </button>
               <button
-                  onClick={() => setPaymentFilter("paid")}
+                  onClick={() => handlePaymentFilter("paid")}
                   className={filterButtonClass(paymentFilter === "paid")}
               >
                 <span className="material-symbols-outlined text-body-lg">verified</span>
@@ -87,28 +98,28 @@ const BookingManagement = () => {
             {isAdmin && (
                 <div className="grid grid-flow-col auto-cols-max gap-1 overflow-x-auto pb-1 border-t border-slate-100 pt-3 [-ms-overflow-style:none] [scrollbar-width:none] [&::-webkit-scrollbar]:hidden">
                   <button
-                      onClick={() => setStatusFilter("all")}
+                      onClick={() => handleStatusFilter("all")}
                       className={filterButtonClass(statusFilter === "all")}
                   >
                     <span className="material-symbols-outlined text-body-sm">list</span>
                     All
                   </button>
                   <button
-                      onClick={() => setStatusFilter("0")}
+                      onClick={() => handleStatusFilter("0")}
                       className={filterButtonClass(statusFilter === "0")}
                   >
                     <span className="material-symbols-outlined text-body-lg">hourglass_empty</span>
                     Pending
                   </button>
                   <button
-                      onClick={() => setStatusFilter("1")}
+                      onClick={() => handleStatusFilter("1")}
                       className={filterButtonClass(statusFilter === "1")}
                   >
                     <span className="material-symbols-outlined text-body-lg ">check_circle</span>
                     Approved
                   </button>
                   <button
-                      onClick={() => setStatusFilter("2")}
+                      onClick={() => handleStatusFilter("2")}
                       className={filterButtonClass(statusFilter === "2")}
                   >
                     <span className="material-symbols-outlined text-body-lg">cancel</span>
@@ -117,6 +128,18 @@ const BookingManagement = () => {
                 </div>
             )}
           </section>
+
+          <article className="rounded-2xl bg-blue-50 p-5 border border-blue-100">
+            <div className="grid grid-cols-[48px_1fr] items-center gap-4">
+              <div className="h-12 w-12 rounded-xl bg-white grid place-items-center text-[#00176b]">
+                <span className="material-symbols-outlined text-h2">payments</span>
+              </div>
+              <div>
+                <p className="text-xl font-extrabold text-[#00176b]">{formatCurrency(dueTotal)}</p>
+                <p className="text-sm text-slate-500">Total due balance</p>
+              </div>
+            </div>
+          </article>
 
           <section className="grid grid-cols-1 gap-4">
             {isLoading && (
@@ -272,19 +295,28 @@ const BookingManagement = () => {
                   </article>
               );
             })}
-
-            <article className="rounded-2xl bg-blue-50 p-5 border border-blue-100">
-              <div className="grid grid-cols-[48px_1fr] items-center gap-4">
-                <div className="h-12 w-12 rounded-xl bg-white grid place-items-center text-[#00176b]">
-                  <span className="material-symbols-outlined text-h2">payments</span>
-                </div>
-                <div>
-                  <p className="text-xl font-extrabold text-[#00176b]">{formatCurrency(dueTotal)}</p>
-                  <p className="text-sm text-slate-500">Total due balance</p>
-                </div>
-              </div>
-            </article>
           </section>
+          {lastPage > 1 && (
+              <div className="grid grid-cols-[auto_1fr_auto] items-center gap-3 pt-2">
+                <button
+                    onClick={() => setPage((p) => Math.max(1, p - 1))}
+                    disabled={page === 1}
+                    className="h-10 w-10 rounded-xl border border-slate-200 bg-white grid place-items-center text-[#07277f] disabled:opacity-40 transition active:scale-95"
+                >
+                  <span className="material-symbols-outlined text-body-lg">chevron_left</span>
+                </button>
+                <p className="text-center text-sm font-bold text-slate-500">
+                  Page {page} of {lastPage}
+                </p>
+                <button
+                    onClick={() => setPage((p) => Math.min(lastPage, p + 1))}
+                    disabled={page === lastPage}
+                    className="h-10 w-10 rounded-xl border border-slate-200 bg-white grid place-items-center text-[#07277f] disabled:opacity-40 transition active:scale-95"
+                >
+                  <span className="material-symbols-outlined text-body-lg">chevron_right</span>
+                </button>
+              </div>
+          )}
         </main>
         <PaymentModal
             bookingId={payModalBookingId ?? 0}

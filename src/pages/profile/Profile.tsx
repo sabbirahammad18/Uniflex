@@ -521,6 +521,8 @@ const Profile = () => {
                   </div>
                 ))}
 
+
+
                 {!earningsLoading && !earnings?.earnings_breakdown?.length && (
                   <p className="rounded-2xl bg-slate-50 p-4 text-sm font-semibold text-slate-500">
                     No earning data found.

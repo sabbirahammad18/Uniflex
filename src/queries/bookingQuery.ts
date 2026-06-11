@@ -26,7 +26,7 @@ export const bookingQuery = baseApi.injectEndpoints({
   endpoints: (builder) => ({
     getBookings: builder.query<
         BookingListResponse,
-        { payment_status?: string; status?: string } | void
+        { payment_status?: string; status?: string; page?: number } | void
     >({
       query: (params) => ({
         url: "my-bookings",

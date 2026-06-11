@@ -11,7 +11,7 @@ interface PaymentModalProps {
     onClose: () => void;
 }
 
-type PaymentType = "installment" | "downpayment";
+type PaymentType = "installment" | "down payment";
 
 const fmt = (n: number) =>
     "৳ " + n.toLocaleString("en-BD", { minimumFractionDigits: 2 });
@@ -164,7 +164,7 @@ export default function PaymentModal({ bookingId, open, onClose }: PaymentModalP
                                 Payment Type
                             </label>
                             <div className="grid grid-cols-2 gap-2">
-                                {([ "installment", "downpayment" ] as PaymentType[]).map((type) => (
+                                {([ "installment", "down payment" ] as PaymentType[]).map((type) => (
                                     <button
                                         key={type}
                                         type="button"

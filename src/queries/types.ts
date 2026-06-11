@@ -110,10 +110,13 @@ export type Booking = {
   last_entry_date: string | null;
 };
 
-export type BookingListResponse = {
+export interface BookingListResponse {
+  current_page: number;
+  per_page: number;
   total: number;
+  last_page: number;
   data: Booking[];
-};
+}
 
 export type CustomerBooking = {
   booking_id: number;
