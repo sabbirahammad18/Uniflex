@@ -20,6 +20,7 @@ import {
   isSuperAdminUser,
 } from "@/utils/userAccess";
 import ProfileMapButton from "@/components/UniplexMap/ProfileMapButton";
+import {MdFactory, MdMap} from "react-icons/md";
 
 type PlotForm = {
   sectorNo: string;
@@ -156,7 +157,17 @@ const Profile = () => {
 
           <section className="grid grid-cols-2 gap-4">
             <ProfileMapButton />
-
+                <Link
+                    to="/management"
+                    className="rounded-xl bg-white p-4 col-span-1 min-h-18 grid grid-cols-[40px_1fr] items-center gap-3 border border-blue-100 active:scale-[0.98] transition"
+                >
+                  <div className="w-10 h-10 rounded-lg bg-emerald-100 grid place-items-center text-emerald-700">
+                    <MdFactory aria-hidden="true" size={23} />
+                  </div>
+                  <span className="text-sm leading-4 font-medium text-[#00176b]">
+                    Management
+                  </span>
+                </Link>
             {marketingUser ? (
                 <>
                   <Link
