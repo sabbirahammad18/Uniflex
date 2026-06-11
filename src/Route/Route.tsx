@@ -27,6 +27,7 @@ import NewPassword from "@/pages/Auth/NewPassword.tsx";
 import ForgetPassword from "@/pages/Auth/ForgetPassword.tsx";
 import Otp from "@/pages/Auth/Otp.tsx";
 import PaymentResult from "@/pages/PaymentResult.tsx";
+import Management from "@/pages/Management.tsx";
 
 const TestPage = lazy(() => import("@/pages/test.tsx"));
 const ProjectMapPage = lazy(() => import("@/pages/profile/ProjectMapPage"));
@@ -61,6 +62,7 @@ const AppRoute = () => {
               </Suspense>
             }
           />
+          <Route  path="management" element={ <Management />}/>
           <Route path="project" element={<Project />} />
           <Route path="payment-result" element={<PaymentResult />} />
           <Route path="project/:id" element={<ProjectDetails />} />
