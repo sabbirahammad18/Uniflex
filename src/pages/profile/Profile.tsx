@@ -45,9 +45,7 @@ const Profile = () => {
   );
 
   const [plotSearchError, setPlotSearchError] = useState("");
-  const [plotSearchResult, setPlotSearchResult] = useState<{
-    status: string | number;
-  } | null>(null);
+  const [plotSearchResult, setPlotSearchResult] = useState<number | null>(null);
   const [plotBreakdown, setPlotBreakdown] = useState<PlotBreakdown | null>(null);
 
   const [triggerPlotSearch, { isFetching: isPlotSearching }] =
@@ -328,10 +326,10 @@ const Profile = () => {
                   </p>
               )}
 
-              {plotSearchResult && (
+              {(plotSearchResult===0 || plotSearchResult===1) && (
                   <div
                       className={`mt-4 rounded-2xl border p-4 ${
-                          plotSearchResult.status === 1
+                          plotSearchResult === 1
                               ? "border-emerald-200 bg-emerald-50"
                               : "border-amber-200 bg-amber-50"
                       }`}
@@ -340,27 +338,27 @@ const Profile = () => {
                       <div>
                         <p
                             className={`text-base font-extrabold ${
-                                plotSearchResult.status === 1
+                                plotSearchResult === 1
                                     ? "text-emerald-800"
                                     : "text-amber-800"
                             }`}
                         >
-                          {plotSearchResult.status === 1
+                          {plotSearchResult === 1
                               ? "Available"
                               : "Not available"}
                         </p>
                         <p className="mt-1 text-sm text-slate-600">
-                          {plotSearchResult.status === 1
+                          {plotSearchResult === 1
                               ? "The plot exists in the system."
                               : "The plot is not available."}
                         </p>
                       </div>
                       <span className="material-symbols-outlined text-3xl text-slate-300">
-                    {plotSearchResult.status === 1 ? "check_circle" : "cancel"}
+                    {plotSearchResult === 1 ? "check_circle" : "cancel"}
                   </span>
                     </div>
 
-                    {plotSearchResult.status === 1 && plotBreakdown && (
+                    {plotSearchResult === 1 && plotBreakdown && (
                         <div className="mt-4 grid grid-cols-2 gap-3 sm:grid-cols-4">
                           <div className="rounded-xl bg-white/80 p-3">
                             <p className="text-[11px] font-semibold uppercase tracking-wide text-slate-500">
@@ -397,7 +395,7 @@ const Profile = () => {
                         </div>
                     )}
 
-                    {plotSearchResult.status !== 1 && (
+                    {plotSearchResult !== 1 && (
                         <p className="mt-4 text-sm font-semibold text-amber-800">
                           Not available
                         </p>

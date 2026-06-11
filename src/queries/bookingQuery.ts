@@ -12,7 +12,7 @@ export interface PaymentSummary {
 
 export interface InitiatePaymentRequest {
   booking_id: number;
-  payment_type: "installment" | "downpayment";
+  payment_type: "installment" | "down payment";
   amount: number;
   account_id: number;
 }

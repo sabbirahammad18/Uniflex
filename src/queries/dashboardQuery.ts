@@ -1,7 +1,6 @@
 import { baseApi } from "@/queries/baseApi";
 import type {
   EarningBreakdownResponse,
-  PlotSearch,
   PromotionStatus,
 } from "@/queries/types";
 
@@ -28,7 +27,7 @@ export const dashboardQuery = baseApi.injectEndpoints({
       providesTags: ["Promotion"],
     }),
 
-    getPlotSearch: builder.query<PlotSearch, {
+    getPlotSearch: builder.query<number, {
       sector_no: string;
       block: string;
       road_no: string;
