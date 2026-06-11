@@ -95,6 +95,7 @@ export type ProjectDetails = {
 
 export type Booking = {
   booking_id: number;
+  is_approved:number;
   user_id: number | null;
   customer_uid: string | null;
   user_name: string | null;
@@ -298,7 +299,10 @@ export type PromotionStatus = {
 };
 
 export type PlotSearch = {
-  status: string | number;
+  sector_no: string;
+  block: string;
+  road_no: string;
+  plot: string;
 };
 
 export type UserTreeNode = {

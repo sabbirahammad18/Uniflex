@@ -28,11 +28,16 @@ export const dashboardQuery = baseApi.injectEndpoints({
       providesTags: ["Promotion"],
     }),
 
-    getPlotSearch: builder.query<PlotSearch, string>({
-      query: (propertyNo) => ({
+    getPlotSearch: builder.query<PlotSearch, {
+      sector_no: string;
+      block: string;
+      road_no: string;
+      plot: string;
+    }>({
+      query: (body) => ({
         url: "plot-search",
         method: "POST",
-        body: { property_no: propertyNo },
+        body,
       }),
     }),
   }),

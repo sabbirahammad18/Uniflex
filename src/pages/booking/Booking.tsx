@@ -106,21 +106,21 @@ const BookingManagement = () => {
                   </button>
                   <button
                       onClick={() => handleStatusFilter("0")}
-                      className={filterButtonClass(statusFilter === "0")}
+                      className={filterButtonClass(statusFilter == "0")}
                   >
                     <span className="material-symbols-outlined text-body-lg">hourglass_empty</span>
                     Pending
                   </button>
                   <button
                       onClick={() => handleStatusFilter("1")}
-                      className={filterButtonClass(statusFilter === "1")}
+                      className={filterButtonClass(statusFilter == "1")}
                   >
                     <span className="material-symbols-outlined text-body-lg ">check_circle</span>
                     Approved
                   </button>
                   <button
                       onClick={() => handleStatusFilter("2")}
-                      className={filterButtonClass(statusFilter === "2")}
+                      className={filterButtonClass(statusFilter == "2")}
                   >
                     <span className="material-symbols-outlined text-body-lg">cancel</span>
                     Rejected
@@ -180,16 +180,16 @@ const BookingManagement = () => {
                         {/* Status Badge Indicators */}
                         <span
                             className={`rounded-full border px-3 py-1 text-[11px] font-extrabold ${
-                                booking.project_status === "1"
+                                booking.is_approved == 1
                                     ? "border-green-200 bg-green-50 text-green-700"
-                                    : booking.project_status === "2"
+                                    : booking.is_approved == 2
                                         ? "border-red-200 bg-red-50 text-red-700"
                                         : "border-yellow-200 bg-yellow-50 text-yellow-700"
                             }`}
                         >
-                      {booking.project_status === "1"
+                      {booking.is_approved ==1
                           ? "Approved"
-                          : booking.project_status === "2"
+                          : booking.is_approved == 2
                               ? "Rejected"
                               : "Pending"}
                     </span>
@@ -273,18 +273,16 @@ const BookingManagement = () => {
                       </div>
 
                       {/* Administrative Action Dashboard Controls */}
-                      {isAdmin && (
+                      {(isAdmin && booking.is_approved==0) && (
                           <div className="grid grid-cols-2 gap-2 mt-1 pt-2 border-t border-slate-100">
                             <button
                                 onClick={() => handleStatusUpdate(booking.booking_id, "1")}
-                                disabled={booking.project_status === "1" || isUpdating}
                                 className="h-10 text-xs rounded-xl bg-green-600 text-white font-bold disabled:opacity-40 transition active:scale-95"
                             >
                               Approve
                             </button>
                             <button
                                 onClick={() => handleStatusUpdate(booking.booking_id, "2")}
-                                disabled={booking.project_status === "2" || isUpdating}
                                 className="h-10 text-xs rounded-xl bg-rose-600 text-white font-bold disabled:opacity-40 transition active:scale-95"
                             >
                               Reject
