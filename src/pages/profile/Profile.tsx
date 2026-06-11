@@ -326,7 +326,7 @@ const Profile = () => {
                   </p>
               )}
 
-              {plotSearchResult && (
+              {(plotSearchResult===0 || plotSearchResult===1) && (
                   <div
                       className={`mt-4 rounded-2xl border p-4 ${
                           plotSearchResult === 1

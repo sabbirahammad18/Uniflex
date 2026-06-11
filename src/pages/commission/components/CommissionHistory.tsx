@@ -20,15 +20,6 @@ const CommissionHistory = ({ item }: { item: Item }) => {
           <p className="text-sm text-slate-500 mt-1">{item.project}</p>
         </div>
 
-        <span
-          className={`px-3 py-1 rounded-full text-xs font-semibold ${
-            item.status === "Paid"
-              ? "bg-green-100 text-green-600"
-              : "bg-orange-100 text-orange-600"
-          }`}
-        >
-          {item.status}
-        </span>
       </div>
 
       <div className="grid grid-cols-2 gap-3 mt-4">

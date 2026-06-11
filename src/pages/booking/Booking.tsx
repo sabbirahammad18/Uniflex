@@ -2,7 +2,7 @@ import { useState } from "react";
 import { Link } from "react-router-dom";
 import { useGetCurrentUserQuery } from "@/queries/authQuery";
 import { useGetBookingsQuery, useUpdateBookingStatusMutation } from "@/queries/bookingQuery";
-import { formatCurrency, formatPlainNumber } from "@/utils/format";
+import {formatCurrency, formatPlainNumber, getApiErrorMessage} from "@/utils/format";
 import { getDataScopeLabel } from "@/utils/userAccess";
 import PaymentModal from "@/components/PaymentModal.tsx";
 
@@ -14,7 +14,7 @@ const BookingManagement = () => {
   const [statusFilter, setStatusFilter] = useState<StatusFilter>("all");
   const [payModalBookingId, setPayModalBookingId] = useState<number | null>(null);
   const [page, setPage] = useState(1);
-
+  const [statusErrors, setStatusErrors] = useState<Record<number, string>>({});
   const { data: session } = useGetCurrentUserQuery();
   const isAdmin = session?.user?.uid === "admin10001";
 
@@ -36,9 +36,11 @@ const BookingManagement = () => {
 
   const handleStatusUpdate = async (bookingId: number, status: "1" | "2") => {
     try {
+      setStatusErrors((prev) => ({ ...prev, [bookingId]: "" }));
       await updateBookingStatus({ bookingId, project_status: status }).unwrap();
     } catch (error) {
-      console.error("Failed to update status:", error);
+      const msg = getApiErrorMessage(error, "Status update failed.");
+      setStatusErrors((prev) => ({ ...prev, [bookingId]: msg }));
     }
   };
 
@@ -287,6 +289,11 @@ const BookingManagement = () => {
                             >
                               Reject
                             </button>
+                            {statusErrors[booking.booking_id] && (
+                                <p className="col-span-2 rounded-xl border border-red-100 bg-red-50 px-3 py-2 text-xs font-semibold text-red-700">
+                                  {statusErrors[booking.booking_id]}
+                                </p>
+                            )}
                           </div>
                       )}
                     </div>
