@@ -1,5 +1,5 @@
 import { useState, useEffect } from "react";
-import { createPortal } from "react-dom"; // 👈 Import createPortal
+import { createPortal } from "react-dom";
 import {
     useGetPaymentSummaryQuery,
     useInitiatePaymentMutation,
@@ -38,13 +38,6 @@ export default function PaymentModal({ bookingId, open, onClose }: PaymentModalP
             : "";
 
     const [initiatePayment, { isLoading: submitting }] = useInitiatePaymentMutation();
-
-    useEffect(() => {
-        if (!open) return;
-        setSubmitErr("");
-        setAmount("");
-        setPaymentType("installment");
-    }, [open]);
 
     // Body scroll lock when modal is open
     useEffect(() => {

@@ -27,7 +27,7 @@ const BookingManagement = () => {
   const bookings = data?.data || [];
   const lastPage = data?.last_page ?? 1;
 
-  const [updateBookingStatus, { isLoading: isUpdating }] = useUpdateBookingStatusMutation();
+  const [updateBookingStatus] = useUpdateBookingStatusMutation();
 
   const dueTotal = bookings.reduce(
       (total, booking) => total + Math.max(booking.remaining_amount, 0),
@@ -261,7 +261,7 @@ const BookingManagement = () => {
                         </Link>
 
                         {/* Standard Action: Display pay if not paid and context is user */}
-                        {!isAdmin && !isPaid && (
+                        {!(isAdmin && isPaid) && booking.is_approved == 1 && (
                             <button
                                 onClick={() => setPayModalBookingId(booking.booking_id)}
                                 className="h-11 w-16 rounded-xl border border-blue-200 text-[#07277f] grid place-items-center text-xs font-bold active:scale-95 transition"
@@ -317,11 +317,11 @@ const BookingManagement = () => {
           )}
         </main>
         <PaymentModal
+            key={payModalBookingId}
             bookingId={payModalBookingId ?? 0}
             open={payModalBookingId !== null}
             onClose={() => setPayModalBookingId(null)}
         />
-
       </div>
   );
 };
