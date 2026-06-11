@@ -19,7 +19,7 @@ const managementData = [
 
 const Management = () => {
     return (
-        <div className="w-full max-w-118.75 space-y-6">
+        <div className="w-full max-w-118.75 space-y-6 my-10">
             {managementData.map((item) => (
                 <div
                     key={item.name}
