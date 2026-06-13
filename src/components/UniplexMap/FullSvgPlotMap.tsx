@@ -17,7 +17,7 @@ import "./FullSvgPlotMap.css";
 
 // ─── Types ────────────────────────────────────────────────────────────────────
 
-type PlotStatus = "available" | "booked" | "sold" | "reserved" | "hold" | "blocked" | "unknown";
+type PlotStatus = "available" | "booked" | "sold" | "unknown";
 
 type StatusConfig = {
   color: string;
@@ -156,14 +156,11 @@ const STATUS_CONFIG: Record<PlotStatus, StatusConfig> = {
   available: { color: "#22c55e", fill: "rgba(34,197,94,0.20)",   label: "Available", border: "#16a34a" },
   booked:    { color: "#f97316", fill: "rgba(249,115,22,0.75)",  label: "Booked",    border: "#ea580c" },
   sold:      { color: "#ef4444", fill: "rgba(239,68,68,0.80)",   label: "Sold",      border: "#dc2626" },
-  reserved:  { color: "#3b82f6", fill: "rgba(59,130,246,0.75)", label: "Reserved",  border: "#2563eb" },
-  hold:      { color: "#a855f7", fill: "rgba(168,85,247,0.75)", label: "On Hold",   border: "#9333ea" },
-  blocked:   { color: "#6b7280", fill: "rgba(107,114,128,0.75)",label: "Blocked",   border: "#4b5563" },
   unknown:   { color: "#6b7280", fill: "rgba(107,114,128,0.45)",label: "Unknown",   border: "#475569" },
 };
 
 const STATUS_OPTIONS: Array<PlotStatus | "all"> = [
-  "all", "available", "booked", "sold", "reserved", "hold", "blocked", "unknown",
+  "all", "available", "booked", "sold","unknown",
 ];
 
 const MAX_SEARCH_RESULTS = 80;
@@ -183,10 +180,7 @@ const normalizeStatus = (value: unknown): PlotStatus => {
   if (s.includes("available")) return "available";
   if (s.includes("book"))      return "booked";
   if (s.includes("sold"))      return "sold";
-  if (s.includes("reserve"))   return "reserved";
-  if (s.includes("hold"))      return "hold";
-  if (s.includes("block"))     return "blocked";
-  return "unknown";
+  return "unknown"
 };
 
 const getLivePlotNo    = (r: LivePlotStatus) => normalizeValue(r.plot_no    ?? r.plotNo    ?? r.plot_number ?? r.plotNumber);
@@ -389,7 +383,7 @@ export default function FullSvgPlotMap({
   const statusCounts = useMemo(
       () => mapPlots.reduce<Record<PlotStatus, number>>(
           (acc, p) => { acc[p.status] += 1; return acc; },
-          { available: 0, booked: 0, sold: 0, reserved: 0, hold: 0, blocked: 0, unknown: 0 },
+          { available: 0, booked: 0, sold: 0, unknown: 0 },
       ),
       [mapPlots],
   );
@@ -543,6 +537,7 @@ export default function FullSvgPlotMap({
                 </button>
 
                 {/* Search & filter panel */}
+                {/* Search & filter panel */}
                 {isSearchOpen && (
                     <aside className="full-svg-map__search-card" aria-label="Search and filter plots">
                       <header>
@@ -555,100 +550,79 @@ export default function FullSvgPlotMap({
                         </button>
                       </header>
 
-                      <label className="full-svg-map__field">
-                        <MdSearch aria-hidden="true" />
-                        <input
-                            type="search"
-                            value={query}
-                            placeholder="Plot no, size, road, sector, status"
-                            onChange={(e: ChangeEvent<HTMLInputElement>) => setQuery(e.target.value)}
-                        />
-                      </label>
-
-                      <div className="full-svg-map__filters">
-                        <label>
-                          <span>Status</span>
-                          <select value={statusFilter} onChange={(e) => setStatusFilter(e.target.value as PlotStatus | "all")}>
-                            {STATUS_OPTIONS.map((s) => (
-                                <option key={s} value={s}>
-                                  {s === "all" ? "All statuses" : STATUS_CONFIG[s].label}
-                                </option>
-                            ))}
-                          </select>
-                        </label>
-                        <label>
-                          <span>Size / category</span>
-                          <select value={categoryFilter} onChange={(e) => setCategoryFilter(e.target.value)}>
-                            <option value="all">All sizes</option>
-                            {categoryOptions.map((c) => <option key={c} value={c}>{c}</option>)}
-                          </select>
-                        </label>
-                        <label>
+                      {/* Four-field search form */}
+                      <div className="full-svg-map__four-fields">
+                        <label className="full-svg-map__field-group">
                           <span>Sector</span>
-                          <select value={sectorFilter} onChange={(e) => setSectorFilter(e.target.value)}>
-                            <option value="all">All sectors</option>
-                            {sectorOptions.map((s) => <option key={s} value={s}>{s}</option>)}
-                          </select>
+                          <input
+                              type="text"
+                              value={sectorFilter === "all" ? "" : sectorFilter}
+                              placeholder="e.g. 01"
+                              autoComplete="off"
+                              onChange={(e) => setSectorFilter(e.target.value || "all")}
+                          />
                         </label>
-                        <label>
+
+                        <label className="full-svg-map__field-group">
                           <span>Block</span>
-                          <select value={blockFilter} onChange={(e) => setBlockFilter(e.target.value)}>
-                            <option value="all">All blocks</option>
-                            {blockOptions.map((b) => <option key={b} value={b}>{b}</option>)}
+                          <select
+                              value={blockFilter === "all" ? "" : blockFilter}
+                              onChange={(e) => setBlockFilter(e.target.value || "all")}
+                          >
+                            <option value="">Select</option>
+                            <option value="A">A</option>
+                            <option value="B">B</option>
+                            <option value="C">C</option>
+                            <option value="D">D</option>
+                            <option value="E">E</option>
                           </select>
                         </label>
-                        <label className="full-svg-map__filter-wide">
+
+                        <label className="full-svg-map__field-group">
                           <span>Road</span>
-                          <select value={roadFilter} onChange={(e) => setRoadFilter(e.target.value)}>
-                            <option value="all">All roads</option>
-                            {roadOptions.map((r) => <option key={r} value={r}>{r}</option>)}
-                          </select>
+                          <input
+                              type="text"
+                              value={roadFilter === "all" ? "" : roadFilter}
+                              placeholder="e.g. 07"
+                              autoComplete="off"
+                              onChange={(e) => setRoadFilter(e.target.value || "all")}
+                          />
+                        </label>
+
+                        <label className="full-svg-map__field-group">
+                          <span>Plot</span>
+                          <input
+                              type="search"
+                              value={query}
+                              placeholder="e.g. 04/01"
+                              autoComplete="off"
+                              onChange={(e: ChangeEvent<HTMLInputElement>) => setQuery(e.target.value)}
+                          />
                         </label>
                       </div>
 
-                      <div className="full-svg-map__status-pills">
-                        {STATUS_OPTIONS
-                            .filter((s): s is PlotStatus => s !== "all")
-                            .map((s) => (
-                                <button
-                                    key={s}
-                                    type="button"
-                                    className={statusFilter === s ? "is-active" : ""}
-                                    onClick={() => setStatusFilter(statusFilter === s ? "all" : s)}
-                                    style={{
-                                      "--status-color":  STATUS_CONFIG[s].color,
-                                      "--status-fill":   STATUS_CONFIG[s].fill,
-                                      "--status-border": STATUS_CONFIG[s].border,
-                                    } as CSSProperties}
-                                >
-                                  <span />
-                                  {STATUS_CONFIG[s].label}
-                                  <b>{statusCounts[s].toLocaleString("en-US")}</b>
-                                </button>
-                            ))}
-                      </div>
 
                       <ul className="full-svg-map__results">
                         {filteredPlots.slice(0, MAX_SEARCH_RESULTS).map((plot) => (
                             <li key={`result-${plot.uid}`}>
                               <button type="button" onClick={() => zoomToPlot(plot)}>
-                        <span
-                            className="full-svg-map__result-status"
-                            style={{
-                              "--status-color":  STATUS_CONFIG[plot.status].color,
-                              "--status-fill":   STATUS_CONFIG[plot.status].fill,
-                              "--status-border": STATUS_CONFIG[plot.status].border,
-                            } as CSSProperties}
-                        />
+                <span
+                    className="full-svg-map__result-status"
+                    style={{
+                      "--status-color":  STATUS_CONFIG[plot.status].color,
+                      "--status-fill":   STATUS_CONFIG[plot.status].fill,
+                      "--status-border": STATUS_CONFIG[plot.status].border,
+                    } as CSSProperties}
+                />
                                 <span>
-                          <strong>Plot {plot.plotNo || plot.uid}</strong>
-                          <small>
-                            {[plot.size, plot.category, plot.sector, plot.block, plot.road, STATUS_CONFIG[plot.status].label]
-                                .map(formatOptional)
-                                .filter((v) => v !== "Not assigned")
-                                .join(" · ")}
-                          </small>
-                        </span>
+                  <strong>Plot {plot.plotNo || plot.uid}</strong>
+                  <small>
+                    {[plot.size, plot.category, plot.sector, plot.block, plot.road, STATUS_CONFIG[plot.status].label]
+                        .map(formatOptional)
+                        .filter((v) => v !== "Not assigned")
+                        .join(" · ")}
+                  </small>
+                </span>
                               </button>
                             </li>
                         ))}

@@ -1,6 +1,6 @@
 // CommissionPage.tsx
 import { useReducer } from "react";
-import CommissionHistory from "./components/CommissionHistory";
+import CommissionHistory, {type CommissionItem } from "./components/CommissionHistory";
 import { useGetEarningBreakdownQuery } from "@/queries/dashboardQuery";
 import { formatCurrency } from "@/utils/format";
 
@@ -14,22 +14,37 @@ function CommissionPage() {
 
     const { data, isLoading, isError } = useGetEarningBreakdownQuery();
 
-    const allRows =
+    const allRows: CommissionItem[] =
         data?.earnings_breakdown.flatMap((category) =>
             category.customers.map((customer) => ({
+                // IDs
                 id: `${category.category_name}-${customer.customer_id}`,
                 customerId: customer.customer_uid || "N/A",
-                customer: (customer.customer_name || "Customer").replace(
-                    /\s+and\s+other[''s]*/gi,
-                    "",
-                ).trim(),
+
+                // Names
+                customer: (customer.customer_name || "Customer")
+                    .replace(/\s+and\s+other[''s]*/gi, "")
+                    .trim(),
                 project: category.category_name,
+
+                // Money
                 amount: formatCurrency(customer.amount),
+                rawAmount: customer.amount ?? 0,
+                withdraw: customer.withdraw ?? 0,
+
+                // Date
                 date: customer.date || "N/A",
+
+                // Property location
+                road_no: customer.road_no || "",
+                block_no: customer.block_no || "",
+                sector_no: customer.sector_no || "",
+                property_no: customer.property_no || "",
             })),
         ) || [];
 
-    const categories = data?.earnings_breakdown.map((c) => c.category_name) || [];
+    const categories =
+        data?.earnings_breakdown.map((c) => c.category_name) || [];
 
     const rows =
         activeCategory === "all"
@@ -44,9 +59,12 @@ function CommissionPage() {
     return (
         <div className="bg-slate-100 flex justify-center">
             <div className="w-full max-w-107 bg-white pb-24">
-                <div className="bg-[#07277F] px-5 pt-12 pb-6 rounded-b-lg">
+                {/* Header */}
+                <div className="bg-[#07277F] px-5 pt-5 pb-6 rounded-b-lg">
                     <h1 className="text-white text-2xl font-bold">Commission</h1>
-                    <p className="text-blue-100 text-sm mt-1">Your commission overview</p>
+                    <p className="text-blue-100 text-sm mt-1">
+                        Your commission overview
+                    </p>
 
                     <div className="grid grid-cols-2 gap-3 mt-5">
                         <div className="bg-white rounded-xl p-4 shadow-sm">
@@ -63,7 +81,7 @@ function CommissionPage() {
                         </div>
                     </div>
 
-                    {/* Category filter buttons */}
+                    {/* Category filter */}
                     <div className="flex gap-2 mt-4 flex-wrap">
                         <button
                             onClick={() => setActiveCategory("all")}
@@ -83,12 +101,13 @@ function CommissionPage() {
                     </div>
                 </div>
 
+                {/* List */}
                 <div className="px-4 mt-5">
                     <div className="flex items-center justify-between mb-4">
                         <h2 className="font-bold text-lg">Commission History</h2>
                         <span className="text-xs font-semibold text-slate-400">
-              {rows.length} records
-            </span>
+                            {rows.length} records
+                        </span>
                     </div>
 
                     <div className="space-y-4">

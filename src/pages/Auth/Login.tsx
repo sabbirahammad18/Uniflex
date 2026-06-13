@@ -167,7 +167,10 @@ const Login = () => {
           </form>
         </section>
 
-        <footer className="mt-auto pb-3 pt-10 flex items-center justify-center">
+        <footer className="mt-auto pb-3 pt-8 flex items-center justify-center flex-col">
+          <Link to={'/privacy-policy'} className="text-[12px] font-mono tracking-wider text-slate-800 hover:underline">
+            Privacy Policy
+          </Link>
           <p className="text-[11px] font-mono tracking-wider text-slate-400">
             Developed by HSBLCO V2.1
           </p>

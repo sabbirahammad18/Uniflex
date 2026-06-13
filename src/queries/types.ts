@@ -166,6 +166,11 @@ export type EarningCustomer = {
   customer_name: string | null;
   amount: number;
   date: string | null;
+  road_no: string;
+  block_no: string;
+  sector_no: string;
+  property_no: string;
+  withdraw: number;
 };
 
 export type EarningCategory = {

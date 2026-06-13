@@ -1,5 +1,5 @@
-import { Suspense, lazy } from "react";
-import { Routes, Route } from "react-router-dom"; // Use "react-router" for v7+
+import {Suspense, lazy} from "react";
+import {Routes, Route} from "react-router-dom"; // Use "react-router" for v7+
 import Login from "../pages/Auth/Login";
 import AuthLayout from "../layout/AuthLayout";
 import Dashboard from "../pages/Dashboard";
@@ -22,81 +22,83 @@ import MoneyReceipt from "../pages/booking/MoneyReceipt.tsx";
 import ProjectDetails from "../pages/project/ProjectDetails.tsx";
 import BookingDetails from "../pages/booking/BookingDetails.tsx";
 import NotificationPage from "@/pages/Notification";
-import { GuestRoute, ProtectedRoute } from "./AuthGuards";
+import {GuestRoute, ProtectedRoute} from "./AuthGuards";
 import NewPassword from "@/pages/Auth/NewPassword.tsx";
 import ForgetPassword from "@/pages/Auth/ForgetPassword.tsx";
 import Otp from "@/pages/Auth/Otp.tsx";
 import PaymentResult from "@/pages/PaymentResult.tsx";
 import Management from "@/pages/Management.tsx";
+import PrivacyPolicy from "@/pages/PrivacyPolicy.tsx";
 
-const TestPage = lazy(() => import("@/pages/test.tsx"));
+const TestPage = lazy(() => import("@/pages/Map.tsx"));
 const ProjectMapPage = lazy(() => import("@/pages/profile/ProjectMapPage"));
 
 const RouteLoader = () => (
-  <div className="grid min-h-[calc(100dvh-120px)] place-items-center bg-white text-[#07277F]">
-    <span className="material-symbols-outlined animate-pulse text-3xl">progress_activity</span>
-  </div>
+    <div className="grid min-h-[calc(100dvh-120px)] place-items-center bg-white text-[#07277F]">
+        <span className="material-symbols-outlined animate-pulse text-3xl">progress_activity</span>
+    </div>
 );
 
 const AppRoute = () => {
-  return (
-    <Routes>
-      <Route element={<GuestRoute />}>
-        <Route path="/" element={<AuthLayout />}>
-          <Route path="/" element={<Login />} />
-          <Route path="forgetpassword" element={<ForgetPassword />} />
-          <Route path="otp" element={<Otp />} />
-          <Route path="newpassword" element={<NewPassword />} />
-        </Route>
-      </Route>
+    return (
+        <Routes>
+            <Route element={<GuestRoute/>}>
+                <Route path="/" element={<AuthLayout/>}>
+                    <Route path="/" element={<Login/>}/>
+                    <Route path="forgetpassword" element={<ForgetPassword/>}/>
 
-      <Route element={<ProtectedRoute />}>
-        <Route path="/" element={<Layout />}>
-          <Route path="dashboard" element={<Dashboard />} />
-          <Route path="profile" element={<Profile />} />
-          <Route
-            path="profile/map"
-            element={
-              <Suspense fallback={<RouteLoader />}>
-                <ProjectMapPage />
-              </Suspense>
-            }
-          />
-          <Route  path="management" element={ <Management />}/>
-          <Route path="project" element={<Project />} />
-          <Route path="payment-result" element={<PaymentResult />} />
-          <Route path="project/:id" element={<ProjectDetails />} />
-          <Route path="booking" element={<Booking />} />
-          <Route path="booking/:id" element={<BookingDetails />} />
-          <Route path="notifications" element={<NotificationPage />} />
-          <Route path="setting" element={<Setting />} />
-          <Route path="customer" element={<Customer />} />
-          <Route path="employee" element={<Employee />} />
-          <Route path="CustomerProfile" element={<CustomerProfile />} />
-          <Route path="PaymentDetails" element={<PaymentDetails />} />
-          <Route path="MoneyReceipt" element={<MoneyReceipt />} />
-          <Route path="allstatement" element={<All_Statement />} />
-          <Route path="customerpayment" element={<Customerpayment />} />
-          <Route element={<ProtectedRoute allowedRoles={["marketing"]} />}>
-            <Route path="payment" element={<Payment title="Current Balance" amount="৳ 0" date="Live balance" />} />
-            <Route path="commission" element={<Commission />} />
-            <Route path="achievement" element={<Achievement />} />
-            <Route path="request" element={<Paymentrequest />} />
-          </Route>
-          <Route
-            path="map"
-            element={
-              <Suspense fallback={<RouteLoader />}>
-                <TestPage />
-              </Suspense>
-            }
-          />
-
-          {/* Default route for unmatched paths */}
-        </Route>
-      </Route>
-    </Routes>
-  );
+                    <Route path="otp" element={<Otp/>}/>
+                    <Route path="newpassword" element={<NewPassword/>}/>
+                </Route>
+            </Route>
+            <Route path="/privacy-policy" element={<PrivacyPolicy/>}/>
+            <Route element={<ProtectedRoute/>}>
+                <Route path="/" element={<Layout/>}>
+                    <Route path="dashboard" element={<Dashboard/>}/>
+                    <Route path="profile" element={<Profile/>}/>
+                    <Route
+                        path="profile/map"
+                        element={
+                            <Suspense fallback={<RouteLoader/>}>
+                                <ProjectMapPage/>
+                            </Suspense>
+                        }
+                    />
+                    <Route path="management" element={<Management/>}/>
+                    <Route path="project" element={<Project/>}/>
+                    <Route path="payment-result" element={<PaymentResult/>}/>
+                    <Route path="project/:id" element={<ProjectDetails/>}/>
+                    <Route path="booking" element={<Booking/>}/>
+                    <Route path="booking/:id" element={<BookingDetails/>}/>
+                    <Route path="notifications" element={<NotificationPage/>}/>
+                    <Route path="setting" element={<Setting/>}/>
+                    <Route path="customer" element={<Customer/>}/>
+                    <Route path="employee" element={<Employee/>}/>
+                    <Route path="CustomerProfile" element={<CustomerProfile/>}/>
+                    <Route path="PaymentDetails" element={<PaymentDetails/>}/>
+                    <Route path="MoneyReceipt" element={<MoneyReceipt/>}/>
+                    <Route path="allstatement" element={<All_Statement/>}/>
+                    <Route path="customerpayment" element={<Customerpayment/>}/>
+                    <Route element={<ProtectedRoute allowedRoles={["marketing"]}/>}>
+                        <Route path="payment"
+                               element={<Payment title="Current Balance" amount="৳ 0" date="Live balance"/>}/>
+                        <Route path="commission" element={<Commission/>}/>
+                        <Route path="achievement" element={<Achievement/>}/>
+                        <Route path="request" element={<Paymentrequest/>}/>
+                    </Route>
+                    <Route
+                        path="map"
+                        element={
+                            <Suspense fallback={<RouteLoader/>}>
+                                <TestPage/>
+                            </Suspense>
+                        }
+                    />
+                    {/* Default route for unmatched paths */}
+                </Route>
+            </Route>
+        </Routes>
+    );
 };
 
 export default AppRoute;

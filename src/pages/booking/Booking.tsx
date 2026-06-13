@@ -22,7 +22,7 @@ const BookingManagement = () => {
   const { data, isLoading, isError } = useGetBookingsQuery({
     payment_status: paymentFilter !== "all" ? paymentFilter : undefined,
     status: statusFilter !== "all" ? statusFilter : undefined,
-    page,
+    page
   });
   const bookings = data?.data || [];
   const lastPage = data?.last_page ?? 1;

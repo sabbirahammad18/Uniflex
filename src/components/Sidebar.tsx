@@ -150,6 +150,16 @@ const Sidebar = ({sidebarOpen, setSidebarOpen}: SidebarProps) => {
                 </span>
                                 Customer Payment
                             </Link>
+                            <Link
+                                to="/privacy-policy"
+                                onClick={closeSidebar}
+                                className={subMenuClass}
+                            >
+               <span className="material-symbols-outlined">
+shield_locked
+</span>
+                                Privacy Policy
+                            </Link>
                         </div>
 
                         {/* LOGOUT */}

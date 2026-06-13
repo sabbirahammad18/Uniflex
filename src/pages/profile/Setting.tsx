@@ -171,6 +171,7 @@ function Setting() {
                 <input
                   type="text"
                   value={profileName}
+                  readOnly
                   onChange={(event) => setName(event.target.value)}
                   placeholder="Enter new name"
                   className="w-full px-4 py-3 rounded-xl bg-white border outline-none focus:ring-2 focus:ring-[#07277F]"
