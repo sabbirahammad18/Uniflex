@@ -183,6 +183,8 @@ export type EarningCategory = {
 export type EarningBreakdownResponse = {
   earnings_breakdown: EarningCategory[];
   total_commission: number;
+  total_income?: number;
+  total_expense?: number;
 };
 
 export type PaymentSummary = {
@@ -255,6 +257,79 @@ export type Pagination = {
 export type RecentTransactionsResponse = {
   data: RecentTransaction[];
   pagination: Pagination;
+};
+
+export type ManagementFilterOption = {
+  value: string | number;
+  label: string;
+};
+
+export type ManagementRoleOption = {
+  id: number;
+  name: string;
+};
+
+export type ManagementUser = {
+  id: number;
+  name: string | null;
+  uid: string | null;
+  email: string | null;
+  phone_number: string | null;
+  avatar: string | null;
+  avatar_url: string | null;
+  role_id: number | null;
+  role_name: string | null;
+  designation: string | null;
+  status: number;
+  status_label: string;
+  joined_at: string | null;
+  joined_at_human: string | null;
+};
+
+export type ManagementUsersResponse = {
+  data: ManagementUser[];
+  pagination: Pagination;
+  filters: {
+    roles: ManagementRoleOption[];
+    statuses: ManagementFilterOption[];
+  };
+};
+
+export type ManagementUsersParams = {
+  page?: number;
+  per_page?: number;
+  search?: string;
+  role_id?: number | "";
+  status?: number | "";
+};
+
+export type ManagementBooking = {
+  booking_id: number;
+  customer_uid: string | null;
+  customer_name: string | null;
+  phone_number: string | null;
+  project_name: string | null;
+  payable_amount: number;
+  paid_amount: number;
+  due_amount: number;
+  payment_status: "due" | "paid";
+  created_at: string | null;
+  money_receipt_url: string | null;
+};
+
+export type ManagementBookingsResponse = {
+  data: ManagementBooking[];
+  pagination: Pagination;
+  filters: {
+    payment_statuses: ManagementFilterOption[];
+  };
+};
+
+export type ManagementBookingsParams = {
+  page?: number;
+  per_page?: number;
+  search?: string;
+  payment_status?: "due" | "paid" | "";
 };
 
 export type AppNotification = {

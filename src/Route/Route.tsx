@@ -29,6 +29,8 @@ import Otp from "@/pages/Auth/Otp.tsx";
 import PaymentResult from "@/pages/PaymentResult.tsx";
 import Management from "@/pages/Management.tsx";
 import PrivacyPolicy from "@/pages/PrivacyPolicy.tsx";
+import Users from "@/pages/customer/Users.tsx";
+import AllBookings from "@/pages/booking/AllBookings.tsx";
 
 const TestPage = lazy(() => import("@/pages/Map.tsx"));
 const ProjectMapPage = lazy(() => import("@/pages/profile/ProjectMapPage"));
@@ -79,6 +81,10 @@ const AppRoute = () => {
                     <Route path="MoneyReceipt" element={<MoneyReceipt/>}/>
                     <Route path="allstatement" element={<All_Statement/>}/>
                     <Route path="customerpayment" element={<Customerpayment/>}/>
+                    <Route element={<ProtectedRoute allowedRoles={["super-admin", "admin"]}/>}>
+                        <Route path="users" element={<Users/>}/>
+                        <Route path="bookings" element={<AllBookings/>}/>
+                    </Route>
                     <Route element={<ProtectedRoute allowedRoles={["marketing"]}/>}>
                         <Route path="payment"
                                element={<Payment title="Current Balance" amount="৳ 0" date="Live balance"/>}/>

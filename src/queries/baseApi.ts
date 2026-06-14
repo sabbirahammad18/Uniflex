@@ -35,6 +35,8 @@ export const baseApi = createApi({
     "Projects",
     "Project",
     "Bookings",
+    "ManagementBookings",
+    "ManagementUsers",
     "Earnings",
     "Payments",
     "Payouts",

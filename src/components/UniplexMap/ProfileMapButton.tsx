@@ -11,9 +11,7 @@ export default function ProfileMapButton() {
         <MdMap aria-hidden="true" size={23} />
       </div>
       <span className="text-sm leading-4 font-medium text-[#00176b]">
-        Project
-        <br />
-        Map
+        Project Map
       </span>
     </Link>
   );

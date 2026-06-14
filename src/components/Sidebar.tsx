@@ -94,11 +94,6 @@ const Sidebar = ({sidebarOpen, setSidebarOpen}: SidebarProps) => {
 
                         {
                             marketingUser ? <>
-                                <Link to="/request" onClick={closeSidebar} className={subMenuClass}>
-                                    <span className="material-symbols-outlined">payments</span>
-                                    Withdraw Request
-                                </Link>
-
                                 <Link to="/payment" onClick={closeSidebar} className={subMenuClass}>
                                     <span className="material-symbols-outlined">history</span>
                                     Withdraw History
@@ -140,16 +135,6 @@ const Sidebar = ({sidebarOpen, setSidebarOpen}: SidebarProps) => {
                                 All Customer
                             </Link>
 
-                            <Link
-                                to="/customerpayment"
-                                onClick={closeSidebar}
-                                className={subMenuClass}
-                            >
-                <span className="material-symbols-outlined">
-                  account_balance_wallet
-                </span>
-                                Customer Payment
-                            </Link>
                             <Link
                                 to="/privacy-policy"
                                 onClick={closeSidebar}
