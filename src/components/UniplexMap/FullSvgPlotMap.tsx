@@ -10,7 +10,7 @@ import {
   type ChangeEvent,
   type MouseEvent as ReactMouseEvent,
 } from "react";
-import { MdCenterFocusStrong, MdClose, MdManageSearch, MdSearch } from "react-icons/md";
+import { MdCenterFocusStrong, MdClose, MdManageSearch } from "react-icons/md";
 import { TransformWrapper, TransformComponent } from "react-zoom-pan-pinch";
 import fullMapPaths from "../../data/full_map_plot_paths.json";
 import "./FullSvgPlotMap.css";
@@ -216,12 +216,6 @@ const buildSearchText = (plot: Omit<MapPlot, "searchText">) =>
         .filter(Boolean)
         .join(" ");
 
-const getOptionList = (plots: MapPlot[], key: "category" | "sector" | "block" | "road") => {
-  const values = new Set<string>();
-  plots.forEach((p) => { const v = normalizeValue(p[key]); if (v) values.add(v); });
-  return Array.from(values).sort((a, b) => a.localeCompare(b, undefined, { numeric: true }));
-};
-
 const money = new Intl.NumberFormat("en-BD", {
   style: "currency", currency: "BDT", maximumFractionDigits: 0,
 });
@@ -247,7 +241,7 @@ export default function FullSvgPlotMap({
   );
   const [query,          setQuery]          = useState("");
   const [statusFilter,   setStatusFilter]   = useState<PlotStatus | "all">("all");
-  const [categoryFilter, setCategoryFilter] = useState("all");
+  const [categoryFilter] = useState("all");
   const [sectorFilter,   setSectorFilter]   = useState("all");
   const [blockFilter,    setBlockFilter]    = useState("all");
   const [roadFilter,     setRoadFilter]     = useState("all");
@@ -359,12 +353,6 @@ export default function FullSvgPlotMap({
   }, [mapPlots]);
 
   const selectedPlot = selectedPlotId ? plotById.get(selectedPlotId) ?? null : null;
-
-  // ── Filter options ──────────────────────────────────────────────────────────
-  const categoryOptions = useMemo(() => getOptionList(mapPlots, "category"), [mapPlots]);
-  const sectorOptions   = useMemo(() => getOptionList(mapPlots, "sector"),   [mapPlots]);
-  const blockOptions    = useMemo(() => getOptionList(mapPlots, "block"),    [mapPlots]);
-  const roadOptions     = useMemo(() => getOptionList(mapPlots, "road"),     [mapPlots]);
 
   const filteredPlots = useMemo(() => {
     const terms = normalizeText(deferredQuery).split(/\s+/).filter(Boolean);

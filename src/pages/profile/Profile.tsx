@@ -23,7 +23,6 @@ import ProfileMapButton from "@/components/UniplexMap/ProfileMapButton";
 import {MdFactory} from "react-icons/md";
 import {AiOutlineUser} from "react-icons/ai";
 import {TbBrandBooking} from "react-icons/tb";
-import {FaMoneyBillWave, FaWallet} from "react-icons/fa";
 
 type PlotForm = {
     sectorNo: string;
