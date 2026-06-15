@@ -31,6 +31,8 @@ import Management from "@/pages/Management.tsx";
 import PrivacyPolicy from "@/pages/PrivacyPolicy.tsx";
 import Users from "@/pages/customer/Users.tsx";
 import AllBookings from "@/pages/booking/AllBookings.tsx";
+import UserEdit from "@/pages/customer/UserEdit.tsx";
+import BookingEdit from "@/pages/booking/BookingEdit.tsx";
 
 const TestPage = lazy(() => import("@/pages/Map.tsx"));
 const ProjectMapPage = lazy(() => import("@/pages/profile/ProjectMapPage"));
@@ -83,7 +85,9 @@ const AppRoute = () => {
                     <Route path="customerpayment" element={<Customerpayment/>}/>
                     <Route element={<ProtectedRoute allowedRoles={["super-admin", "admin"]}/>}>
                         <Route path="users" element={<Users/>}/>
+                        <Route path="/users/edit/:id" element={<UserEdit/>}/>
                         <Route path="bookings" element={<AllBookings/>}/>
+                        <Route path="bookings/edit/:id" element={<BookingEdit/>}/>
                     </Route>
                     <Route element={<ProtectedRoute allowedRoles={["marketing"]}/>}>
                         <Route path="payment"

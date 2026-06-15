@@ -709,27 +709,14 @@ export default function FullSvgPlotMap({
                             "--status-border": STATUS_CONFIG[selectedPlot.status].border,
                           } as CSSProperties}
                       >
-                  {STATUS_CONFIG[selectedPlot.status].label}
-                </span>
+                      {STATUS_CONFIG[selectedPlot.status].label}
+                      </span>
                       <dl>
                         <div><dt>Size</dt>     <dd>{selectedPlot.size}</dd></div>
-                        <div><dt>Category</dt> <dd>{selectedPlot.category}</dd></div>
                         <div><dt>Sector</dt>   <dd>{formatOptional(selectedPlot.sector)}</dd></div>
                         <div><dt>Block</dt>    <dd>{formatOptional(selectedPlot.block)}</dd></div>
-                        <div className="full-svg-map__popover-wide">
-                          <dt>Road</dt>
-                          <dd>{formatOptional(selectedPlot.road)}</dd>
-                        </div>
-                        <div>
-                          <dt>Price</dt>
-                          <dd>{selectedPlot.price ? money.format(Number(selectedPlot.price)) : "Not available"}</dd>
-                        </div>
-                        <div><dt>Source layer</dt> <dd>{selectedPlot.sourceLayer}</dd></div>
-                        <div><dt>SVG path</dt>     <dd>{selectedPlot.svgPathId}</dd></div>
-                        <div className="full-svg-map__popover-wide">
-                          <dt>Plot UID</dt>
-                          <dd>{selectedPlot.plotUid}</dd>
-                        </div>
+                        <div><dt>Road</dt>    <dd>{formatOptional(selectedPlot.road)}</dd></div>
+
                       </dl>
                       {selectedPlot.customerName && (
                           <div className="full-svg-map__customer">

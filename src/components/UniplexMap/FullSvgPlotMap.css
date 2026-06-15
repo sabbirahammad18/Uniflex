@@ -581,10 +581,10 @@
 
   .full-svg-map__popover {
     border-radius: 8px 8px 0 0;
-    bottom: 0;
-    left: 0 !important;
+    bottom: -500px !important;
+    left: auto !important;
     max-width: none;
-    right: 0;
+    right: auto !important;
     top: auto !important;
     width: auto;
   }

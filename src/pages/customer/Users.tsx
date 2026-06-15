@@ -1,29 +1,38 @@
-import { useDeferredValue, useMemo, useState } from "react";
+import { useEffect, useMemo, useState } from "react";
+import { Link } from "react-router-dom";
 import { useGetManagementUsersQuery } from "@/queries/managementQuery";
+import {MdOutlineEdit} from "react-icons/md";
 
 const Users = () => {
   const [page, setPage] = useState(1);
   const [search, setSearch] = useState("");
+  const [debouncedSearch, setDebouncedSearch] = useState("");
   const [roleId, setRoleId] = useState<number | "">("");
-  const [status, setStatus] = useState<number | "">("");
-  const deferredSearch = useDeferredValue(search);
+
+  useEffect(() => {
+    const timer = window.setTimeout(() => {
+      setDebouncedSearch(search);
+    }, 400);
+
+    return () => {
+      window.clearTimeout(timer);
+    };
+  }, [search]);
 
   const query = useMemo(
     () => ({
       page,
       per_page: 10,
-      search: deferredSearch.trim() || undefined,
+      search: debouncedSearch.trim() || undefined,
       role_id: roleId,
-      status,
     }),
-    [deferredSearch, page, roleId, status],
+    [debouncedSearch, page, roleId],
   );
 
   const { data, isLoading, isFetching, isError } = useGetManagementUsersQuery(query);
   const users = data?.data || [];
   const pagination = data?.pagination;
   const roleOptions = data?.filters.roles || [];
-  const statusOptions = data?.filters.statuses || [];
 
   return (
     <div className="min-h-screen w-full bg-slate-50">
@@ -56,7 +65,7 @@ const Users = () => {
             />
           </div>
 
-          <div className="grid grid-cols-2 gap-3">
+          <div >
             <label className="space-y-1">
               <span className="text-[11px] font-bold uppercase tracking-[0.18em] text-slate-400">
                 Role
@@ -78,26 +87,7 @@ const Users = () => {
               </select>
             </label>
 
-            <label className="space-y-1">
-              <span className="text-[11px] font-bold uppercase tracking-[0.18em] text-slate-400">
-                Status
-              </span>
-              <select
-                value={status}
-                onChange={(event) => {
-                  setPage(1);
-                  setStatus(event.target.value ? Number(event.target.value) : "");
-                }}
-                className="h-11 w-full rounded-xl border border-slate-200 bg-white px-3 text-sm font-semibold text-slate-700 outline-none focus:border-[#07277F]"
-              >
-                <option value="">All statuses</option>
-                {statusOptions.map((option) => (
-                  <option key={String(option.value)} value={option.value}>
-                    {option.label}
-                  </option>
-                ))}
-              </select>
-            </label>
+
           </div>
 
           {pagination && (
@@ -106,7 +96,7 @@ const Users = () => {
                 <p className="text-[11px] font-bold uppercase tracking-[0.18em] text-slate-500">
                   Total
                 </p>
-                <p className="mt-2 text-xl font-black text-[#07277F]">
+                <p className="text-xl font-black text-[#07277F]">
                   {pagination.total}
                 </p>
               </div>
@@ -114,7 +104,7 @@ const Users = () => {
                 <p className="text-[11px] font-bold uppercase tracking-[0.18em] text-slate-500">
                   Page
                 </p>
-                <p className="mt-2 text-xl font-black text-emerald-700">
+                <p className="text-xl font-black text-emerald-700">
                   {pagination.current_page}
                 </p>
               </div>
@@ -122,7 +112,7 @@ const Users = () => {
                 <p className="text-[11px] font-bold uppercase tracking-[0.18em] text-slate-500">
                   Showing
                 </p>
-                <p className="mt-2 text-xl font-black text-amber-700">
+                <p className="text-xl font-black text-amber-700">
                   {users.length}
                 </p>
               </div>
@@ -151,68 +141,68 @@ const Users = () => {
             {users.map((user) => (
               <article
                 key={user.id}
-                className="rounded-2xl border border-slate-100 bg-white p-4 shadow-sm"
+                className="rounded-2xl border border-slate-200 bg-white p-3.5 shadow-[0_8px_24px_rgba(15,23,42,0.06)]"
               >
-                <div className="grid grid-cols-[auto_1fr] items-start gap-3">
+                <div className="grid grid-cols-[auto_1fr] items-start gap-2.5">
                   {user.avatar_url ? (
                     <img
                       src={user.avatar_url}
                       alt={user.name || "User"}
-                      className="h-12 w-12 rounded-2xl border border-slate-200 object-cover"
+                      className="h-11 w-11 rounded-xl border border-slate-200 object-cover"
                     />
                   ) : (
-                    <div className="grid h-12 w-12 place-items-center rounded-2xl bg-[#07277F] text-base font-black text-white">
+                    <div className="grid h-11 w-11 place-items-center rounded-xl bg-[#07277F] text-sm font-black text-white">
                       {(user.name || "U").slice(0, 1).toUpperCase()}
                     </div>
                   )}
 
                   <div className="min-w-0">
-                    <div className="flex items-start justify-between gap-3">
+                    <div className="flex items-start justify-between gap-2">
                       <div className="min-w-0">
-                        <h2 className="truncate text-base font-black text-slate-900">
+                        <h2 className="truncate text-[15px] font-black leading-tight text-slate-900">
                           {user.name || "Unnamed user"}
                         </h2>
-                        <p className="mt-1 truncate text-xs font-semibold text-slate-500">
+                        <p className="mt-0.5 truncate text-[11px] font-semibold text-slate-500">
                           {user.uid || "No UID"} {user.email ? `· ${user.email}` : ""}
                         </p>
                       </div>
-                      <span
-                        className={`shrink-0 rounded-full px-2.5 py-1 text-[10px] font-black ${
-                          user.status === 1
-                            ? "bg-emerald-100 text-emerald-700"
-                            : "bg-slate-100 text-slate-600"
-                        }`}
-                      >
-                        {user.status_label}
-                      </span>
+<div>
+  <Link
+      to={`/users/edit/${user.id}`}
+      className="grid h-8 w-8 place-items-center rounded-xl border border-[#07277F] bg-white text-sm font-black text-[#07277F] transition-colors hover:bg-blue-50"
+  >
+    <MdOutlineEdit size={20} />
+  </Link>
+</div>
                     </div>
 
-                    <div className="mt-3 grid grid-cols-2 gap-2 text-xs">
-                      <div className="rounded-xl bg-slate-50 p-3">
+                    <div className="mt-2.5 grid grid-cols-2 gap-2 text-xs">
+                      <div className="rounded-xl bg-slate-50 px-3 py-2.5">
                         <p className="font-bold text-slate-500">Role</p>
-                        <p className="mt-1 font-black text-[#07277F]">
+                        <p className="mt-0.5 font-black text-[#07277F]">
                           {user.role_name || user.designation || "N/A"}
                         </p>
                       </div>
-                      <div className="rounded-xl bg-slate-50 p-3">
+                      <div className="rounded-xl bg-slate-50 px-3 py-2.5">
                         <p className="font-bold text-slate-500">Joined</p>
-                        <p className="mt-1 font-black text-slate-900">
+                        <p className="mt-0.5 font-black text-slate-900">
                           {user.joined_at || "N/A"}
                         </p>
                       </div>
                     </div>
 
-                    <div className="mt-3 rounded-xl bg-blue-50 p-3">
+                    <div className="mt-2.5 rounded-xl border border-blue-100 bg-blue-50 px-3 py-2.5">
                       <p className="text-[11px] font-bold uppercase tracking-[0.18em] text-slate-500">
                         Contact
                       </p>
-                      <p className="mt-1 text-sm font-bold text-[#07277F]">
+                      <p className="mt-1 text-[15px] font-black leading-tight text-[#07277F]">
                         {user.phone_number || "Phone not available"}
                       </p>
-                      <p className="mt-1 text-xs font-semibold text-slate-500">
+                      <p className="mt-0.5 text-[11px] font-semibold text-slate-500">
                         {user.joined_at_human || ""}
                       </p>
                     </div>
+
                   </div>
                 </div>
               </article>

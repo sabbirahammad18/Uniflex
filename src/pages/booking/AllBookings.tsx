@@ -1,21 +1,52 @@
-import { useDeferredValue, useMemo, useState } from "react";
+import { useEffect, useMemo, useState } from "react";
+import { Link } from "react-router-dom";
 import { useGetManagementBookingsQuery } from "@/queries/managementQuery";
 import { formatCurrency } from "@/utils/format";
+
+const statusMeta: Record<number, { label: string; badge: string; card: string }> = {
+  0: {
+    label: "Pending",
+    badge: "bg-amber-100 text-amber-700",
+    card: "border-amber-100 border-l-amber-500",
+  },
+  1: {
+    label: "Approved",
+    badge: "bg-emerald-100 text-emerald-700",
+    card: "border-emerald-100 border-l-emerald-500",
+  },
+  2: {
+    label: "Rejected",
+    badge: "bg-rose-100 text-rose-700",
+    card: "border-rose-100 border-l-rose-500",
+  },
+};
 
 const AllBookings = () => {
   const [page, setPage] = useState(1);
   const [search, setSearch] = useState("");
+  const [debouncedSearch, setDebouncedSearch] = useState("");
+  const [status, setStatus] = useState<number | "">("");
   const [paymentStatus, setPaymentStatus] = useState<"" | "due" | "paid">("");
-  const deferredSearch = useDeferredValue(search);
+
+  useEffect(() => {
+    const timer = window.setTimeout(() => {
+      setDebouncedSearch(search);
+    }, 400);
+
+    return () => {
+      window.clearTimeout(timer);
+    };
+  }, [search]);
 
   const query = useMemo(
     () => ({
       page,
       per_page: 10,
-      search: deferredSearch.trim() || undefined,
+      search: debouncedSearch.trim() || undefined,
+      status,
       payment_status: paymentStatus,
     }),
-    [deferredSearch, page, paymentStatus],
+    [debouncedSearch, page, paymentStatus, status],
   );
 
   const { data, isLoading, isFetching, isError } =
@@ -23,6 +54,7 @@ const AllBookings = () => {
 
   const bookings = data?.data || [];
   const pagination = data?.pagination;
+  const statusFilters = data?.filters.statuses || [];
   const paymentFilters = data?.filters.payment_statuses || [];
   const dueTotal = bookings.reduce(
     (total, booking) => total + Math.max(booking.due_amount, 0),
@@ -42,7 +74,7 @@ const AllBookings = () => {
           </p>
           <h1 className="mt-1 text-xl font-black">Bookings List</h1>
           <p className="mt-1 text-xs text-blue-100">
-            Approved active bookings from the backend dashboard
+            Filter pending, approved, and rejected bookings
           </p>
         </div>
 
@@ -64,40 +96,86 @@ const AllBookings = () => {
             />
           </div>
 
-          <div className="grid grid-flow-col auto-cols-max gap-2 overflow-x-auto pb-1 [-ms-overflow-style:none] [scrollbar-width:none] [&::-webkit-scrollbar]:hidden">
-            <button
-              type="button"
-              onClick={() => {
-                setPage(1);
-                setPaymentStatus("");
-              }}
-              className={`rounded-full px-3 py-2 text-xs font-black transition ${
-                paymentStatus === ""
-                  ? "bg-[#07277F] text-white"
-                  : "border border-slate-200 bg-white text-slate-600"
-              }`}
-            >
-              All
-            </button>
-            {paymentFilters
-              .filter((item) => item.value !== "all")
-              .map((item) => (
-                <button
-                  key={String(item.value)}
-                  type="button"
-                  onClick={() => {
-                    setPage(1);
-                    setPaymentStatus(item.value as "due" | "paid");
-                  }}
-                  className={`rounded-full px-3 py-2 text-xs font-black transition ${
-                    paymentStatus === item.value
-                      ? "bg-[#07277F] text-white"
-                      : "border border-slate-200 bg-white text-slate-600"
-                  }`}
-                >
-                  {item.label}
-                </button>
-              ))}
+          <div className="space-y-2">
+            <p className="text-[11px] font-bold uppercase tracking-[0.18em] text-slate-400">
+              Booking status
+            </p>
+            <div className="grid grid-flow-col auto-cols-max gap-2 overflow-x-auto pb-1 [-ms-overflow-style:none] [scrollbar-width:none] [&::-webkit-scrollbar]:hidden">
+              <button
+                type="button"
+                onClick={() => {
+                  setPage(1);
+                  setStatus("");
+                }}
+                className={`rounded-full px-3 py-2 text-xs font-black transition ${
+                  status === ""
+                    ? "bg-[#07277F] text-white"
+                    : "border border-slate-200 bg-white text-slate-600"
+                }`}
+              >
+                All
+              </button>
+              {statusFilters
+                .filter((item) => item.value !== "all")
+                .map((item) => (
+                  <button
+                    key={String(item.value)}
+                    type="button"
+                    onClick={() => {
+                      setPage(1);
+                      setStatus(Number(item.value));
+                    }}
+                    className={`rounded-full px-3 py-2 text-xs font-black transition ${
+                      status === Number(item.value)
+                        ? "bg-[#07277F] text-white"
+                        : "border border-slate-200 bg-white text-slate-600"
+                    }`}
+                  >
+                    {item.label}
+                  </button>
+                ))}
+            </div>
+          </div>
+
+          <div className="space-y-2">
+            <p className="text-[11px] font-bold uppercase tracking-[0.18em] text-slate-400">
+              Payment status
+            </p>
+            <div className="grid grid-flow-col auto-cols-max gap-2 overflow-x-auto pb-1 [-ms-overflow-style:none] [scrollbar-width:none] [&::-webkit-scrollbar]:hidden">
+              <button
+                type="button"
+                onClick={() => {
+                  setPage(1);
+                  setPaymentStatus("");
+                }}
+                className={`rounded-full px-3 py-2 text-xs font-black transition ${
+                  paymentStatus === ""
+                    ? "bg-[#07277F] text-white"
+                    : "border border-slate-200 bg-white text-slate-600"
+                }`}
+              >
+                All
+              </button>
+              {paymentFilters
+                .filter((item) => item.value !== "all")
+                .map((item) => (
+                  <button
+                    key={String(item.value)}
+                    type="button"
+                    onClick={() => {
+                      setPage(1);
+                      setPaymentStatus(item.value as "due" | "paid");
+                    }}
+                    className={`rounded-full px-3 py-2 text-xs font-black transition ${
+                      paymentStatus === item.value
+                        ? "bg-[#07277F] text-white"
+                        : "border border-slate-200 bg-white text-slate-600"
+                    }`}
+                  >
+                    {item.label}
+                  </button>
+                ))}
+            </div>
           </div>
 
           <div className="grid grid-cols-2 gap-3">
@@ -139,16 +217,13 @@ const AllBookings = () => {
 
           <section className="space-y-3">
             {bookings.map((booking) => {
+              const bookingStatus = statusMeta[booking.is_approved] || statusMeta[1];
               const isPaid = booking.payment_status === "paid";
 
               return (
                 <article
                   key={booking.booking_id}
-                  className={`rounded-2xl border border-l-4 bg-white p-4 shadow-sm ${
-                    isPaid
-                      ? "border-green-100 border-l-emerald-500"
-                      : "border-orange-100 border-l-amber-500"
-                  }`}
+                  className={`rounded-2xl border border-l-4 bg-white p-4 shadow-sm ${bookingStatus.card}`}
                 >
                   <div className="flex items-start justify-between gap-3">
                     <div className="min-w-0">
@@ -160,15 +235,22 @@ const AllBookings = () => {
                         {booking.customer_uid ? ` (${booking.customer_uid})` : ""}
                       </p>
                     </div>
-                    <span
-                      className={`shrink-0 rounded-full px-2.5 py-1 text-[10px] font-black ${
-                        isPaid
-                          ? "bg-emerald-100 text-emerald-700"
-                          : "bg-amber-100 text-amber-700"
-                      }`}
-                    >
-                      {isPaid ? "Paid" : "Due"}
-                    </span>
+                    <div className="flex flex-col items-end gap-1.5">
+                      <span
+                        className={`shrink-0 rounded-full px-2.5 py-1 text-[10px] font-black ${bookingStatus.badge}`}
+                      >
+                        {bookingStatus.label}
+                      </span>
+                      <span
+                        className={`shrink-0 rounded-full px-2.5 py-1 text-[10px] font-black ${
+                          isPaid
+                            ? "bg-emerald-100 text-emerald-700"
+                            : "bg-amber-100 text-amber-700"
+                        }`}
+                      >
+                        {isPaid ? "Paid" : "Due"}
+                      </span>
+                    </div>
                   </div>
 
                   <div className="mt-3 rounded-xl bg-slate-50 p-3">
@@ -204,7 +286,16 @@ const AllBookings = () => {
                     </div>
                   </div>
 
-
+                  {booking.is_approved === 0 ? (
+                    <div className="mt-3">
+                      <Link
+                        to={`/bookings/edit/${booking.booking_id}`}
+                        className="grid h-11 place-items-center rounded-2xl border border-[#07277F] bg-white text-sm font-black text-[#07277F]"
+                      >
+                        Edit Pending Booking
+                      </Link>
+                    </div>
+                  ) : null}
                 </article>
               );
             })}
