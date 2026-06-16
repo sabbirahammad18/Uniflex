@@ -16,6 +16,7 @@ export type CommissionItem = {
     block_no: string;
     sector_no: string;
     property_no: string;
+    category_id:number;
 };
 
 const CommissionHistory = ({ item }: { item: CommissionItem }) => {
@@ -54,6 +55,7 @@ const CommissionHistory = ({ item }: { item: CommissionItem }) => {
             block_no: item.block_no,
             sector_no: item.sector_no,
             property_no: item.property_no,
+            category_id:item.category_id,
         };
 
         try {

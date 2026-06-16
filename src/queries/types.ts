@@ -183,6 +183,7 @@ export type EarningCategory = {
 export type EarningBreakdownResponse = {
   earnings_breakdown: EarningCategory[];
   total_commission: number;
+  category_id:number;
   total_income?: number;
   total_expense?: number;
 };

@@ -16,16 +16,18 @@ function CommissionPage() {
 
     const allRows: CommissionItem[] =
         data?.earnings_breakdown.flatMap((category) =>
-            category.customers.map((customer) => ({
-                // IDs
-                id: `${category.category_name}-${customer.customer_id}`,
+            category.customers.map((customer, customerIndex) => ({
+                // IDs — use index to guarantee uniqueness across all rows
+                id: `${category.category_name}-${customer.customer_id}-${customerIndex}`,
+
                 customerId: customer.customer_uid || "N/A",
+                category_id:category?.category_id ?? null,
 
                 // Names
                 customer: (customer.customer_name || "Customer")
-                    .replace(/\s+and\s+other[''s]*/gi, "")
+                    .replace(/\s+and\s+other['s]*/gi, "")
                     .trim(),
-                project: category.category_name,
+                project: category.category_name,   // ← this IS the category label shown on the card
 
                 // Money
                 amount: formatCurrency(customer.amount),
@@ -55,7 +57,7 @@ function CommissionPage() {
         isActive
             ? "px-3 py-1.5 rounded-full text-xs font-bold bg-white text-[#07277F] shadow-sm transition"
             : "px-3 py-1.5 rounded-full text-xs font-bold bg-white/20 text-white transition";
-
+    console.log(rows)
     return (
         <div className="bg-slate-100 flex justify-center">
             <div className="w-full max-w-107 bg-white pb-24">
@@ -127,7 +129,7 @@ function CommissionPage() {
                             </p>
                         )}
                         {rows.map((item) => (
-                            <CommissionHistory key={item.id} item={item} />
+                            <CommissionHistory key={item.id} item={item}  />
                         ))}
                     </div>
                 </div>

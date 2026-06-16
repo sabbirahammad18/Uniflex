@@ -13,7 +13,6 @@ import Customer from "../pages/customer/Customer.tsx";
 import Employee from "../pages/employee/Employee.tsx";
 import Commission from "../pages/commission/Commission";
 import All_Statement from "../pages/All_statement";
-import Customerpayment from "../pages/customer/Customerpayment.tsx";
 import Achievement from "../pages/Achievement";
 import Paymentrequest from "../pages/payment/paymentrequest.tsx";
 import PaymentDetails from "../pages/payment/PaymentDetails";
@@ -82,7 +81,6 @@ const AppRoute = () => {
                     <Route path="PaymentDetails" element={<PaymentDetails/>}/>
                     <Route path="MoneyReceipt" element={<MoneyReceipt/>}/>
                     <Route path="allstatement" element={<All_Statement/>}/>
-                    <Route path="customerpayment" element={<Customerpayment/>}/>
                     <Route element={<ProtectedRoute allowedRoles={["super-admin", "admin"]}/>}>
                         <Route path="users" element={<Users/>}/>
                         <Route path="/users/edit/:id" element={<UserEdit/>}/>
