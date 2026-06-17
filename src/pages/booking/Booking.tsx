@@ -255,7 +255,7 @@ const BookingManagement = () => {
                     {/* Footer Actions */}
                     <div className="grid grid-flow-row gap-2">
                       <div className="grid grid-cols-[1fr_auto] gap-2">
-                        <Link to={`/booking/${booking.booking_id}`} className="w-full">
+                        <Link to={`/booking/${booking.project_id}?user_id=${booking.user_id}`} className="w-full">
                           <button className="h-11 w-full rounded-xl bg-[#07277f] text-white font-bold grid grid-cols-[auto_auto] items-center justify-center gap-2 active:scale-[0.98] transition">
                             <span className="material-symbols-outlined text-body-lg">visibility</span>
                             View

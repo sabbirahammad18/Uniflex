@@ -94,6 +94,7 @@ export type ProjectDetails = {
 };
 
 export type Booking = {
+  project_id: number;
   booking_id: number;
   is_approved:number;
   user_id: number | null;
@@ -178,12 +179,12 @@ export type EarningCategory = {
   total_amount: number;
   total_customers: number;
   customers: EarningCustomer[];
+  category_id:number;
 };
 
 export type EarningBreakdownResponse = {
   earnings_breakdown: EarningCategory[];
   total_commission: number;
-  category_id:number;
   total_income?: number;
   total_expense?: number;
 };
@@ -363,7 +364,7 @@ export type ManagementUserProfileResponse = {
 };
 
 export type UpdateManagementUserPayload = {
-  id: number;
+  id?: number;
   name?: string;
   email?: string;
   role_id?: number | "";

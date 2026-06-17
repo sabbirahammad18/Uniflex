@@ -216,9 +216,7 @@ const buildSearchText = (plot: Omit<MapPlot, "searchText">) =>
         .filter(Boolean)
         .join(" ");
 
-const money = new Intl.NumberFormat("en-BD", {
-  style: "currency", currency: "BDT", maximumFractionDigits: 0,
-});
+
 
 // ─── Component ────────────────────────────────────────────────────────────────
 
@@ -731,7 +729,6 @@ export default function FullSvgPlotMap({
               </div>
           )}
         </TransformWrapper>
-
       </section>
   );
 }

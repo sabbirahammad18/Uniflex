@@ -72,11 +72,13 @@ const toManagementUserFormData = (payload: UpdateManagementUserPayload) => {
   return formData;
 };
 
-const toPendingBookingFormData = (payload: PendingBookingUpdatePayload) => {
+const toPendingBookingFormData = (
+    payload: Omit<PendingBookingUpdatePayload, "id">
+) => {
   const formData = new FormData();
 
   Object.entries(payload).forEach(([key, value]) => {
-    if (key === "id" || value === undefined || value === null || value === "") {
+    if (value === undefined || value === null || value === "") {
       return;
     }
 

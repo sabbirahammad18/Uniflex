@@ -2,6 +2,7 @@ import { useState, useEffect } from "react";
 import { createPortal } from "react-dom";
 import { BsCash } from "react-icons/bs";
 import { HiOutlineLocationMarker } from "react-icons/hi";
+import { useWithdrawRequestMutation } from "@/queries/withdrawQuery";
 
 export type CommissionItem = {
     id: string;
@@ -16,22 +17,18 @@ export type CommissionItem = {
     block_no: string;
     sector_no: string;
     property_no: string;
-    category_id:number;
+    category_id: number;
 };
 
 const CommissionHistory = ({ item }: { item: CommissionItem }) => {
     const [modalOpen, setModalOpen] = useState(false);
     const [payoutAmount, setPayoutAmount] = useState<number>(item.rawAmount);
-    const [loading, setLoading] = useState(false);
     const [submitErr, setSubmitErr] = useState("");
 
-    // Body scroll lock
+    const [withdrawRequest, { isLoading }] = useWithdrawRequestMutation();
+
     useEffect(() => {
-        if (modalOpen) {
-            document.body.style.overflow = "hidden";
-        } else {
-            document.body.style.overflow = "unset";
-        }
+        document.body.style.overflow = modalOpen ? "hidden" : "unset";
         return () => { document.body.style.overflow = "unset"; };
     }, [modalOpen]);
 
@@ -48,35 +45,18 @@ const CommissionHistory = ({ item }: { item: CommissionItem }) => {
             return;
         }
 
-        setLoading(true);
-        const payload = {
-            amount: payoutAmount,
-            road_no: item.road_no,
-            block_no: item.block_no,
-            sector_no: item.sector_no,
-            property_no: item.property_no,
-            category_id:item.category_id,
-        };
-
         try {
-            const res = await fetch("/api/withdraw-request", {
-                method: "POST",
-                headers: {
-                    "Content-Type": "application/json",
-                    "Accept": "application/json",
-                },
-                body: JSON.stringify(payload),
-            });
-            if (res.ok) {
-                setModalOpen(false);
-            } else {
-                const data = await res.json().catch(() => ({}));
-                setSubmitErr(data?.message ?? "Payout failed. Please try again.");
-            }
-        } catch {
-            setSubmitErr("Network error. Please try again.");
-        } finally {
-            setLoading(false);
+            await withdrawRequest({
+                amount: payoutAmount,
+                road_no: item.road_no,
+                block_no: item.block_no,
+                sector_no: item.sector_no,
+                property_no: item.property_no,
+                category_id: item.category_id,
+            }).unwrap();
+            setModalOpen(false);
+        } catch (err: any) {
+            setSubmitErr(err?.data?.message ?? "Payout failed. Please try again.");
         }
     };
 
@@ -252,12 +232,12 @@ const CommissionHistory = ({ item }: { item: CommissionItem }) => {
                                     <button
                                         type="button"
                                         onClick={handlePayout}
-                                        disabled={loading}
+                                        disabled={isLoading}
                                         className="h-14 w-full rounded-xl bg-[#07277f] text-white font-extrabold text-base flex items-center justify-center gap-3 px-5 disabled:opacity-40 active:scale-[0.98] transition"
                                     >
                                         <BsCash size={20} />
                                         <span className="flex-1 text-center">
-                                            {loading ? "Processing…" : "Confirm Payout"}
+                                            {isLoading ? "Processing…" : "Confirm Payout"}
                                         </span>
                                         <span className="material-symbols-outlined text-lg">arrow_forward</span>
                                     </button>
