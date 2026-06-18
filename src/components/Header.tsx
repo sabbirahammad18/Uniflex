@@ -27,7 +27,21 @@ const Header = ({ setSidebarOpen }: HeaderProps) => {
                 </Link>
             </div>
 
-            <div className="flex items-center gap-3">
+            <div className="flex items-center gap-2">
+                <Link
+                    to="tel:+8801760686162"
+                    className="relative w-9 h-9 rounded-full grid place-items-center hover:bg-slate-100 active:scale-95 transition"
+                    aria-label="Notifications"
+                >
+            <span className="material-symbols-outlined text-[#07277f] text-h3">
+              support_agent
+            </span>
+                    {unreadCount > 0 && (
+                        <span className="absolute top-1 right-1 min-w-4 h-4 rounded-full bg-red-500 px-1 text-[9px] font-bold leading-4 text-white text-center">
+                            {unreadCount > 99 ? "99+" : unreadCount}
+                        </span>
+                    )}
+                </Link>
                 <Link
                     to="/notifications"
                     className="relative w-9 h-9 rounded-full grid place-items-center hover:bg-slate-100 active:scale-95 transition"

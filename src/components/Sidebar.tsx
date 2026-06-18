@@ -145,6 +145,16 @@ shield_locked
 </span>
                                 Privacy Policy
                             </Link>
+                            <Link
+                                to="tel:+8801760686162"
+                                onClick={closeSidebar}
+                                className={subMenuClass}
+                            >
+               <span className="material-symbols-outlined">
+support_agent
+</span>
+                                Customer Care
+                            </Link>
                         </div>
 
                         {/* LOGOUT */}

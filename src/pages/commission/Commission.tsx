@@ -28,7 +28,8 @@ function CommissionPage() {
                     .replace(/\s+and\s+other['s]*/gi, "")
                     .trim(),
                 project: category.category_name,   // ← this IS the category label shown on the card
-
+                pending_withdraw_amount:customer.pending_withdraw_amount,
+                total_amount:customer.total_amount,
                 // Money
                 amount: formatCurrency(customer.amount),
                 rawAmount: customer.amount ?? 0,
@@ -57,7 +58,7 @@ function CommissionPage() {
         isActive
             ? "px-3 py-1.5 rounded-full text-xs font-bold bg-white text-[#07277F] shadow-sm transition"
             : "px-3 py-1.5 rounded-full text-xs font-bold bg-white/20 text-white transition";
-    console.log(rows)
+
     return (
         <div className="bg-slate-100 flex justify-center">
             <div className="w-full max-w-107 bg-white pb-24">

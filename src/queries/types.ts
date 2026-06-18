@@ -172,6 +172,8 @@ export type EarningCustomer = {
   sector_no: string;
   property_no: string;
   withdraw: number;
+  total_amount: number;
+  pending_withdraw_amount: number;
 };
 
 export type EarningCategory = {
