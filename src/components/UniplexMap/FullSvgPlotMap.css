@@ -84,7 +84,20 @@
   width: 100%;
 }
 
+.full-svg-map__canvas {
+  cursor: grab;
+  display: block;
+  height: 100%;
+  touch-action: none;
+  user-select: none;
+  width: 100%;
+}
+
 .full-svg-map__svg:active {
+  cursor: grabbing;
+}
+
+.full-svg-map__canvas:active {
   cursor: grabbing;
 }
 

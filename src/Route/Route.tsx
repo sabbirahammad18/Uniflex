@@ -33,12 +33,11 @@ import AllBookings from "@/pages/booking/AllBookings.tsx";
 import UserEdit from "@/pages/customer/UserEdit.tsx";
 import BookingEdit from "@/pages/booking/BookingEdit.tsx";
 
-const TestPage = lazy(() => import("@/pages/Map.tsx"));
 const ProjectMapPage = lazy(() => import("@/pages/profile/ProjectMapPage"));
 
 const RouteLoader = () => (
     <div className="grid min-h-[calc(100dvh-120px)] place-items-center bg-white text-[#07277F]">
-        <span className="material-symbols-outlined animate-pulse text-3xl">progress_activity</span>
+        <span className="material-symbols-outlined animate-pulse text-3xl ">progress_activity</span>
     </div>
 );
 
@@ -59,14 +58,6 @@ const AppRoute = () => {
                 <Route path="/" element={<Layout/>}>
                     <Route path="dashboard" element={<Dashboard/>}/>
                     <Route path="profile" element={<Profile/>}/>
-                    <Route
-                        path="profile/map"
-                        element={
-                            <Suspense fallback={<RouteLoader/>}>
-                                <ProjectMapPage/>
-                            </Suspense>
-                        }
-                    />
                     <Route path="management" element={<Management/>}/>
                     <Route path="project" element={<Project/>}/>
                     <Route path="payment-result" element={<PaymentResult/>}/>
@@ -98,7 +89,7 @@ const AppRoute = () => {
                         path="map"
                         element={
                             <Suspense fallback={<RouteLoader/>}>
-                                <TestPage/>
+                                <ProjectMapPage/>
                             </Suspense>
                         }
                     />

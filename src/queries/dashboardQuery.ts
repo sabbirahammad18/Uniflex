@@ -1,12 +1,10 @@
 import { baseApi } from "@/queries/baseApi";
 import type {
+  EarningBreakdownQuery,
   EarningBreakdownResponse,
   PromotionStatus,
 } from "@/queries/types";
 
-type EarningBreakdownQuery = {
-  date?: string;
-};
 
 export const dashboardQuery = baseApi.injectEndpoints({
   endpoints: (builder) => ({
@@ -14,10 +12,19 @@ export const dashboardQuery = baseApi.injectEndpoints({
         EarningBreakdownResponse,
         EarningBreakdownQuery | void
     >({
-      query: ({ date } = {}) => ({
+      query: ({ date, date_from, date_to, category_id, page, per_page } = {}) => ({
         url: "earning-breakdown",
         method: "GET",
-        params: { date },
+        params: {
+          date,
+          date_from,
+          date_to,
+          category_id: Array.isArray(category_id)
+              ? category_id.join(",")
+              : category_id,
+          page,
+          per_page,
+        },
       }),
       providesTags: ["Earnings"],
     }),

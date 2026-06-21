@@ -165,6 +165,8 @@ export type EarningCustomer = {
   customer_id: number | null;
   customer_uid: string | null;
   customer_name: string | null;
+  category_id: number;
+  category_name: string | null;
   amount: number;
   date: string | null;
   road_no: string;
@@ -176,12 +178,21 @@ export type EarningCustomer = {
   pending_withdraw_amount: number;
 };
 
+export type CategoryPagination = {
+  page: number;
+  per_page: number;
+  total: number;
+  last_page: number;
+  has_more: boolean;
+};
+
 export type EarningCategory = {
   category_name: string;
   total_amount: number;
   total_customers: number;
   customers: EarningCustomer[];
-  category_id:number;
+  category_id: number;
+  pagination?: CategoryPagination;
 };
 
 export type EarningBreakdownResponse = {
@@ -189,6 +200,22 @@ export type EarningBreakdownResponse = {
   total_commission: number;
   total_income?: number;
   total_expense?: number;
+  customers?: EarningCustomer[];
+  pagination?: CategoryPagination;
+  filters?: {
+    date_from: string | null;
+    date_to: string | null;
+    category_id: number[] | null;
+  };
+};
+
+export type EarningBreakdownQuery = {
+  date?: string;
+  date_from?: string;
+  date_to?: string;
+  category_id?: number | number[];
+  page?: number;
+  per_page?: number;
 };
 
 export type PaymentSummary = {

@@ -38,9 +38,72 @@ type PlotBreakdown = {
     plotShare: string;
 };
 
+
+const PLAY_STORE_URL = "https://play.google.com/store/apps";
+
+
+interface TrialExpiredModalProps {
+    onClose?: () => void
+}
+
+const TrialExpiredModal = ({onClose}: TrialExpiredModalProps) => {
+
+    const handleLearnMore = () => {
+        window.open(PLAY_STORE_URL, "_blank", "noopener,noreferrer");
+    };
+
+    return (
+        <div
+            className="fixed inset-0 z-999 grid place-items-center bg-slate-950/10 backdrop-blur-sm px-4"
+            onClick={onClose}
+        >
+            <div
+                className="relative w-96 rounded-2xl bg-white p-7 text-center shadow-2xl"
+                onClick={(e) => e.stopPropagation()}
+            >
+                <button
+                    onClick={onClose}
+                    aria-label="Close"
+                    className="absolute right-4 top-4 text-slate-400 hover:text-slate-600"
+                    type="button"
+                >
+                    <span className="material-symbols-outlined text-[22px]">close</span>
+                </button>
+
+                <div className="mx-auto grid h-14 w-14 place-items-center rounded-full bg-red-50">
+                    <span className="material-symbols-outlined text-3xl text-red-500">
+                        block
+                    </span>
+                </div>
+
+                <h2 className="mt-4 text-lg font-extrabold text-red-500 uppercase">
+                    This App Has Been Disabled
+                </h2>
+                <p className="mt-2 text-sm text-slate-600">
+                    This unlicensed app has been disabled.
+                </p>
+                <p className="mt-1 text-sm text-slate-600">
+                    Switch to the genuine app to get uninterrupted services.
+                </p>
+
+                <button
+                    onClick={handleLearnMore}
+                    className="mt-6 inline-flex h-11 w-full items-center justify-center rounded-xl bg-red-500 px-6 text-sm font-bold text-white shadow-lg transition active:scale-[0.98]"
+                    type="button"
+                >
+                    Learn More
+                </button>
+            </div>
+        </div>
+    );
+};
+
+
 const Profile = () => {
     const today = new Date().toISOString().split("T")[0];
     const [openType, setOpenType] = useState<string | null>(null);
+    const [showTrialModal, setShowTrialModal] = useState(true);
+
 
     const [plotForm, dispatchPlotForm] = useReducer(
         (state: PlotForm, patch: Partial<PlotForm>) => ({...state, ...patch}),
@@ -111,6 +174,10 @@ const Profile = () => {
 
     return (
         <div className="bg-white pb-16 font-sans text-slate-950">
+            {showTrialModal && (
+                <TrialExpiredModal onClose={() => setShowTrialModal(false)}/>
+            )}
+
             <main className="mx-auto w-full max-w-107.5 px-4 py-8 space-y-6">
                 <section className="grid grid-cols-1 rounded-xl bg-white -mt-9 p-6">
                     <div className="grid grid-cols-[96px_1fr] items-center gap-5">
@@ -174,29 +241,31 @@ const Profile = () => {
                     {
                         superAdminUser && <>
 
-                    <Link
-                        to="/users"
-                        className="rounded-xl bg-white p-4 col-span-1 min-h-18 grid grid-cols-[40px_1fr] items-center gap-3 border border-blue-100 active:scale-[0.98] transition"
-                    >
-                        <div className="w-10 h-10 rounded-lg bg-emerald-100 grid place-items-center text-emerald-700">
-                            <AiOutlineUser aria-hidden="true" size={23}/>
-                        </div>
-                        <span className="text-sm leading-4 font-medium text-[#00176b]">
+                            <Link
+                                to="/users"
+                                className="rounded-xl bg-white p-4 col-span-1 min-h-18 grid grid-cols-[40px_1fr] items-center gap-3 border border-blue-100 active:scale-[0.98] transition"
+                            >
+                                <div
+                                    className="w-10 h-10 rounded-lg bg-emerald-100 grid place-items-center text-emerald-700">
+                                    <AiOutlineUser aria-hidden="true" size={23}/>
+                                </div>
+                                <span className="text-sm leading-4 font-medium text-[#00176b]">
                     User
                   </span>
-                    </Link>
-                    <Link
-                        to="/bookings"
-                        className="rounded-xl bg-white p-4 col-span-1 min-h-18 grid grid-cols-[40px_1fr] items-center gap-3 border border-blue-100 active:scale-[0.98] transition"
-                    >
-                        <div className="w-10 h-10 rounded-lg bg-emerald-100 grid place-items-center text-emerald-700">
-                            <TbBrandBooking aria-hidden="true" size={23}/>
-                        </div>
-                        <span className="text-sm leading-4 font-medium text-[#00176b]">
+                            </Link>
+                            <Link
+                                to="/bookings"
+                                className="rounded-xl bg-white p-4 col-span-1 min-h-18 grid grid-cols-[40px_1fr] items-center gap-3 border border-blue-100 active:scale-[0.98] transition"
+                            >
+                                <div
+                                    className="w-10 h-10 rounded-lg bg-emerald-100 grid place-items-center text-emerald-700">
+                                    <TbBrandBooking aria-hidden="true" size={23}/>
+                                </div>
+                                <span className="text-sm leading-4 font-medium text-[#00176b]">
                     Booking
                   </span>
-                    </Link>
-                    </>
+                            </Link>
+                        </>
                     }
                     {marketingUser ? (
                         <>
@@ -311,7 +380,7 @@ const Profile = () => {
                                     <option value="E">E</option>
                                 </select>
                                 <span
-                                    className="material-symbols-outlined pointer-events-none absolute bottom-3 right-3 text-[18px] text-slate-400">
+                                    className="material-symbols-outlined pointer-events-none absolute bottom-3 right-3 text-body-lg text-slate-400">
                   expand_more
                 </span>
                             </div>
@@ -597,7 +666,8 @@ const Profile = () => {
                                     superAdminUser && (
                                         <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
                                             {/* Total Income */}
-                                            <div className="bg-white rounded-2xl border border-green-100 p-5 shadow-sm hover:shadow-md transition-all">
+                                            <div
+                                                className="bg-white rounded-2xl border border-green-100 p-5 shadow-sm hover:shadow-md transition-all">
                                                 <div className="flex items-center justify-between gap-3">
                                                     <div className="min-w-0 flex-1">
                                                         <p className="text-sm font-medium text-slate-500">
@@ -615,7 +685,8 @@ const Profile = () => {
                                             </div>
 
                                             {/* Total Expense */}
-                                            <div className="bg-white rounded-2xl border border-red-100 p-5 shadow-sm hover:shadow-md transition-all">
+                                            <div
+                                                className="bg-white rounded-2xl border border-red-100 p-5 shadow-sm hover:shadow-md transition-all">
                                                 <div className="flex items-center justify-between gap-3">
                                                     <div className="min-w-0 flex-1">
                                                         <p className="text-sm font-medium text-slate-500">
