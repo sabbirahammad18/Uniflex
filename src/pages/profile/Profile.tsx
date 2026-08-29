@@ -39,71 +39,10 @@ type PlotBreakdown = {
 };
 
 
-const PLAY_STORE_URL = "https://play.google.com/store/apps";
-
-
-interface TrialExpiredModalProps {
-    onClose?: () => void
-}
-
-const TrialExpiredModal = ({onClose}: TrialExpiredModalProps) => {
-
-    const handleLearnMore = () => {
-        window.open(PLAY_STORE_URL, "_blank", "noopener,noreferrer");
-    };
-
-    return (
-        <div
-            className="fixed inset-0 z-999 grid place-items-center bg-slate-950/10 backdrop-blur-sm px-4"
-            onClick={onClose}
-        >
-            <div
-                className="relative w-96 rounded-2xl bg-white p-7 text-center shadow-2xl"
-                onClick={(e) => e.stopPropagation()}
-            >
-                <button
-                    onClick={onClose}
-                    aria-label="Close"
-                    className="absolute right-4 top-4 text-slate-400 hover:text-slate-600"
-                    type="button"
-                >
-                    <span className="material-symbols-outlined text-[22px]">close</span>
-                </button>
-
-                <div className="mx-auto grid h-14 w-14 place-items-center rounded-full bg-red-50">
-                    <span className="material-symbols-outlined text-3xl text-red-500">
-                        block
-                    </span>
-                </div>
-
-                <h2 className="mt-4 text-lg font-extrabold text-red-500 uppercase">
-                    This App Has Been Disabled
-                </h2>
-                <p className="mt-2 text-sm text-slate-600">
-                    This unlicensed app has been disabled.
-                </p>
-                <p className="mt-1 text-sm text-slate-600">
-                    Switch to the genuine app to get uninterrupted services.
-                </p>
-
-                <button
-                    onClick={handleLearnMore}
-                    className="mt-6 inline-flex h-11 w-full items-center justify-center rounded-xl bg-red-500 px-6 text-sm font-bold text-white shadow-lg transition active:scale-[0.98]"
-                    type="button"
-                >
-                    Learn More
-                </button>
-            </div>
-        </div>
-    );
-};
-
 
 const Profile = () => {
     const today = new Date().toISOString().split("T")[0];
     const [openType, setOpenType] = useState<string | null>(null);
-    const [showTrialModal, setShowTrialModal] = useState(true);
-
 
     const [plotForm, dispatchPlotForm] = useReducer(
         (state: PlotForm, patch: Partial<PlotForm>) => ({...state, ...patch}),
@@ -174,9 +113,9 @@ const Profile = () => {
 
     return (
         <div className="bg-white pb-16 font-sans text-slate-950">
-            {showTrialModal && (
-                <TrialExpiredModal onClose={() => setShowTrialModal(false)}/>
-            )}
+            {/*{showTrialModal && (*/}
+            {/*    <TrialExpiredModal onClose={() => setShowTrialModal(false)}/>*/}
+            {/*)}*/}
 
             <main className="mx-auto w-full max-w-107.5 px-4 py-8 space-y-6">
                 <section className="grid grid-cols-1 rounded-xl bg-white -mt-9 p-6">
